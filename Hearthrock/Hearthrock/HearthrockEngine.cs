@@ -211,14 +211,7 @@ namespace Hearthrock
         {
             GameState state = GameState.Get();
             if (state == null) return;
-
-
-
-
-            Console.WriteLine("OnRockGamePlay");
-            Console.WriteLine("OnRockGamePlay" + state.IsBlockingServer());
             
-
             if (state.IsBlockingServer())
             {
                 HoldBack(750);
@@ -371,8 +364,9 @@ namespace Hearthrock
                 if (action.type == HEARTHROCK_ACTIONTYPE.PLAY)
                 {
                     InputManager input_mgr = InputManager.Get();
-                    MethodInfo dynMethod = input_mgr.GetType().GetMethod("DropHeldCard", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { }, null);
-                    dynMethod.Invoke(input_mgr, new object[] { });
+                    input_mgr.DropHeldCard();
+                    //MethodInfo dynMethod = input_mgr.GetType().GetMethod("DropHeldCard", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { }, null);
+                    //dynMethod.Invoke(input_mgr, new object[] { });
                     action.step = 2;
                 }
                 else if (action.type == HEARTHROCK_ACTIONTYPE.ATTACK)
@@ -591,11 +585,11 @@ namespace Hearthrock
                 HoldBack(1000);
                 Log("DeckPickerTrayDisplay.Get() NULL");
                 SingletonOnGameRequest = false;
-                AdventureId adventureId = Options.Get().GetEnum<AdventureId>(Option.SELECTED_ADVENTURE, AdventureId.PRACTICE);
-                AdventureModeId modeId = Options.Get().GetEnum<AdventureModeId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeId.NORMAL);
+                AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
+                AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
                 if (expert)
                 {
-                    modeId = Options.Get().GetEnum<AdventureModeId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeId.EXPERT);
+                    modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.EXPERT);
                 }
                 Log("AdventureConfig.Get().GetSelectedMode " + AdventureConfig.Get().GetSelectedMode());
 
@@ -621,7 +615,7 @@ namespace Hearthrock
             }
 
             HoldBack(5000);
-            MissionId mission = HearthrockUtils.RandomPracticeMission();
+            ScenarioDbId mission = HearthrockUtils.RandomPracticeMission();
             GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, (int)mission, deck, 0L);
         }
 
@@ -630,7 +624,7 @@ namespace Hearthrock
         {
             InputManager input = InputManager.Get();
             MethodInfo method = input.GetType().GetMethod("HandleClickOnCard", BindingFlags.NonPublic | BindingFlags.Instance);
-            method.Invoke(input, new object[] { card.gameObject });
+            method.Invoke(input, new object[] { card.gameObject , true});
         }
     }
 }

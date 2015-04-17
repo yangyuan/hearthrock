@@ -7,18 +7,18 @@ namespace Hearthrock
 {
     class HearthrockUtils
     {
-        public static MissionId RandomPracticeMission()
+        public static ScenarioDbId RandomPracticeMission()
         {
-            MissionId[] AI_EXPERT = {
-                MissionId.PRACTICE_EXPERT_MAGE,
-                MissionId.PRACTICE_EXPERT_WARLOCK,
-                MissionId.PRACTICE_EXPERT_HUNTER,
-                MissionId.PRACTICE_EXPERT_ROGUE,
-                MissionId.PRACTICE_EXPERT_PRIEST,
-                MissionId.PRACTICE_EXPERT_WARRIOR,
-                MissionId.PRACTICE_EXPERT_DRUID,
-                MissionId.PRACTICE_EXPERT_PALADIN,
-                MissionId.PRACTICE_EXPERT_SHAMAN
+            ScenarioDbId[] AI_EXPERT = {
+                ScenarioDbId.PRACTICE_EXPERT_MAGE,
+                ScenarioDbId.PRACTICE_EXPERT_WARLOCK,
+                ScenarioDbId.PRACTICE_EXPERT_HUNTER,
+                ScenarioDbId.PRACTICE_EXPERT_ROGUE,
+                ScenarioDbId.PRACTICE_EXPERT_PRIEST,
+                ScenarioDbId.PRACTICE_EXPERT_WARRIOR,
+                ScenarioDbId.PRACTICE_EXPERT_DRUID,
+                ScenarioDbId.PRACTICE_EXPERT_PALADIN,
+                ScenarioDbId.PRACTICE_EXPERT_SHAMAN
             };
 
             Random random = new Random();
