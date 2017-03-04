@@ -17,7 +17,7 @@ namespace Hearthrock
         /// <summary>
         /// ranked, vs_ai and so on
         /// </summary>
-        private HEARTHROCK_GAMEMODE GameMode;
+        private RockGameMode GameMode;
         private DateTime delay_start = DateTime.Now;
         private long delay_length = 0;
 
@@ -28,7 +28,7 @@ namespace Hearthrock
         public void SwitchMode(int mode)
         {
             // do a simple map
-            GameMode = (HEARTHROCK_GAMEMODE) mode;
+            GameMode = (RockGameMode) mode;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Hearthrock
             InactivePlayerKicker ipk = InactivePlayerKicker.Get();
             if (ipk == null)
             {
-                Log("InactivePlayerKicker NA");
+                Trace("InactivePlayerKicker NA");
                 return;
             }
             FieldInfo fieldinfo = ipk.GetType().GetField("m_activityDetected", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -57,21 +57,23 @@ namespace Hearthrock
             delay_length = msec;
         }
 
-
-        public static void Log(string message)
+        /// <summary>
+        /// Display trace info to screen.
+        /// </summary>
+        /// <param name="message">The trace info.</param>
+        public void RockInfo(string message)
         {
-            Console.WriteLine(DateTime.Now + ": " + message);
-        }
-
-        private void Notify(string message)
-        {
-            Log(message);
+            Trace(message);
             UIStatus.Get().AddInfo(message);
         }
 
-        public static void Message(string message)
+        /// <summary>
+        /// Log trace info on log file.
+        /// </summary>
+        /// <param name="message">The trace info.</param>
+        public static void Trace(string message)
         {
-            UIStatus.Get().AddInfo(message);
+            Console.WriteLine($"{DateTime.Now}: {message}");
         }
 
         SceneMgr.Mode scenemgr_mode = SceneMgr.Mode.INVALID;
@@ -80,16 +82,17 @@ namespace Hearthrock
             if (scenemgr_mode != mode)
             {
                 scenemgr_mode = mode;
-                Log(scenemgr_mode.ToString());
+                Trace(scenemgr_mode.ToString());
             }
         }
 
-        bool SingletonOnUpdate = false;
-        public void Update()
+        /// <summary>
+        /// The update method of engine.
+        /// Each time the engine will check the state and do responding behavior.
+        /// Cannot use yield because user may change states at any time.
+        /// </summary>
+        public double Update()
         {
-            if (SingletonOnUpdate == true) return;
-            SingletonOnUpdate = true;
-
             try
             {
                 SceneMgr.Mode mode = SceneMgr.Get().GetMode();
@@ -99,28 +102,25 @@ namespace Hearthrock
                 TimeSpan time_since_delay = current_time - delay_start;
                 if (time_since_delay.TotalMilliseconds < delay_length)
                 {
-                    SingletonOnUpdate = false;
-                    return;
+                    return 1;
                 }
                 switch (mode)
                 {
                     case SceneMgr.Mode.STARTUP:
                     case SceneMgr.Mode.LOGIN:
-                        HoldBack(1000);
-                        break;
+                        return 1;
                     case SceneMgr.Mode.DRAFT:
-                        Log("disable for bug");
-                        HoldBack(1000);
-                        break;
+                        Trace("disable for bug");
+                        return 1;
                     case SceneMgr.Mode.COLLECTIONMANAGER:
                     case SceneMgr.Mode.PACKOPENING:
                     case SceneMgr.Mode.FRIENDLY:
                     case SceneMgr.Mode.CREDITS:
-                        Log("NEXT MODE" + mode);
+                        Trace("NEXT MODE" + mode);
                         {
                             if (DialogManager.Get().ShowingDialog())
                             {
-                                Log("ShowingDialog");
+                                Trace("ShowingDialog");
                                 DialogManager.Get().GoBack();
                             }
                         }
@@ -132,16 +132,15 @@ namespace Hearthrock
                     default:
                         break;
                     case SceneMgr.Mode.HUB:
-                        HoldBack(3000);
                         Clear();
                         switch (GameMode)
                         {
-                            case HEARTHROCK_GAMEMODE.PRACTICE_NORMAL:
-                            case HEARTHROCK_GAMEMODE.PRACTICE_EXPERT:
+                            case RockGameMode.PRACTICE_NORMAL:
+                            case RockGameMode.PRACTICE_EXPERT:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.ADVENTURE);
                                 break;
-                            case HEARTHROCK_GAMEMODE.PLAY_UNRANKED:
-                            case HEARTHROCK_GAMEMODE.PLAY_RANKED:
+                            case RockGameMode.PLAY_UNRANKED:
+                            case RockGameMode.PLAY_RANKED:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.TOURNAMENT);
                                 Tournament.Get().NotifyOfBoxTransitionStart();
                                 break;
@@ -150,19 +149,18 @@ namespace Hearthrock
                         }
                         break;
                     case SceneMgr.Mode.ADVENTURE:
-                        HoldBack(3000);
                         ClearGameState();
                         ClearUIQuest();
                         switch (GameMode)
                         {
-                            case HEARTHROCK_GAMEMODE.PRACTICE_NORMAL:
+                            case RockGameMode.PRACTICE_NORMAL:
                                 OnRockPraticeMode(false);
                                 break;
-                            case HEARTHROCK_GAMEMODE.PRACTICE_EXPERT:
+                            case RockGameMode.PRACTICE_EXPERT:
                                 OnRockPraticeMode(true);
                                 break;
-                            case HEARTHROCK_GAMEMODE.PLAY_UNRANKED:
-                            case HEARTHROCK_GAMEMODE.PLAY_RANKED:
+                            case RockGameMode.PLAY_UNRANKED:
+                            case RockGameMode.PLAY_RANKED:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
                             default:
@@ -170,19 +168,18 @@ namespace Hearthrock
                         }
                         break;
                     case SceneMgr.Mode.TOURNAMENT:
-                        HoldBack(3000);
                         ClearGameState();
                         ClearUIQuest();
                         switch (GameMode)
                         {
-                            case HEARTHROCK_GAMEMODE.PRACTICE_NORMAL:
-                            case HEARTHROCK_GAMEMODE.PRACTICE_EXPERT:
+                            case RockGameMode.PRACTICE_NORMAL:
+                            case RockGameMode.PRACTICE_EXPERT:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
-                            case HEARTHROCK_GAMEMODE.PLAY_UNRANKED:
+                            case RockGameMode.PLAY_UNRANKED:
                                 OnRockTournamentMode(false);
                                 break;
-                            case HEARTHROCK_GAMEMODE.PLAY_RANKED:
+                            case RockGameMode.PLAY_RANKED:
                                 OnRockTournamentMode(true);
                                 break;
                             default:
@@ -191,100 +188,95 @@ namespace Hearthrock
                         break;
                     case SceneMgr.Mode.GAMEPLAY:
                         SingletonOnGameRequest = false;
-                        OnRockGamePlay();
-                        break;
+                        return OnRockGamePlay();
                 }
             }
             catch (Exception e)
             {
-                Notify(e.ToString());
+                RockInfo(e.ToString());
             }
             finally
             {
-                SingletonOnUpdate = false;
             }
+
+            return 1;
         }
 
         bool SingletonOnGameRequest = false;
 
         bool TurnReady = false;
-        private void OnRockGamePlay()
+        private double OnRockGamePlay()
         {
             GameState state = GameState.Get();
-            if (state == null) return;
+            if (state == null)
+            {
+                return 1;
+            }
             
             if (state.IsBlockingPowerProcessor())
             {
-                HoldBack(750);
-                Log("BlockingServer");
+                Trace("BlockingServer");
+                return 0.75;
             }
-                /*
             else if (state.IsMulliganPhase())
             {
-                OnRockMulligan();
                 TurnReady = false;
-            }
-                 * */
-            
-            else if (state.IsMulliganPhase())
-            {
-                OnRockMulligan();
-                TurnReady = false;
+                return OnRockMulligan();
             }
             else if (state.IsMulliganPhasePending())
             {
                 // which means some pending about mulligan
-                HoldBack(750);
-                Notify("MulliganPhasePending");
+                RockInfo("MulliganPhasePending");
+                return 0.75;
             }
             else if (state.IsGameOver())
             {
                 Clear();
-                OnRockGameOver();
+                return OnRockGameOver();
             }
             else if (state.IsFriendlySidePlayerTurn() == true)
             {
                 if (TurnReady)
                 {
-                    OnRockAI();
+                    return OnRockAI();
                 }
                 else
                 {
-                    OnRockTurnStart();
+                    return OnRockTurnStart();
                 }
             }
             else
             {
                 TurnReady = false;
+                return 1;
             }
         }
 
-        private void OnRockTurnStart()
+        private float OnRockTurnStart()
         {
-            HoldBack(5000);
             ActionRocking = null;
             TurnReady = true;
             SingletonEndTurn = false;
-            //
             OnRocking = false;
+
+            return 5;
         }
-        private void OnRockTurnEnd()
+        private float OnRockTurnEnd()
         {
-            if (SingletonEndTurn) return;
+            if (SingletonEndTurn) return 1;
             SingletonEndTurn = true;
-            HoldBack(3000);
-            Notify("Job's Done!");
+            RockInfo("Job's Done!");
             ActionRocking = null;
             TurnReady = false;
             HearthrockRobot.RockEnd();
             InputManager.Get().DoEndTurnButton();
             //
             OnRocking = false;
+            return 3;
         }
 
         public void Clear()
         {
-            SingletonOnUpdate = false;
             SingletonOnGameRequest = false;
             ClearGameState();
             ClearUIQuest();
@@ -308,17 +300,16 @@ namespace Hearthrock
             }
             catch (Exception e)
             {
-                Notify(e.ToString());
+                RockInfo(e.ToString());
             }
         }
 
-        private void OnRockGameOver()
+        private double OnRockGameOver()
         {
-            HoldBack(5000);
             if (EndGameScreen.Get() != null)
             {
                 HoldBack(5000);
-                Notify("Game Over");
+                RockInfo("Game Over");
                 // EndGameScreen.Get().ContinueEvents();
                 try
                 {
@@ -326,6 +317,8 @@ namespace Hearthrock
                 }
                 catch { }
             }
+
+            return 5;
         }
         
         RockAction ActionRocking = null;
@@ -357,12 +350,12 @@ namespace Hearthrock
             else if (action.step == 1)
             {
                 int delay = r.Next(300, 600);
-                if (action.type == HEARTHROCK_ACTIONTYPE.ATTACK)
+                if (action.type == RockActionType.Attack)
                 {
                     delay += 400;
                 }
                 HoldBack(delay);
-                if (action.type == HEARTHROCK_ACTIONTYPE.PLAY)
+                if (action.type == RockActionType.Play)
                 {
                     InputManager input_mgr = InputManager.Get();
                     input_mgr.DropHeldCard();
@@ -370,7 +363,7 @@ namespace Hearthrock
                     //dynMethod.Invoke(input_mgr, new object[] { });
                     action.step = 2;
                 }
-                else if (action.type == HEARTHROCK_ACTIONTYPE.ATTACK)
+                else if (action.type == RockActionType.Attack)
                 {
                     HearthstoneClickCard(action.card2);
                     action.step = -1;
@@ -388,7 +381,7 @@ namespace Hearthrock
                 }
                 int delay = r.Next(300, 600);
                 HoldBack(delay);
-                if (action.type == HEARTHROCK_ACTIONTYPE.PLAY)
+                if (action.type == RockActionType.Play)
                 {
                     action.step = -1;
                 }
@@ -398,9 +391,9 @@ namespace Hearthrock
 
         bool SingletonEndTurn = false;
         bool OnRocking = false;
-        private void OnRockAI()
+        private double OnRockAI()
         {
-            if (OnRocking) return;
+            if (OnRocking) return 1;
             OnRocking = true;
 
             try
@@ -420,29 +413,28 @@ namespace Hearthrock
                     {
                         ActionRocking = null;
                     }
-                    return;
+                    return 1;
                 }
 
                 // ActionRocking = should be null;
 
-                HoldBack(250);
                 if (EndTurnButton.Get().HasNoMorePlays())
                 {
                     OnRockTurnEnd();
-                    return;
+                    return 0.25;
                 }
 
                 RockAction action = HearthrockRobot.RockIt();
-                if (action.type == HEARTHROCK_ACTIONTYPE.PLAY)
+                if (action.type == RockActionType.Play)
                 {
                     SingletonEndTurn = false;
-                    Notify("Play: " + action.card1.GetEntity().GetName());
+                    RockInfo("Play: " + action.card1.GetEntity().GetName());
                     ActionRocking = action;
                 }
-                else if (action.type == HEARTHROCK_ACTIONTYPE.ATTACK)
+                else if (action.type == RockActionType.Attack)
                 {
                     SingletonEndTurn = false;
-                    Notify("Attack: " + action.card1.GetEntity().GetName() + " > " + action.card2.GetEntity().GetName());
+                    RockInfo("Attack: " + action.card1.GetEntity().GetName() + " > " + action.card2.GetEntity().GetName());
                     ActionRocking = action;
                 }
                 else
@@ -453,36 +445,35 @@ namespace Hearthrock
                 
             }
             catch (Exception e){
-                Log("OnRockAI ex " + e.ToString());
+                Trace("OnRockAI ex " + e.ToString());
             }
             finally
             {
                 OnRocking = false;
             }
+
+            return 0.1;
         }
 
 
         int MulliganState = 0;
-        private void OnRockMulligan()
+        private double OnRockMulligan()
         {
             if (GameState.Get().IsMulliganManagerActive() == false || MulliganManager.Get() == null || MulliganManager.Get().GetMulliganButton() == null || MulliganManager.Get().GetMulliganButton().IsEnabled() == false)
             {
-                HoldBack(500);
-                return;
+                return 0.5;
             }
 
             FieldInfo filedinfo = MulliganManager.Get().GetType().GetField("m_waitingForUserInput", BindingFlags.NonPublic | BindingFlags.Instance);
             bool iswaiting = (bool)filedinfo.GetValue(MulliganManager.Get());
             if (!iswaiting)
             {
-                HoldBack(500);
-                return;
+                return 0.5;
             }
             
             if (MulliganState <= 0)
             {
-                Notify("Mulligan");
-                HoldBack(1000);
+                RockInfo("Mulligan");
                 Card[] cards = GameState.Get().GetFriendlySidePlayer().GetHandZone().GetCards().ToArray();
                 foreach (Card current in cards)
                 {
@@ -493,16 +484,15 @@ namespace Hearthrock
                     }
                 }
                 MulliganState = 1;
-                return;
+                return 1;
             }
             if (MulliganState <= 1)
             {
                 MulliganManager.Get().GetMulliganButton().TriggerRelease();
                 MulliganState = 2;
-                HoldBack(5000);
-                return;
+                return 5;
             }
-            return;
+            return 0.1;
         }
 
         private void OnRockTournamentMode(bool ranked)
@@ -584,7 +574,7 @@ namespace Hearthrock
             if (DeckPickerTrayDisplay.Get() == null)
             {
                 HoldBack(1000);
-                Log("DeckPickerTrayDisplay.Get() NULL");
+                Trace("DeckPickerTrayDisplay.Get() NULL");
                 SingletonOnGameRequest = false;
                 AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
                 AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
@@ -592,7 +582,7 @@ namespace Hearthrock
                 {
                     modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.EXPERT);
                 }
-                Log("AdventureConfig.Get().GetSelectedMode " + AdventureConfig.Get().GetSelectedMode());
+                Trace("AdventureConfig.Get().GetSelectedMode " + AdventureConfig.Get().GetSelectedMode());
 
                 if (AdventureConfig.Get().CanPlayMode(adventureId, modeId))
                 {
@@ -601,7 +591,7 @@ namespace Hearthrock
                 }
                 else
                 {
-                    Log("AdventureConfig.Get().CanPlayMode FALSE");
+                    Trace("AdventureConfig.Get().CanPlayMode FALSE");
                 }
 
                 return;
@@ -610,7 +600,7 @@ namespace Hearthrock
             if (deck == 0)
             {
                 HoldBack(1000);
-                Log("DeckPickerTrayDisplay.Get() 0");
+                Trace("DeckPickerTrayDisplay.Get() 0");
                 SingletonOnGameRequest = false;
                 return;
             }
@@ -632,7 +622,7 @@ namespace Hearthrock
             ScenarioDbId mission = HearthrockUtils.RandomPracticeMission();
 
 
-            Notify("Mulligan");
+            RockInfo("Mulligan");
 
             GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_STANDARD, (int)mission, deck, 0L);
         }

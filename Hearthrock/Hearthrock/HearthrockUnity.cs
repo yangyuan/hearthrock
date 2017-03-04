@@ -1,42 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
+﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock
 {
+    using System.Collections;
+    using UnityEngine;
+
+    /// <summary>
+    /// Unity Component of Hearthrock
+    /// </summary>
     class HearthrockUnity : MonoBehaviour
     {
-        const string HearthrockTitle = "Hearthrock";
-        const double HearthrockScale = 1.5;
+        const string Title = "Hearthrock";
+        const double UIScale = 1.5;
 
-        private string[] HearthrockStates = { "Ready", "Running", "Paused" };
-        private string[] HearthrockModes = { "RANK", "PVP", "PVE N", "PVE X" };
-        const int HearthrockWidth = (int)(120 * HearthrockScale);
-        const int HearthrockHeight = (int)(96 * HearthrockScale);
+
+        const int HearthrockWidth = (int)(120 * UIScale);
+        const int HearthrockHeight = (int)(96 * UIScale);
+
         // dynamic values
         private int HearthrockState = 0;
         private int HearthrockMode = 0;
-        private HearthrockEngine Engine = new HearthrockEngine();
+
         // static values
-        const int UnityPadding = (int)(8 * HearthrockScale);
-        const int UnitySpacing = (int)(4 * HearthrockScale);
-        const int UnityTitleHeight = (int)(15 * HearthrockScale);
-        const int UnityBorderSize = (int)(2 * HearthrockScale);
-        const int UnityButtonHeight = (int)(22 * HearthrockScale);
+        const int UnityPadding = (int)(8 * UIScale);
+        const int UnitySpacing = (int)(4 * UIScale);
+        const int UnityTitleHeight = (int)(15 * UIScale);
+        const int UnityBorderSize = (int)(2 * UIScale);
+        const int UnityButtonHeight = (int)(22 * UIScale);
+
+        private string[] HearthrockStates = { "Ready", "Running", "Paused" };
+        private string[] HearthrockModes = { "RANK", "PVP", "PVE N", "PVE X" };
+        private HearthrockEngine Engine = new HearthrockEngine();
+
+        /// <summary>
+        /// The method to inject HearthrockUnity
+        /// </summary>
         public static void Hook()
         {
             GameObject sceneObject = SceneMgr.Get().gameObject;
             sceneObject.AddComponent<HearthrockUnity>();
         }
+
+        /// <summary>
+        /// For Start Message of MonoBehaviour
+        /// </summary>
+        public void Start()
+        {
+            // Init RockRoutine
+            StartCoroutine(RockRoutine());
+        }
+
+        /// <summary>
+        /// For OnGUI Message of MonoBehaviour
+        /// </summary>
         public void OnGUI()
         {
             Rect rect = new Rect(Screen.width - HearthrockWidth - UnityPadding, UnityPadding, HearthrockWidth, HearthrockHeight);
-            GUI.ModalWindow(0, rect, OnHearthrockWindow, HearthrockTitle);
+            GUI.ModalWindow(0, rect, OnHearthrockWindow, Title);
         }
 
+        /// <summary>
+        /// Main loop of Hearthrock
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator RockRoutine()
+        {
+            while (true)
+            {
+                Engine.SwitchMode(HearthrockMode);
+                Engine.Tick();
+                double delay = 1;
+                if (HearthrockState == 1)
+                {
+                    delay = Engine.Update();
+                }
+
+                yield return new WaitForSeconds((float)delay);
+            }
+        }
+
+        /// <summary>
+        /// Main function of HearthrockUnity ModalWindow
+        /// </summary>
+        /// <param name="windowID"></param>
         private void OnHearthrockWindow(int windowID)
         {
             int width = HearthrockWidth - UnitySpacing * 2 - UnityBorderSize * 2;
@@ -53,24 +101,14 @@ namespace Hearthrock
                 if (HearthrockState == 0 || HearthrockState == 2)
                 {
                     HearthrockState = 1;
-                    HearthrockEngine.Message("Hearthrock Started");
+                    Engine.RockInfo("Hearthrock Started");
                 }
                 else
                 {
                     HearthrockState = 2;
-                    HearthrockEngine.Message("Hearthrock Paused");
+                    Engine.RockInfo("Hearthrock Paused");
                 }
                 Engine.Clear();
-            }
-        }
-
-        public void Update()
-        {
-            Engine.SwitchMode(HearthrockMode);
-            Engine.Tick();
-            if (HearthrockState == 1)
-            {
-                Engine.Update();
             }
         }
     }

@@ -148,7 +148,7 @@ namespace Hearthrock
             // use coin
             if (coin_card != null && need_coin_card)
             {
-                action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                action.type = RockActionType.Play;
                 action.card1 = coin_card;
                 return action;
             }
@@ -176,7 +176,7 @@ namespace Hearthrock
                 }
                 if (card.GetEntity().IsSpell() || card.GetEntity().IsWeapon())
                 {
-                    action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                    action.type = RockActionType.Play;
                     action.card1 = card;
                     return action;
                 }
@@ -191,7 +191,7 @@ namespace Hearthrock
                 }
                 if (card.GetEntity().IsMinion() && GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone().GetCards().Count < 6 && (card.GetEntity().GetCost() == resource || ((card.GetEntity().GetCost() == resource - 2) && HeroSpellReady)))
                 {
-                    action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                    action.type = RockActionType.Play;
                     action.card1 = card;
                     return action;
                 }
@@ -207,7 +207,7 @@ namespace Hearthrock
 
                 if (card.GetEntity().IsMinion() && GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone().GetCards().Count < 6)
                 {
-                    action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                    action.type = RockActionType.Play;
                     action.card1 = card;
                     return action;
                 }
@@ -215,7 +215,7 @@ namespace Hearthrock
                 {
                     if (card.GetEntity().HasCharge() || card.GetEntity().HasTaunt())
                     {
-                        action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                        action.type = RockActionType.Play;
                         action.card1 = card;
                         return action;
                     }
@@ -246,7 +246,7 @@ namespace Hearthrock
                 {
                     foreach (Card card in minion_notaunts)
                     {
-                        action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                        action.type = RockActionType.Attack;
                         action.card1 = card;
                         action.card2 = card_oppo;
                         return action;
@@ -258,7 +258,7 @@ namespace Hearthrock
                 {
                     foreach (Card card in minion_taunts)
                     {
-                        action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                        action.type = RockActionType.Attack;
                         action.card1 = card;
                         action.card2 = card_oppo;
                         return action;
@@ -283,7 +283,7 @@ namespace Hearthrock
                 {
                     foreach (Card card in minion_notaunts)
                     {
-                        action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                        action.type = RockActionType.Attack;
                         action.card1 = card;
                         action.card2 = card_oppo;
                         return action;
@@ -306,7 +306,7 @@ namespace Hearthrock
                                 // if can kill, kill
                                 if (card.GetEntity().GetATK() >= card_oppo.GetEntity().GetHealth())
                                 {
-                                    action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                                    action.type = RockActionType.Attack;
                                     action.card1 = card;
                                     action.card2 = card_oppo;
                                     return action;
@@ -333,7 +333,7 @@ namespace Hearthrock
                                 // if can kill, kill
                                 if (card.GetEntity().GetATK() >= card_oppo.GetEntity().GetHealth())
                                 {
-                                    action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                                    action.type = RockActionType.Attack;
                                     action.card1 = card;
                                     action.card2 = card_oppo;
                                     return action;
@@ -355,13 +355,13 @@ namespace Hearthrock
                         // for bug, should noy run
                         if (card_oppo.GetEntity().HasTaunt())
                         {
-                            action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                            action.type = RockActionType.Attack;
                             action.card1 = card;
                             action.card2 = card_oppo;
                             return action;
                         }
                     }
-                    action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                    action.type = RockActionType.Attack;
                     action.card1 = card;
                     action.card2 = player_enemy.GetHeroCard();
                     return action;
@@ -371,14 +371,14 @@ namespace Hearthrock
             }
 
             // deal with hero weapon and atk
-            HearthrockEngine.Log("HasWeapon " + player.HasWeapon());
+            HearthrockEngine.Trace("HasWeapon " + player.HasWeapon());
             if (player.HasWeapon())
             {
-                HearthrockEngine.Log("HasWeapon CanAttack " + player.GetWeaponCard().GetEntity().CanAttack());
+                HearthrockEngine.Trace("HasWeapon CanAttack " + player.GetWeaponCard().GetEntity().CanAttack());
             }
             if (minion_taunts_enemy.Count == 0 && player.HasWeapon() && player.GetWeaponCard().GetEntity().CanAttack())
             {
-                action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                action.type = RockActionType.Attack;
                 action.card1 = player.GetWeaponCard();
                 action.card2 = player_enemy.GetHeroCard();
                 return action;
@@ -388,7 +388,7 @@ namespace Hearthrock
             Entity me = player.GetHeroCard().GetEntity();
             if (minion_taunts_enemy.Count == 0 && me.CanAttack() && me.GetATK() > 0)
             {
-                action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                action.type = RockActionType.Attack;
                 action.card1 = player.GetHeroCard();
                 action.card2 = player_enemy.GetHeroCard();
                 return action;
@@ -420,14 +420,14 @@ namespace Hearthrock
                             }
                             else
                             {
-                                action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                                action.type = RockActionType.Play;
                                 action.card1 = heropower;
                                 return action;
                             }
                         }
                         else
                         {
-                            action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                            action.type = RockActionType.Play;
                             action.card1 = heropower;
                             return action;
                         }
@@ -437,16 +437,16 @@ namespace Hearthrock
                     case TAG_CLASS.ROGUE:
                     case TAG_CLASS.SHAMAN:
                     case TAG_CLASS.WARRIOR:
-                        action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                        action.type = RockActionType.Play;
                         action.card1 = heropower;
                         return action;
                     case TAG_CLASS.PRIEST:
-                        action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                        action.type = RockActionType.Attack;
                         action.card1 = heropower;
                         action.card2 = player.GetHeroCard();
                         return action;
                     case TAG_CLASS.MAGE:
-                        action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                        action.type = RockActionType.Attack;
                         action.card1 = heropower;
                         action.card2 = player_enemy.GetHeroCard();
                         return action;
@@ -489,7 +489,7 @@ namespace Hearthrock
 
                 if (target_best != null)
                 {
-                    action.type = HEARTHROCK_ACTIONTYPE.ATTACK;
+                    action.type = RockActionType.Attack;
                     action.card1 = attacker_best;
                     action.card2 = target_best;
                     return action;
@@ -511,7 +511,7 @@ namespace Hearthrock
                 }
                 if (card.GetEntity().IsMinion() && card.GetEntity().HasTaunt() && GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone().GetCards().Count < 7 && (card.GetEntity().GetCost() == resource || ((card.GetEntity().GetCost() == resource - 2) && HeroSpellReady)))
                 {
-                    action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                    action.type = RockActionType.Play;
                     action.card1 = card;
                     return action;
                 }
@@ -531,7 +531,7 @@ namespace Hearthrock
                     // waste a cost
                     if (card.GetEntity().IsMinion() && card.GetEntity().HasTaunt() && GameState.Get().GetFriendlySidePlayer().GetBattlefieldZone().GetCards().Count < 7 && (card.GetEntity().GetCost() == resource - 1 || ((card.GetEntity().GetCost() == resource - 3) && HeroSpellReady)))
                     {
-                        action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                        action.type = RockActionType.Play;
                         action.card1 = card;
                         return action;
                     }
@@ -553,7 +553,7 @@ namespace Hearthrock
                     {
                         if (card.GetEntity().HasCharge())
                         {
-                            action.type = HEARTHROCK_ACTIONTYPE.PLAY;
+                            action.type = RockActionType.Play;
                             action.card1 = card;
                             return action;
                         }
@@ -563,6 +563,30 @@ namespace Hearthrock
             return null;
         }
 
+    }
+    public class CardPowerComparer : IComparer<Card>
+    {
+        public int Compare(Card x, Card y)
+        {
+            int power_x = FetchPower(x.GetEntity());
+            int power_y = FetchPower(y.GetEntity());
+            return power_x - power_y;
+        }
+
+        private int FetchPower(Entity entity)
+        {
+            int power = entity.GetATK();
+            if (entity.HasWindfury())
+            {
+                power += entity.GetATK();
+            }
+            power -= entity.GetRealTimeRemainingHP();
+            if (entity.HasDivineShield())
+            {
+                power -= 1;
+            }
+            return power;
+        }
     }
 
 }
