@@ -8,4 +8,12 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>Hearthrock.Contracts</Import_RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)RockAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockCard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockHero.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockMinion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockScene.cs" />
+  </ItemGroup>
 </Project>

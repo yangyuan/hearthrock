@@ -63,7 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HearthrockAction.cs" />
+    <Compile Include="Engine\HearthrockAction.cs" />
     <Compile Include="HearthrockEngine.cs" />
     <Compile Include="HearthrockRobot.cs" />
     <Compile Include="HearthrockUnity.cs" />

@@ -7,16 +7,16 @@ namespace Hearthrock
     /// <summary>
     /// Action of Hearthrock
     /// </summary>
-    public class RockAction
+    public class RockActionInternal
     {
-        public RockActionType type;
+        public RockActionTypeInternal type;
         public int step;
         public string msg;
         public Card card1;
         public Card card2;
-        public RockAction()
+        public RockActionInternal()
         {
-            type = RockActionType.None;
+            type = RockActionTypeInternal.None;
             step = 0;
             msg = "";
             card1 = null;
@@ -27,7 +27,7 @@ namespace Hearthrock
     /// <summary>
     /// Action Type of Hearthrock
     /// </summary>
-    public enum RockActionType
+    public enum RockActionTypeInternal
     {
         None,
         Play,

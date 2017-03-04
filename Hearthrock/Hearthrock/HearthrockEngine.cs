@@ -321,8 +321,8 @@ namespace Hearthrock
             return 5;
         }
         
-        RockAction ActionRocking = null;
-        private void OnAction(RockAction action)
+        RockActionInternal ActionRocking = null;
+        private void OnAction(RockActionInternal action)
         {
             System.Random r = new System.Random();
             
@@ -350,12 +350,12 @@ namespace Hearthrock
             else if (action.step == 1)
             {
                 int delay = r.Next(300, 600);
-                if (action.type == RockActionType.Attack)
+                if (action.type == RockActionTypeInternal.Attack)
                 {
                     delay += 400;
                 }
                 HoldBack(delay);
-                if (action.type == RockActionType.Play)
+                if (action.type == RockActionTypeInternal.Play)
                 {
                     InputManager input_mgr = InputManager.Get();
                     input_mgr.DropHeldCard();
@@ -363,7 +363,7 @@ namespace Hearthrock
                     //dynMethod.Invoke(input_mgr, new object[] { });
                     action.step = 2;
                 }
-                else if (action.type == RockActionType.Attack)
+                else if (action.type == RockActionTypeInternal.Attack)
                 {
                     HearthstoneClickCard(action.card2);
                     action.step = -1;
@@ -381,7 +381,7 @@ namespace Hearthrock
                 }
                 int delay = r.Next(300, 600);
                 HoldBack(delay);
-                if (action.type == RockActionType.Play)
+                if (action.type == RockActionTypeInternal.Play)
                 {
                     action.step = -1;
                 }
@@ -424,14 +424,14 @@ namespace Hearthrock
                     return 0.25;
                 }
 
-                RockAction action = HearthrockRobot.RockIt();
-                if (action.type == RockActionType.Play)
+                RockActionInternal action = HearthrockRobot.RockIt();
+                if (action.type == RockActionTypeInternal.Play)
                 {
                     SingletonEndTurn = false;
                     RockInfo("Play: " + action.card1.GetEntity().GetName());
                     ActionRocking = action;
                 }
-                else if (action.type == RockActionType.Attack)
+                else if (action.type == RockActionTypeInternal.Attack)
                 {
                     SingletonEndTurn = false;
                     RockInfo("Attack: " + action.card1.GetEntity().GetName() + " > " + action.card2.GetEntity().GetName());
