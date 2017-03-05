@@ -9,7 +9,7 @@ namespace Hearthrock.Contracts
     /// <summary>
     /// Action contract of Hearthrock
     /// </summary>
-    class RockAction
+    public class RockAction
     {
         /// <summary>
         /// Source entity of the action.

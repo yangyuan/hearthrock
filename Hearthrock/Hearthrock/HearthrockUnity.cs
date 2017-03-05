@@ -4,6 +4,7 @@
 
 namespace Hearthrock
 {
+    using Robot;
     using System.Collections;
     using UnityEngine;
 
@@ -101,12 +102,18 @@ namespace Hearthrock
                 if (HearthrockState == 0 || HearthrockState == 2)
                 {
                     HearthrockState = 1;
+                    Engine.Reload();
                     Engine.RockInfo("Hearthrock Started");
+
+                    RockInputManager.DisableInput();
                 }
                 else
                 {
                     HearthrockState = 2;
+                    Engine.Reload();
                     Engine.RockInfo("Hearthrock Paused");
+
+                    RockInputManager.EnableInput();
                 }
                 Engine.Clear();
             }

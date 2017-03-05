@@ -370,12 +370,7 @@ namespace Hearthrock
 
             }
 
-            // deal with hero weapon and atk
-            HearthrockEngine.Trace("HasWeapon " + player.HasWeapon());
-            if (player.HasWeapon())
-            {
-                HearthrockEngine.Trace("HasWeapon CanAttack " + player.GetWeaponCard().GetEntity().CanAttack());
-            }
+
             if (minion_taunts_enemy.Count == 0 && player.HasWeapon() && player.GetWeaponCard().GetEntity().CanAttack())
             {
                 action.type = RockActionTypeInternal.Attack;

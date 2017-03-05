@@ -33,11 +33,4 @@ namespace Hearthrock
         PRACTICE_NORMAL,
         PRACTICE_EXPERT,
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public class RockYield
-    {
-    }
 }

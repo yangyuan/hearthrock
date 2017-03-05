@@ -87,5 +87,9 @@ namespace Hearthrock.Client
 
             UnpatchButton.IsEnabled = true;
         }
+
+        private void DebugButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

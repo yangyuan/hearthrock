@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock.Client", "Hearth
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hearthrock.Contracts", "Hearthrock.Contracts\Hearthrock.Contracts.shproj", "{5161FB1C-A6DA-485E-8595-5FD28FCE73E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock.Tests", "Hearthrock.Tests\Hearthrock.Tests.csproj", "{01C4EC17-3C64-472F-97B4-877B96B7765F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Hearthrock.Contracts\Hearthrock.Contracts.projitems*{5161fb1c-a6da-485e-8595-5fd28fce73e1}*SharedItemsImports = 13
@@ -27,6 +29,10 @@ Global
 		{48B8CBF6-670E-4981-B77E-15470F78A8BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48B8CBF6-670E-4981-B77E-15470F78A8BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48B8CBF6-670E-4981-B77E-15470F78A8BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01C4EC17-3C64-472F-97B4-877B96B7765F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C4EC17-3C64-472F-97B4-877B96B7765F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C4EC17-3C64-472F-97B4-877B96B7765F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C4EC17-3C64-472F-97B4-877B96B7765F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

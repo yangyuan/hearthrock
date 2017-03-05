@@ -5,9 +5,18 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using UnityEngine;
+using UnityEngine.Experimental.Networking;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Hearthrock
 {
+    using Contracts;
+    using Hearthrock.Configuration;
+    using MiniJson;
+    using Robot;
+
     /// <summary>
     /// This class is the bridge between Hearthstone and Hearthrock.
     /// HearthrockEngine will used to do the Artificial Intelligence
@@ -21,14 +30,25 @@ namespace Hearthrock
         private DateTime delay_start = DateTime.Now;
         private long delay_length = 0;
 
+        private RockConfiguration configuration;
+        private RockRobotClient robotClient;
+
         public HearthrockEngine()
         {
+            this.Reload();
         }
 
         public void SwitchMode(int mode)
         {
             // do a simple map
             GameMode = (RockGameMode) mode;
+        }
+
+        public void Reload()
+        {
+            var configurationString = File.ReadAllText("Hearthstone_Data\\Managed\\hearthrock.json");
+            this.configuration = MiniJsonSerializer.Deserialize<RockConfiguration>(configurationString);
+            this.robotClient = new RockRobotClient(this.configuration);
         }
 
         /// <summary>
@@ -63,18 +83,20 @@ namespace Hearthrock
         /// <param name="message">The trace info.</param>
         public void RockInfo(string message)
         {
-            Trace(message);
+            this.Trace(message);
             UIStatus.Get().AddInfo(message);
         }
 
         /// <summary>
-        /// Log trace info on log file.
+        /// Display trace info to screen.
         /// </summary>
         /// <param name="message">The trace info.</param>
-        public static void Trace(string message)
+        public void Trace(string message)
         {
-            Console.WriteLine($"{DateTime.Now}: {message}");
+            this.robotClient.SendTrace(message);
         }
+
+
 
         SceneMgr.Mode scenemgr_mode = SceneMgr.Mode.INVALID;
         private void LogSceneMode(SceneMgr.Mode mode)
@@ -252,6 +274,28 @@ namespace Hearthrock
             }
         }
 
+        private RockActionContext rockActionContext;
+
+        private double OnRockAI2()
+        {
+            if (rockActionContext == null || rockActionContext.IsDone() || rockActionContext.IsInvalid(GameState.Get()))
+            {
+                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
+                var rockAction = this.robotClient.GetAction(scene);
+                if (rockAction != null)
+                {
+                    this.rockActionContext = new RockActionContext(rockAction);
+                }
+                else
+                {
+                    OnRockTurnEnd();
+                }
+            }
+
+            this.rockActionContext.Apply(GameState.Get());
+            return 0.5;
+        }
+
         private float OnRockTurnStart()
         {
             ActionRocking = null;
@@ -308,7 +352,6 @@ namespace Hearthrock
         {
             if (EndGameScreen.Get() != null)
             {
-                HoldBack(5000);
                 RockInfo("Game Over");
                 // EndGameScreen.Get().ContinueEvents();
                 try
@@ -330,21 +373,13 @@ namespace Hearthrock
             {
                 int delay = r.Next(400, 600);
                 HoldBack(delay);
-                /*
-                Spell spell = action.card1.GetBattlecrySpell();
-                if (spell != null)
-                {
-                }
-                else
-                {
-                    Notify("No Spell ");
-                }
-                */
 
-                //bool x = GameState.Get().HasResponse(action.card1.GetEntity());
-                
+                InputManager input_mgr = InputManager.Get();
+                input_mgr.DisableInput();
 
-                HearthstoneClickCard(action.card1);
+
+                RockInputManager.ClickCard(RockActionContext.GetCard(GameState.Get(), action.card1.GetEntity().GetEntityId()));
+                // HearthstoneClickCard(action.card1);
                 action.step = 1;
             }
             else if (action.step == 1)
@@ -373,18 +408,6 @@ namespace Hearthrock
             {
                 action.step = -1;
                 return;
-                // maybe can do sth to deal with card with spell
-                if (InputManager.Get().GetHeldCard() == null)
-                {
-                    action.step = -1;
-                    return;
-                }
-                int delay = r.Next(300, 600);
-                HoldBack(delay);
-                if (action.type == RockActionTypeInternal.Play)
-                {
-                    action.step = -1;
-                }
             }
         }
 
@@ -423,6 +446,9 @@ namespace Hearthrock
                     OnRockTurnEnd();
                     return 0.25;
                 }
+
+                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
+                this.robotClient.GetAction(scene);
 
                 RockActionInternal action = HearthrockRobot.RockIt();
                 if (action.type == RockActionTypeInternal.Play)
@@ -634,5 +660,6 @@ namespace Hearthrock
             MethodInfo method = input.GetType().GetMethod("HandleClickOnCard", BindingFlags.NonPublic | BindingFlags.Instance);
             method.Invoke(input, new object[] { card.gameObject , true});
         }
+
     }
 }

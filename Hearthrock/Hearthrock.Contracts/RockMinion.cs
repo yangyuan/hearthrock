@@ -4,7 +4,7 @@
 
 namespace Hearthrock.Contracts
 {
-    class RockMinion
+    public class RockMinion
     {
         public int RockId { get; set; }
 

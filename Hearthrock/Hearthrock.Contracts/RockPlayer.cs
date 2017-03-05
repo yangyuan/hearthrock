@@ -6,7 +6,7 @@ namespace Hearthrock.Contracts
 {
     using System.Collections.Generic;
 
-    class RockPlayer
+    public class RockPlayer
     {
         public int Resources { get; set; }
 

@@ -9,6 +9,7 @@
     <Grid>
         <Button x:Name="PatchButton" Content="Patch" HorizontalAlignment="Left" Margin="80,40,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="PatchButton_Click"/>
         <Button x:Name="UnpatchButton" Content="Unpatch" Margin="0,40,80,0" VerticalAlignment="Top" Height="30" Click="UnpatchButton_Click" HorizontalAlignment="Right" Width="100"/>
+        <Button x:Name="DebugButton" Content="Debug" HorizontalAlignment="Right" Margin="0,89,159.333,0" VerticalAlignment="Top" Width="75" Height="30" Click="DebugButton_Click"/>
 
     </Grid>
 </Window>
