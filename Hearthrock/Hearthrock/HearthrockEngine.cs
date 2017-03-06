@@ -1,21 +1,14 @@
 ﻿using PegasusShared;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using UnityEngine;
-using UnityEngine.Experimental.Networking;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Hearthrock
 {
-    using Contracts;
+    using Hearthrock.Contracts;
     using Hearthrock.Configuration;
-    using MiniJson;
-    using Robot;
+    using Hearthrock.MiniJson;
+    using Hearthrock.Engine;
 
     /// <summary>
     /// This class is the bridge between Hearthstone and Hearthrock.
@@ -260,7 +253,7 @@ namespace Hearthrock
             {
                 if (TurnReady)
                 {
-                    return OnRockAI();
+                    return OnRockAI2();
                 }
                 else
                 {
@@ -278,44 +271,45 @@ namespace Hearthrock
 
         private double OnRockAI2()
         {
-            if (rockActionContext == null || rockActionContext.IsDone() || rockActionContext.IsInvalid(GameState.Get()))
+            if (EndTurnButton.Get().HasNoMorePlays())
+            {
+                OnRockTurnEnd();
+                this.rockActionContext = null;
+                return 0.25;
+            }
+
+            if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid(GameState.Get()))
             {
                 var scene = RockSnapshotter.SnapshotScene(GameState.Get());
                 var rockAction = this.robotClient.GetAction(scene);
                 if (rockAction != null)
                 {
                     this.rockActionContext = new RockActionContext(rockAction);
+                    RockInfo(this.rockActionContext.Interpretion(GameState.Get()));
                 }
                 else
                 {
                     OnRockTurnEnd();
+                    return 0.25;
                 }
             }
 
-            this.rockActionContext.Apply(GameState.Get());
-            return 0.5;
+            this.rockActionContext.Apply(GameState.Get(), this);
+            return 1;
         }
 
         private float OnRockTurnStart()
         {
-            ActionRocking = null;
             TurnReady = true;
-            SingletonEndTurn = false;
-            OnRocking = false;
 
             return 5;
         }
         private float OnRockTurnEnd()
         {
-            if (SingletonEndTurn) return 1;
-            SingletonEndTurn = true;
             RockInfo("Job's Done!");
-            ActionRocking = null;
             TurnReady = false;
             HearthrockRobot.RockEnd();
             InputManager.Get().DoEndTurnButton();
-            //
-            OnRocking = false;
             return 3;
         }
 
@@ -331,8 +325,6 @@ namespace Hearthrock
         {
             MulliganState = 0;
             TurnReady = false;
-            ActionRocking = null;
-            OnRocking = false;
         }
 
         private void ClearUIQuest()
@@ -364,123 +356,6 @@ namespace Hearthrock
             return 5;
         }
         
-        RockActionInternal ActionRocking = null;
-        private void OnAction(RockActionInternal action)
-        {
-            System.Random r = new System.Random();
-            
-            if (action.step == 0)
-            {
-                int delay = r.Next(400, 600);
-                HoldBack(delay);
-
-                InputManager input_mgr = InputManager.Get();
-                input_mgr.DisableInput();
-
-
-                RockInputManager.ClickCard(RockActionContext.GetCard(GameState.Get(), action.card1.GetEntity().GetEntityId()));
-                // HearthstoneClickCard(action.card1);
-                action.step = 1;
-            }
-            else if (action.step == 1)
-            {
-                int delay = r.Next(300, 600);
-                if (action.type == RockActionTypeInternal.Attack)
-                {
-                    delay += 400;
-                }
-                HoldBack(delay);
-                if (action.type == RockActionTypeInternal.Play)
-                {
-                    InputManager input_mgr = InputManager.Get();
-                    input_mgr.DropHeldCard();
-                    //MethodInfo dynMethod = input_mgr.GetType().GetMethod("DropHeldCard", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { }, null);
-                    //dynMethod.Invoke(input_mgr, new object[] { });
-                    action.step = 2;
-                }
-                else if (action.type == RockActionTypeInternal.Attack)
-                {
-                    HearthstoneClickCard(action.card2);
-                    action.step = -1;
-                }
-            }
-            else if (action.step == 2)
-            {
-                action.step = -1;
-                return;
-            }
-        }
-
-
-        bool SingletonEndTurn = false;
-        bool OnRocking = false;
-        private double OnRockAI()
-        {
-            if (OnRocking) return 1;
-            OnRocking = true;
-
-            try
-            {
-
-                if (ActionRocking != null && ActionRocking.step == -1)
-                {
-                    ActionRocking = null;
-                }
-                if (ActionRocking != null)
-                {
-                    try
-                    {
-                        OnAction(ActionRocking);
-                    }
-                    catch
-                    {
-                        ActionRocking = null;
-                    }
-                    return 1;
-                }
-
-                // ActionRocking = should be null;
-
-                if (EndTurnButton.Get().HasNoMorePlays())
-                {
-                    OnRockTurnEnd();
-                    return 0.25;
-                }
-
-                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
-                this.robotClient.GetAction(scene);
-
-                RockActionInternal action = HearthrockRobot.RockIt();
-                if (action.type == RockActionTypeInternal.Play)
-                {
-                    SingletonEndTurn = false;
-                    RockInfo("Play: " + action.card1.GetEntity().GetName());
-                    ActionRocking = action;
-                }
-                else if (action.type == RockActionTypeInternal.Attack)
-                {
-                    SingletonEndTurn = false;
-                    RockInfo("Attack: " + action.card1.GetEntity().GetName() + " > " + action.card2.GetEntity().GetName());
-                    ActionRocking = action;
-                }
-                else
-                {
-                    OnRockTurnEnd();
-                }
-
-                
-            }
-            catch (Exception e){
-                Trace("OnRockAI ex " + e.ToString());
-            }
-            finally
-            {
-                OnRocking = false;
-            }
-
-            return 0.1;
-        }
-
 
         int MulliganState = 0;
         private double OnRockMulligan()

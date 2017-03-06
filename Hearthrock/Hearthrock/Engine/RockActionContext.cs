@@ -1,11 +1,10 @@
 ﻿using Hearthrock.Contracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hearthrock.Robot
+namespace Hearthrock.Engine
 {
     class RockActionContext
     {
@@ -18,8 +17,38 @@ namespace Hearthrock.Robot
             this.step = 0;
         }
 
-        public void Apply(GameState gameState)
+        public string Interpretion(GameState gameState)
         {
+            var sourceEnity = GetEntity(gameState, this.rockAction.Source);
+            if (this.rockAction.Targets.Count == 0)
+            {
+                return "Play: " + sourceEnity.GetName();
+            }
+            else
+            {
+                var targetEnities = new List<Entity>();
+                foreach (var rockId in this.rockAction.Targets)
+                {
+                    targetEnities.Add(GetEntity(gameState, rockId));
+                }
+
+                string ret = "Attack: " + sourceEnity.GetName() + " ";
+                foreach (var targetEnity in targetEnities)
+                {
+                    ret += " > " + targetEnity.GetName();
+                }
+
+                return ret;
+            }
+        }
+
+        public void Apply(GameState gameState, HearthrockEngine engine)
+        {
+
+            engine.Trace(MiniJson.MiniJsonSerializer.Serialize(this.rockAction));
+            engine.Trace(this.step.ToString());
+
+
             // Pick source card
             if (this.step == 0)
             {
@@ -32,7 +61,7 @@ namespace Hearthrock.Robot
 
             if (this.step == 1 && this.rockAction.Targets.Count == 0)
             {
-                InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
+                // InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
                 RockInputManager.DropCard();
                 //RockInputManager.EnableInput();
 
@@ -89,6 +118,11 @@ namespace Hearthrock.Robot
         public static Card GetCard(GameState gameState, int rockId)
         {
             return GameState.Get().GetEntity(rockId)?.GetCard();
+        }
+
+        public static Entity GetEntity(GameState gameState, int rockId)
+        {
+            return GameState.Get().GetEntity(rockId);
         }
     }
 }

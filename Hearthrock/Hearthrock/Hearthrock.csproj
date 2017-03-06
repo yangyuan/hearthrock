@@ -70,10 +70,10 @@
     <Compile Include="HearthrockUtils.cs" />
     <Compile Include="MiniJson\MiniJsonSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Robot\RockInputManager.cs" />
-    <Compile Include="Robot\RockActionContext.cs" />
-    <Compile Include="Robot\RockRobotClient.cs" />
-    <Compile Include="Robot\RockSnapshotter.cs" />
+    <Compile Include="Engine\RockInputManager.cs" />
+    <Compile Include="Engine\RockActionContext.cs" />
+    <Compile Include="Engine\RockRobotClient.cs" />
+    <Compile Include="Engine\RockSnapshotter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -81,6 +81,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\Hearthrock.Contracts\Hearthrock.Contracts.projitems" Label="Shared" />
+  <Import Project="..\Hearthrock.Robot\Hearthrock.Robot.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

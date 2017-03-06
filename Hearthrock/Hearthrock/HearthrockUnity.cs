@@ -4,9 +4,9 @@
 
 namespace Hearthrock
 {
-    using Robot;
     using System.Collections;
     using UnityEngine;
+    using Hearthrock.Engine;
 
     /// <summary>
     /// Unity Component of Hearthrock
@@ -105,7 +105,7 @@ namespace Hearthrock
                     Engine.Reload();
                     Engine.RockInfo("Hearthrock Started");
 
-                    RockInputManager.DisableInput();
+                    // RockInputManager.DisableInput();
                 }
                 else
                 {
@@ -113,7 +113,7 @@ namespace Hearthrock
                     Engine.Reload();
                     Engine.RockInfo("Hearthrock Paused");
 
-                    RockInputManager.EnableInput();
+                    // RockInputManager.EnableInput();
                 }
                 Engine.Clear();
             }

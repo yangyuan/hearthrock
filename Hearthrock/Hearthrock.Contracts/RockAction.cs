@@ -31,9 +31,9 @@ namespace Hearthrock.Contracts
             var action = new RockAction();
             action.Source = rockIds[0];
             action.Targets = new List<int>();
-            for (var i=0; i< rockIds.Length; i++)
+            for (var i=1; i< rockIds.Length; i++)
             {
-                action.Targets.Add(i);
+                action.Targets.Add(rockIds[i]);
             }
 
             return action;

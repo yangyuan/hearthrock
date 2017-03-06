@@ -1,5 +1,5 @@
 ﻿
-namespace Hearthrock.Robot
+namespace Hearthrock.Engine
 {
     using Hearthrock.Contracts;
     using System.Collections.Generic;
@@ -35,11 +35,55 @@ namespace Hearthrock.Robot
             var rockHero = new RockHero();
 
             var heroEntity = player.GetHero();
+            switch (player.GetHeroCard().GetEntity().GetClass())
+            {
+                case TAG_CLASS.WARLOCK:
+                    rockHero.Class = RockHeroClass.Warlock;
+                    break;
+                case TAG_CLASS.HUNTER:
+                    rockHero.Class = RockHeroClass.Hunter;
+                    break;
+                case TAG_CLASS.DRUID:
+                    rockHero.Class = RockHeroClass.Druid;
+                    break;
+                case TAG_CLASS.PALADIN:
+                    rockHero.Class = RockHeroClass.Paladin;
+                    break;
+                case TAG_CLASS.ROGUE:
+                    rockHero.Class = RockHeroClass.Rogue;
+                    break;
+                case TAG_CLASS.SHAMAN:
+                    rockHero.Class = RockHeroClass.Shaman;
+                    break;
+                case TAG_CLASS.WARRIOR:
+                    rockHero.Class = RockHeroClass.Warrior;
+                    break;
+                case TAG_CLASS.PRIEST:
+                    rockHero.Class = RockHeroClass.Priest;
+                    break;
+                case TAG_CLASS.MAGE:
+                    rockHero.Class = RockHeroClass.Mage;
+                    break;
+                default:
+                    rockHero.Class = RockHeroClass.None;
+                    break;
+            }
             rockHero.RockId = heroEntity.GetEntityId();
-            rockHero.CanAttack = heroEntity.CanAttack();
             rockHero.Damage = heroEntity.GetATK();
-            rockHero.HasWeapon = player.HasWeapon();
+            rockHero.CanAttack = heroEntity.CanAttack();
+            rockHero.IsExhausted = heroEntity.IsExhausted();
             rockHero.Health = heroEntity.GetRealTimeRemainingHP();
+            rockHero.HasWeapon = player.HasWeapon();
+            if (rockHero.HasWeapon)
+            {
+                rockHero.WeaponRockId = heroEntity.GetWeaponCard().GetEntity().GetEntityId();
+                rockHero.WeaponCanAttack = heroEntity.GetWeaponCard().GetEntity().CanAttack();
+            }
+            else
+            {
+                rockHero.WeaponRockId = 0;
+                rockHero.WeaponCanAttack = false;
+            }
 
             return rockHero;
         }
@@ -66,13 +110,19 @@ namespace Hearthrock.Robot
         {
             var rockMinion = new RockMinion();
 
+            rockMinion.RockId = minion.GetEntityId();
+            rockMinion.Health = minion.GetRealTimeRemainingHP();
             rockMinion.BaseHealth = minion.GetHealth();
             rockMinion.CanAttack = minion.CanAttack();
             rockMinion.CanBeAttacked = minion.CanBeAttacked();
             rockMinion.Damage = minion.GetATK();
             rockMinion.HasTaunt = minion.HasTaunt();
             rockMinion.HasWindfury = minion.HasWindfury();
-            rockMinion.Health = minion.GetRealTimeRemainingHP();
+            rockMinion.HasDivineShield = minion.HasDivineShield();
+            rockMinion.IsStealthed = minion.IsStealthed();
+            rockMinion.IsExhausted = minion.IsExhausted();
+            rockMinion.IsFrozen = minion.IsFrozen();
+            rockMinion.IsAsleep = minion.IsAsleep();
 
             return rockMinion;
         }
@@ -101,6 +151,8 @@ namespace Hearthrock.Robot
             rockCard.IsMinion = card.IsMinion();
             rockCard.IsSpell = card.IsSpell();
             rockCard.IsWeapon = card.IsWeapon();
+            rockCard.HasTaunt = card.HasTaunt();
+            rockCard.HasCharge = card.HasCharge();
 
             return rockCard;
         }

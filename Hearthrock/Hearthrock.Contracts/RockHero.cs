@@ -8,12 +8,20 @@ namespace Hearthrock.Contracts
     {
         public int RockId { get; set; }
 
+        public RockHeroClass Class { get; set; }
+
         public int Damage { get; set; }
 
         public int Health { get; set; }
 
+        public bool CanAttack { get; set; }
+
+        public bool IsExhausted { get; set; }
+        
         public bool HasWeapon { get; set; }
 
-        public bool CanAttack { get; set; }
+        public int WeaponRockId { get; set; }
+
+        public bool WeaponCanAttack { get; set; }
     }
 }

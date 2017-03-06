@@ -10,6 +10,8 @@ namespace Hearthrock.Contracts
     {
         public int Resources { get; set; }
 
+        public bool PowerAvailable { get; set; }
+
         public RockHero Hero { get; set; }
 
         public RockCard Power { get; set; }

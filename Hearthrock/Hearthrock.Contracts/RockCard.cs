@@ -1,4 +1,4 @@
-﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockCard.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -18,5 +18,9 @@ namespace Hearthrock.Contracts
         public bool IsWeapon { get; set; }
 
         public bool IsMinion { get; set; }
+
+        public bool HasTaunt { get; set; }
+
+        public bool HasCharge { get; set; }
     }
 }

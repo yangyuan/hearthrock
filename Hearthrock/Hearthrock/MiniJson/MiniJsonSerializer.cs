@@ -30,6 +30,11 @@ namespace Hearthrock.MiniJson
                 return Convert.ChangeType(obj, type);
             }
 
+            if (type.IsEnum)
+            {
+                return Convert.ChangeType(obj, typeof(int));
+            }
+
             object instance = Activator.CreateInstance(type);
 
             if (instance is IList && type.IsGenericType)
@@ -65,7 +70,11 @@ namespace Hearthrock.MiniJson
             // other types
             foreach (var pro in instance.GetType().GetProperties())
             {
-                pro.SetValue(instance, Construct(map[pro.Name], pro.PropertyType), null);
+                try
+                {
+                    pro.SetValue(instance, Construct(map[pro.Name], pro.PropertyType), null);
+                }
+                catch { }
             }
 
             return instance;
@@ -86,6 +95,11 @@ namespace Hearthrock.MiniJson
                         return obj;
                     }
                 }
+            }
+
+            if (type.IsEnum)
+            {
+                return (int)obj;
             }
 
 

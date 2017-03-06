@@ -11,10 +11,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hearthrock.Contracts", "Hea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock.Tests", "Hearthrock.Tests\Hearthrock.Tests.csproj", "{01C4EC17-3C64-472F-97B4-877B96B7765F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hearthrock.Robot", "Hearthrock.Robot\Hearthrock.Robot.shproj", "{8858C675-4990-46E8-AA26-12D764F9BFB6}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Hearthrock.Contracts\Hearthrock.Contracts.projitems*{5161fb1c-a6da-485e-8595-5fd28fce73e1}*SharedItemsImports = 13
 		Hearthrock.Contracts\Hearthrock.Contracts.projitems*{8582d6df-67b8-47cd-9104-a7cceb1a43e2}*SharedItemsImports = 4
+		Hearthrock.Robot\Hearthrock.Robot.projitems*{8582d6df-67b8-47cd-9104-a7cceb1a43e2}*SharedItemsImports = 4
+		Hearthrock.Robot\Hearthrock.Robot.projitems*{8858c675-4990-46e8-aa26-12d764f9bfb6}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

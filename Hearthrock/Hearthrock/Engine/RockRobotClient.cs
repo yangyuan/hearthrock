@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Robot
+namespace Hearthrock.Engine
 {
     using Configuration;
     using Contracts;
@@ -28,6 +28,19 @@ namespace Hearthrock.Robot
 
         public RockAction GetAction(RockScene scene)
         {
+            var robot = new Robot.Sample.SampleRobot();
+            var action = robot.GetAction(scene);
+
+            SendTrace(MiniJson.MiniJsonSerializer.Serialize(scene));
+            if (action != null)
+            {
+                SendTrace(MiniJson.MiniJsonSerializer.Serialize(action));
+            } else
+            {
+                SendTrace("NO ACTION!");
+            }
+            return action;
+
             try
             {
                 string sceneJson = MiniJsonSerializer.Serialize(scene);

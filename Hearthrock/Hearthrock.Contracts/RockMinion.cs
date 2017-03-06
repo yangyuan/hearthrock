@@ -1,4 +1,4 @@
-﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockMinion.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -29,5 +29,7 @@ namespace Hearthrock.Contracts
         public bool HasTaunt { get; set; }
 
         public bool HasWindfury { get; set; }
+
+        public bool HasDivineShield { get; set; }
     }
 }
