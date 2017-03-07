@@ -1,4 +1,4 @@
-﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockAction.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -22,10 +22,10 @@ namespace Hearthrock.Contracts
         public List<int> Targets { set; get; }
 
         /// <summary>
-        /// 
+        /// The factory method.
         /// </summary>
-        /// <param name="rockIds"></param>
-        /// <returns></returns>
+        /// <param name="rockIds">A list of RockId. The first one is source, others are targets.</param>
+        /// <returns>The RockAction.</returns>
         public static RockAction Create(params int[] rockIds)
         {
             var action = new RockAction();

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Hearthrock.Engine
+namespace Hearthrock.Pegasus
 {
-    public static class RockPegasusClient
+    public static class RockPegasusInput
     {
 
         public static void ClickCard(Card card)

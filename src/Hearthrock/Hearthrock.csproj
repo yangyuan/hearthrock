@@ -62,13 +62,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\RockPegasusHelper.cs" />
+    <Compile Include="Pegasus\RockPegasusHelper.cs" />
     <Compile Include="HearthrockEngine.cs" />
+    <Compile Include="Pegasus\RockPegasusClient.cs" />
     <Compile Include="RockUnity.cs" />
     <Compile Include="HearthrockUtils.cs" />
     <Compile Include="Serialization\RockSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\RockPegasusClient.cs" />
+    <Compile Include="Pegasus\RockPegasusInput.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockBotClient.cs" />
     <Compile Include="Engine\RockSnapshotter.cs" />
@@ -78,6 +79,7 @@
     <None Include="hearthrock.json" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Hearthrock.Contracts\Hearthrock.Contracts.projitems" Label="Shared" />
   <Import Project="..\Hearthrock.Bot\Hearthrock.Bot.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

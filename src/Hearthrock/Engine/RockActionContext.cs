@@ -1,5 +1,4 @@
-﻿using Hearthrock.Contracts;
-using Hearthrock.Serialization;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Hearthrock.Engine
 {
+    using Hearthrock.Contracts;
+    using Hearthrock.Pegasus;
+    using Hearthrock.Serialization;
+
     class RockActionContext
     {
         RockAction rockAction;
@@ -54,7 +57,7 @@ namespace Hearthrock.Engine
             if (this.step == 0)
             {
                 //RockInputManager.DisableInput();
-                RockPegasusClient.ClickCard(GetCard(gameState, this.rockAction.Source));
+                RockPegasusInput.ClickCard(GetCard(gameState, this.rockAction.Source));
 
                 this.step = 1;
                 return;
@@ -63,7 +66,7 @@ namespace Hearthrock.Engine
             if (this.step == 1 && this.rockAction.Targets.Count == 0)
             {
                 // InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
-                RockPegasusClient.DropCard();
+                RockPegasusInput.DropCard();
                 //RockInputManager.EnableInput();
 
                 this.step = 2;
@@ -73,13 +76,13 @@ namespace Hearthrock.Engine
             // other scenarios
             if (this.rockAction.Targets.Count >= this.step)
             {
-                RockPegasusClient.ClickCard(GetCard(gameState, this.rockAction.Targets[this.step - 1]));
+                RockPegasusInput.ClickCard(GetCard(gameState, this.rockAction.Targets[this.step - 1]));
                 this.step++;
                 return;
             }
             else
             {
-                RockPegasusClient.DropCard();
+                RockPegasusInput.DropCard();
                 //RockInputManager.EnableInput();
                 this.step++;
             }

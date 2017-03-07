@@ -4,6 +4,9 @@
 
 namespace Hearthrock.Contracts
 {
+    /// <summary>
+    /// Card contract of Hearthrock
+    /// </summary>
     public class RockCard
     {
         public int RockId { get; set; }
