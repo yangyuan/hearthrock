@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Hearthrock.MiniJson;
+using Hearthrock.Serialization;
 
 namespace Hearthrock.Tests
 {
@@ -15,7 +15,7 @@ namespace Hearthrock.Tests
         public void TestMethod2()
         {
             var rockScene = GenerateRockScene();
-            var x = MiniJsonSerializer.Serialize(rockScene);
+            var x = RockJsonSerializer.Serialize(rockScene);
         }
 
 

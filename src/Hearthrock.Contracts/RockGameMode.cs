@@ -5,19 +5,16 @@
 namespace Hearthrock.Contracts
 {
     /// <summary>
-    /// Rock hero classes
+    /// The game modes supported by hearthstone.
     /// </summary>
-    public enum RockHeroClass
+    public enum RockGameMode
     {
         None,
-        Druid,
-        Hunter,
-        Paladin,
-        Priest,
-        Rogue,
-        Shaman,
-        Mage,
-        Warlock,
-        Warrior
+        NormalPractice,
+        ExpertPractice,
+        Casual,
+        Ranked,
+        WhildCasual,
+        WhildRanked
     }
 }

@@ -6,8 +6,7 @@ using System.Reflection;
 namespace Hearthrock
 {
     using Hearthrock.Contracts;
-    using Hearthrock.Configuration;
-    using Hearthrock.MiniJson;
+    using Hearthrock.Serialization;
     using Hearthrock.Engine;
 
     /// <summary>
@@ -24,7 +23,7 @@ namespace Hearthrock
         private long delay_length = 0;
 
         private RockConfiguration configuration;
-        private RockRobotClient robotClient;
+        private RockBotClient robotClient;
 
         public HearthrockEngine()
         {
@@ -40,8 +39,8 @@ namespace Hearthrock
         public void Reload()
         {
             var configurationString = File.ReadAllText("Hearthstone_Data\\Managed\\hearthrock.json");
-            this.configuration = MiniJsonSerializer.Deserialize<RockConfiguration>(configurationString);
-            this.robotClient = new RockRobotClient(this.configuration);
+            this.configuration = RockJsonSerializer.Deserialize<RockConfiguration>(configurationString);
+            this.robotClient = new RockBotClient(this.configuration);
         }
 
         /// <summary>

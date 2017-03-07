@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Hearthrock.Engine
 {
-    public static class RockInputManager
+    public static class RockPegasusClient
     {
 
         public static void ClickCard(Card card)

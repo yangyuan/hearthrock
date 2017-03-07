@@ -1,4 +1,5 @@
 ﻿using Hearthrock.Contracts;
+using Hearthrock.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,7 +46,7 @@ namespace Hearthrock.Engine
         public void Apply(GameState gameState, HearthrockEngine engine)
         {
 
-            engine.Trace(MiniJson.MiniJsonSerializer.Serialize(this.rockAction));
+            engine.Trace(RockJsonSerializer.Serialize(this.rockAction));
             engine.Trace(this.step.ToString());
 
 
@@ -53,7 +54,7 @@ namespace Hearthrock.Engine
             if (this.step == 0)
             {
                 //RockInputManager.DisableInput();
-                RockInputManager.ClickCard(GetCard(gameState, this.rockAction.Source));
+                RockPegasusClient.ClickCard(GetCard(gameState, this.rockAction.Source));
 
                 this.step = 1;
                 return;
@@ -62,7 +63,7 @@ namespace Hearthrock.Engine
             if (this.step == 1 && this.rockAction.Targets.Count == 0)
             {
                 // InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
-                RockInputManager.DropCard();
+                RockPegasusClient.DropCard();
                 //RockInputManager.EnableInput();
 
                 this.step = 2;
@@ -72,13 +73,13 @@ namespace Hearthrock.Engine
             // other scenarios
             if (this.rockAction.Targets.Count >= this.step)
             {
-                RockInputManager.ClickCard(GetCard(gameState, this.rockAction.Targets[this.step - 1]));
+                RockPegasusClient.ClickCard(GetCard(gameState, this.rockAction.Targets[this.step - 1]));
                 this.step++;
                 return;
             }
             else
             {
-                RockInputManager.DropCard();
+                RockPegasusClient.DropCard();
                 //RockInputManager.EnableInput();
                 this.step++;
             }

@@ -4,9 +4,8 @@
 
 namespace Hearthrock.Engine
 {
-    using Configuration;
-    using Contracts;
-    using MiniJson;
+    using Hearthrock.Contracts;
+    using Hearthrock.Serialization;
     using System;
     using System.Net;
     using UnityEngine;
@@ -14,13 +13,13 @@ namespace Hearthrock.Engine
     /// <summary>
     /// 
     /// </summary>
-    public class RockRobotClient
+    public class RockBotClient
     {
 
         private RockConfiguration configuration;
         private WebClient webClient;
 
-        public RockRobotClient(RockConfiguration configuration)
+        public RockBotClient(RockConfiguration configuration)
         {
             this.configuration = configuration;
             webClient = new WebClient();
@@ -31,10 +30,10 @@ namespace Hearthrock.Engine
             var robot = new Bot.RockBot();
             var action = robot.GetAction(scene);
 
-            SendTrace(MiniJson.MiniJsonSerializer.Serialize(scene));
+            SendTrace(RockJsonSerializer.Serialize(scene));
             if (action != null)
             {
-                SendTrace(MiniJson.MiniJsonSerializer.Serialize(action));
+                SendTrace(RockJsonSerializer.Serialize(action));
             } else
             {
                 SendTrace("NO ACTION!");
@@ -43,11 +42,11 @@ namespace Hearthrock.Engine
 
             try
             {
-                string sceneJson = MiniJsonSerializer.Serialize(scene);
-                string actionJson = this.Post(configuration.RobotEndpoint + "action", sceneJson);
+                string sceneJson = RockJsonSerializer.Serialize(scene);
+                string actionJson = this.Post(configuration.BotEndpoint + "action", sceneJson);
                 SendTrace(actionJson);
-                var rockAction = MiniJsonSerializer.Deserialize<RockAction>(actionJson);
-                SendTrace(MiniJsonSerializer.Serialize(rockAction));
+                var rockAction = RockJsonSerializer.Deserialize<RockAction>(actionJson);
+                SendTrace(RockJsonSerializer.Serialize(rockAction));
                 return rockAction;
             }
             catch (Exception e)

@@ -273,7 +273,6 @@ namespace Hearthrock.Bot
 
         private static RockAction TryPlayKill(List<RockMinion> attackers, List<RockMinion> targets)
         {
-            RockActionInternal action = new RockActionInternal();
             RockMinion bestTarget = null;
             RockMinion bestAttacker = null;
 

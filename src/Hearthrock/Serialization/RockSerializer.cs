@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.MiniJson
+namespace Hearthrock.Serialization
 {
     using System;
     using System.Collections;
@@ -10,7 +10,7 @@ namespace Hearthrock.MiniJson
 
     using Facebook.MiniJSON;
 
-    public class MiniJsonSerializer
+    public class RockJsonSerializer
     {
         public static T Deserialize<T>(string json)
         {

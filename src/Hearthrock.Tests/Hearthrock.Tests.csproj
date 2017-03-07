@@ -57,7 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="MiniJsonSerializerTests.cs" />
-    <Compile Include="Robot\SampleRobotTests.cs" />
+    <Compile Include="Bot\RockBotTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

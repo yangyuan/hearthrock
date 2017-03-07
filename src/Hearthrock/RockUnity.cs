@@ -1,4 +1,4 @@
-﻿// <copyright file="HearthrockUnity.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockUnity.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace Hearthrock
     /// <summary>
     /// Unity Component of Hearthrock
     /// </summary>
-    class HearthrockUnity : MonoBehaviour
+    class RockUnity : MonoBehaviour
     {
         const string Title = "Hearthrock";
         const double UIScale = 1.5;
@@ -34,16 +34,16 @@ namespace Hearthrock
         private HearthrockEngine Engine = new HearthrockEngine();
 
         /// <summary>
-        /// The method to inject HearthrockUnity
+        /// The method to inject RockUnity.
         /// </summary>
         public static void Hook()
         {
             GameObject sceneObject = SceneMgr.Get().gameObject;
-            sceneObject.AddComponent<HearthrockUnity>();
+            sceneObject.AddComponent<RockUnity>();
         }
 
         /// <summary>
-        /// For Start Message of MonoBehaviour
+        /// For Start Message of MonoBehaviour.
         /// </summary>
         public void Start()
         {
@@ -52,7 +52,7 @@ namespace Hearthrock
         }
 
         /// <summary>
-        /// For OnGUI Message of MonoBehaviour
+        /// For OnGUI Message of MonoBehaviour.
         /// </summary>
         public void OnGUI()
         {
@@ -61,9 +61,9 @@ namespace Hearthrock
         }
 
         /// <summary>
-        /// Main loop of Hearthrock
+        /// Main loop of Hearthrock.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IEnumerator of Unity async tasks.</returns>
         private IEnumerator RockRoutine()
         {
             while (true)
@@ -102,16 +102,12 @@ namespace Hearthrock
                     HearthrockState = 1;
                     Engine.Reload();
                     Engine.RockInfo("Hearthrock Started");
-
-                    // RockInputManager.DisableInput();
                 }
                 else
                 {
                     HearthrockState = 2;
                     Engine.Reload();
                     Engine.RockInfo("Hearthrock Paused");
-
-                    // RockInputManager.EnableInput();
                 }
                 Engine.Clear();
             }
