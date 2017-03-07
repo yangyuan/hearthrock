@@ -2,12 +2,12 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Robot
+namespace Hearthrock.Contracts
 {
     using System.Collections.Generic;
     using Hearthrock.Contracts;
 
-    public interface IRockRobot
+    public interface IRockBot
     {
         List<RockCard> PickCards(List<RockCard> cards);
 

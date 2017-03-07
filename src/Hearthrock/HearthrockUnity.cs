@@ -1,4 +1,4 @@
-﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="HearthrockUnity.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -6,7 +6,6 @@ namespace Hearthrock
 {
     using System.Collections;
     using UnityEngine;
-    using Hearthrock.Engine;
 
     /// <summary>
     /// Unity Component of Hearthrock
@@ -15,7 +14,6 @@ namespace Hearthrock
     {
         const string Title = "Hearthrock";
         const double UIScale = 1.5;
-
 
         const int HearthrockWidth = (int)(120 * UIScale);
         const int HearthrockHeight = (int)(96 * UIScale);

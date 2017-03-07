@@ -308,7 +308,6 @@ namespace Hearthrock
         {
             RockInfo("Job's Done!");
             TurnReady = false;
-            HearthrockRobot.RockEnd();
             InputManager.Get().DoEndTurnButton();
             return 3;
         }

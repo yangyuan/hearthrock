@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hearthrock.Robot.Sample
+namespace Hearthrock.Bot
 {
     /// <summary>
     /// Sample Card Database.
-    /// Different robot may need different information, so robot auther is responsible to design and maintain their own database.
+    /// Different bot may need different information, so bot auther is responsible to design and maintain their own card database.
     /// </summary>
-    public class SampleCardDatabase
+    public class RockBotCardDatabase
     {
         public struct CardInfo
         {
@@ -29,7 +29,7 @@ namespace Hearthrock.Robot.Sample
                 return CardInfos[cardId];
             }
 
-            return new CardInfo {  };
+            return new CardInfo { };
         }
 
         private static Dictionary<string, CardInfo> GetCardInfos()
@@ -39,7 +39,7 @@ namespace Hearthrock.Robot.Sample
             dictionary.Add("CS2_022", new CardInfo { RequireTarget = true, CanTargetEnemyMinion = true });
             dictionary.Add("CS2_029", new CardInfo { RequireTarget = true, CanTargetEnemyHero = true });
             dictionary.Add("CS2_009", new CardInfo { RequireTarget = true, CanTargetMinion = true });
-            dictionary.Add("CS2_007", new CardInfo { RequireTarget = true, CanTargetHero =  true, CanTargetMinion = true }); // Healing Touch
+            dictionary.Add("CS2_007", new CardInfo { RequireTarget = true, CanTargetHero = true, CanTargetMinion = true }); // Healing Touch
 
             return dictionary;
         }

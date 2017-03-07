@@ -1,13 +1,13 @@
-﻿// <copyright file="SampleRobot.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockBot.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Robot.Sample
+namespace Hearthrock.Bot
 {
     using System.Collections.Generic;
     using Hearthrock.Contracts;
 
-    public class SampleRobot : IRockRobot
+    public class RockBot : IRockBot
     {
         public List<RockCard> PickCards(List<RockCard> cards)
         {
@@ -43,7 +43,7 @@ namespace Hearthrock.Robot.Sample
             var minionsAttacker = new List<RockMinion>();
 
             // The damage enemy can do in the next turn
-            int enemyNextTurnDamage = SampleRobotHelper.ComputeEnemyNextTurnDamage(enemyHero, enemyMinions);
+            int enemyNextTurnDamage = RockBotHelper.ComputeEnemyNextTurnDamage(enemyHero, enemyMinions);
 
             foreach (var enemyMinion in enemyMinions)
             {
@@ -53,12 +53,12 @@ namespace Hearthrock.Robot.Sample
                     {
                         enemyMinionsWithTaunt.Add(enemyMinion);
                     }
-                    else if (SampleRobotHelper.IsEnemyMinoinDangerous(enemyMinion))
+                    else if (RockBotHelper.IsEnemyMinoinDangerous(enemyMinion))
                     {
                         enemyMinionsDangerous.Add(enemyMinion);
                     }
 
-                    if (SampleRobotHelper.IsEnemyMinoinGreatDangerous(enemyMinion))
+                    if (RockBotHelper.IsEnemyMinoinGreatDangerous(enemyMinion))
                     {
                         enemyMinionsGreatDangerous.Add(enemyMinion);
                     }
@@ -82,13 +82,13 @@ namespace Hearthrock.Robot.Sample
                 }
             }
 
-            enemyMinions.Sort(SampleRobotHelper.MinoinPowerCompare);
-            enemyMinionsWithTaunt.Sort(SampleRobotHelper.MinoinPowerCompare);
-            minionsWithoutTaunt.Sort(SampleRobotHelper.MinoinPowerCompare);
+            enemyMinions.Sort(RockBotHelper.MinoinPowerCompare);
+            enemyMinionsWithTaunt.Sort(RockBotHelper.MinoinPowerCompare);
+            minionsWithoutTaunt.Sort(RockBotHelper.MinoinPowerCompare);
             minionsWithoutTaunt.Reverse();
-            minionsWithTaunt.Sort(SampleRobotHelper.MinoinPowerCompare);
+            minionsWithTaunt.Sort(RockBotHelper.MinoinPowerCompare);
             minionsWithTaunt.Reverse();
-            minionsAttacker.Sort(SampleRobotHelper.MinoinPowerCompare);
+            minionsAttacker.Sort(RockBotHelper.MinoinPowerCompare);
             minionsAttacker.Reverse();
 
             // TryPlayBestMinionCard
@@ -340,18 +340,18 @@ namespace Hearthrock.Robot.Sample
 
                 if (card.IsSpell)
                 {
-                    var cardInfo = SampleCardDatabase.GetCardInfo(card.CardId);
+                    var cardInfo = RockBotCardDatabase.GetCardInfo(card.CardId);
                     if (cardInfo.RequireTarget)
                     {
                         if (cardInfo.CanTargetEnemyHero)
                         {
                             return RockAction.Create(card.RockId, enemyHero.RockId);
                         }
-                        else if(cardInfo.CanTargetHero)
+                        else if (cardInfo.CanTargetHero)
                         {
                             return RockAction.Create(card.RockId, hero.RockId);
                         }
-                        else if(cardInfo.CanTargetEnemyMinion && enemyMinionsWithTaunt.Count != 0)
+                        else if (cardInfo.CanTargetEnemyMinion && enemyMinionsWithTaunt.Count != 0)
                         {
                             return RockAction.Create(card.RockId, enemyMinionsWithTaunt[0].RockId);
                         }
@@ -412,7 +412,7 @@ namespace Hearthrock.Robot.Sample
 
             List<RockCard> availableCards = new List<RockCard>();
 
-            foreach(var card in player.Cards)
+            foreach (var card in player.Cards)
             {
                 if (player.Resources >= card.Cost && card.IsMinion)
                 {

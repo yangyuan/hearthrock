@@ -1,8 +1,8 @@
-﻿// <copyright file="SampleRobotHelper.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockBotHelper.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Robot.Sample
+namespace Hearthrock.Bot
 {
     using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ namespace Hearthrock.Robot.Sample
     /// <summary>
     /// Helper class for SampleRobot
     /// </summary>
-    public static class SampleRobotHelper
+    public static class RockBotHelper
     {
         /// <summary>
         /// This function will compare the enemy minion's health and damage.

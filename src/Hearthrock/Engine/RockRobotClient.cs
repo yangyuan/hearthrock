@@ -28,7 +28,7 @@ namespace Hearthrock.Engine
 
         public RockAction GetAction(RockScene scene)
         {
-            var robot = new Robot.Sample.SampleRobot();
+            var robot = new Bot.RockBot();
             var action = robot.GetAction(scene);
 
             SendTrace(MiniJson.MiniJsonSerializer.Serialize(scene));
