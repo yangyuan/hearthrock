@@ -5,6 +5,8 @@
     using Mono.Cecil;
     using Mono.Cecil.Cil;
     using System.Threading.Tasks;
+    using Contracts;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// The class to inject or remove Hearthrock
@@ -15,6 +17,10 @@
         /// The name of Hearthrock main dll, aka Hearthrock.dll.
         /// </summary>
         const string HearthrockAssemblyName = @"Hearthrock.dll";
+        /// <summary>
+        /// The name of Hearthrock configuration file, aka hearthrock.json.
+        /// </summary>
+        const string HearthrockConfigurationName = @"hearthrock.json";
 
         /// <summary>
         /// The name of Hearthstone main dll, aka Assembly-CSharp.dll.
@@ -48,7 +54,7 @@
             var hearthrockAssembly = AssemblyDefinition.ReadAssembly(hearthrockAssemblyPath, new ReaderParameters { AssemblyResolver = resolver });
             var hearthstoneAssembly = AssemblyDefinition.ReadAssembly(hearthstoneAssemblyPath, new ReaderParameters { AssemblyResolver = resolver });
 
-            MethodDefinition method_hearthrock = hearthrockAssembly.GetMethod("HearthrockUnity", "Hook");
+            MethodDefinition method_hearthrock = hearthrockAssembly.GetMethod("RockUnity", "Hook");
             if (method_hearthrock == null)
             {
                 throw new Exception("Hearthrock Hook Not Found!");
@@ -162,6 +168,32 @@
             }
 
             throw new Exception();
+        }
+
+        public async Task<RockConfiguration> ReadConfigurationAsync(string root)
+        {
+            return await Task.Run(() => ReadConfiguration(root));
+        }
+
+        private RockConfiguration ReadConfiguration(string root)
+        {
+            var hearthstoneConfigurationPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationName);
+            var configurationJson = File.ReadAllText(hearthstoneConfigurationPath);
+            var configuration = JsonConvert.DeserializeObject<RockConfiguration>(configurationJson);
+
+            return configuration;
+        }
+
+        public async Task WriteConfigurationAsync(string root, RockConfiguration rockConfiguration)
+        {
+            await Task.Run(() => WriteConfiguration(root, rockConfiguration));
+        }
+
+        private void WriteConfiguration(string root, RockConfiguration rockConfiguration)
+        {
+            var hearthstoneConfigurationPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationName);
+            var configurationJson = JsonConvert.SerializeObject(rockConfiguration, Formatting.Indented);
+            File.WriteAllText(hearthstoneConfigurationPath, configurationJson);
         }
 
         /// <summary>

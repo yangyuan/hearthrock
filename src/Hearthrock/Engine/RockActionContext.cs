@@ -46,7 +46,7 @@ namespace Hearthrock.Engine
             }
         }
 
-        public void Apply(GameState gameState, HearthrockEngine engine)
+        public void Apply(GameState gameState, RockEngine engine)
         {
 
             engine.Trace(RockJsonSerializer.Serialize(this.rockAction));

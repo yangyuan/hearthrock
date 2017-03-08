@@ -1,46 +1,73 @@
-﻿using PegasusShared;
-using System;
-using System.IO;
-using System.Reflection;
+﻿// <copyright file="RockEngine.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
-namespace Hearthrock
+namespace Hearthrock.Engine
 {
+    using System;
+    using System.IO;
+    using System.Reflection;
+
+    using PegasusShared;
+
     using Hearthrock.Contracts;
     using Hearthrock.Serialization;
-    using Hearthrock.Engine;
 
     /// <summary>
-    /// This class is the bridge between Hearthstone and Hearthrock.
-    /// HearthrockEngine will used to do the Artificial Intelligence
+    /// This class is the bridge between Pegasus and RockBot.
     /// </summary>
-    class HearthrockEngine
+    class RockEngine
     {
         /// <summary>
-        /// ranked, vs_ai and so on
+        /// The RockConfiguration.
         /// </summary>
-        private RockGameMode GameMode;
-        private DateTime delay_start = DateTime.Now;
-        private long delay_length = 0;
-
         private RockConfiguration configuration;
-        private RockBotClient robotClient;
 
-        public HearthrockEngine()
+        /// <summary>
+        /// The RockBotClient
+        /// </summary>
+        private RockBotClient botClient;
+
+        /// <summary>
+        /// The RockEngineTracer
+        /// </summary>
+        private RockEngineTracer engineTracer;
+
+        public RockEngine()
         {
             this.Reload();
-        }
-
-        public void SwitchMode(int mode)
-        {
-            // do a simple map
-            GameMode = (RockGameMode) mode;
         }
 
         public void Reload()
         {
             var configurationString = File.ReadAllText("Hearthstone_Data\\Managed\\hearthrock.json");
             this.configuration = RockJsonSerializer.Deserialize<RockConfiguration>(configurationString);
-            this.robotClient = new RockBotClient(this.configuration);
+            this.botClient = new RockBotClient(this.configuration);
+            this.engineTracer = new RockEngineTracer();
+        }
+
+        public RockGameMode GameMode
+        {
+            get
+            {
+                return this.configuration.GameMode;
+            }
+        }
+
+        public bool UseLocalTrace
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.configuration.TraceEndpoint);
+            }
+        }
+
+        public bool UseBuildinBot
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.configuration.BotEndpoint);
+            }
         }
 
         /// <summary>
@@ -59,24 +86,13 @@ namespace Hearthrock
         }
 
         /// <summary>
-        /// this function is called when you want you check sth later
-        /// make sure you returned after call this
-        /// </summary>
-        /// <param name="msec"></param>
-        private void HoldBack(long msec)
-        {
-            delay_start = DateTime.Now;
-            delay_length = msec;
-        }
-
-        /// <summary>
         /// Display trace info to screen.
         /// </summary>
         /// <param name="message">The trace info.</param>
         public void RockInfo(string message)
         {
-            this.Trace(message);
             UIStatus.Get().AddInfo(message);
+            this.Trace(message);
         }
 
         /// <summary>
@@ -85,19 +101,7 @@ namespace Hearthrock
         /// <param name="message">The trace info.</param>
         public void Trace(string message)
         {
-            this.robotClient.SendTrace(message);
-        }
-
-
-
-        SceneMgr.Mode scenemgr_mode = SceneMgr.Mode.INVALID;
-        private void LogSceneMode(SceneMgr.Mode mode)
-        {
-            if (scenemgr_mode != mode)
-            {
-                scenemgr_mode = mode;
-                Trace(scenemgr_mode.ToString());
-            }
+            this.botClient.SendTrace(message);
         }
 
         /// <summary>
@@ -107,18 +111,14 @@ namespace Hearthrock
         /// </summary>
         public double Update()
         {
+            RockGameMode gameMode = this.configuration.GameMode;
+
             try
             {
-                SceneMgr.Mode mode = SceneMgr.Get().GetMode();
-                LogSceneMode(mode);
+                SceneMgr.Mode sceneMode = SceneMgr.Get().GetMode();
+                engineTracer.TraceSceneMode(sceneMode);
 
-                DateTime current_time = DateTime.Now;
-                TimeSpan time_since_delay = current_time - delay_start;
-                if (time_since_delay.TotalMilliseconds < delay_length)
-                {
-                    return 1;
-                }
-                switch (mode)
+                switch (sceneMode)
                 {
                     case SceneMgr.Mode.STARTUP:
                     case SceneMgr.Mode.LOGIN:
@@ -130,7 +130,7 @@ namespace Hearthrock
                     case SceneMgr.Mode.PACKOPENING:
                     case SceneMgr.Mode.FRIENDLY:
                     case SceneMgr.Mode.CREDITS:
-                        Trace("NEXT MODE" + mode);
+                        Trace("NEXT MODE" + sceneMode);
                         {
                             if (DialogManager.Get().ShowingDialog())
                             {
@@ -147,14 +147,16 @@ namespace Hearthrock
                         break;
                     case SceneMgr.Mode.HUB:
                         Clear();
-                        switch (GameMode)
+                        switch (gameMode)
                         {
-                            case RockGameMode.PRACTICE_NORMAL:
-                            case RockGameMode.PRACTICE_EXPERT:
+                            case RockGameMode.NormalPractice:
+                            case RockGameMode.ExpertPractice:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.ADVENTURE);
                                 break;
-                            case RockGameMode.PLAY_UNRANKED:
-                            case RockGameMode.PLAY_RANKED:
+                            case RockGameMode.Casual:
+                            case RockGameMode.Ranked:
+                            case RockGameMode.WildCasual:
+                            case RockGameMode.WildRanked:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.TOURNAMENT);
                                 Tournament.Get().NotifyOfBoxTransitionStart();
                                 break;
@@ -165,43 +167,44 @@ namespace Hearthrock
                     case SceneMgr.Mode.ADVENTURE:
                         ClearGameState();
                         ClearUIQuest();
-                        switch (GameMode)
+                        switch (gameMode)
                         {
-                            case RockGameMode.PRACTICE_NORMAL:
-                                OnRockPraticeMode(false);
-                                break;
-                            case RockGameMode.PRACTICE_EXPERT:
-                                OnRockPraticeMode(true);
-                                break;
-                            case RockGameMode.PLAY_UNRANKED:
-                            case RockGameMode.PLAY_RANKED:
+                            case RockGameMode.NormalPractice:
+                                return OnRockPraticeMode(false);
+                            case RockGameMode.ExpertPractice:
+                                return OnRockPraticeMode(true);
+                            case RockGameMode.Casual:
+                            case RockGameMode.Ranked:
+                            case RockGameMode.WildCasual:
+                            case RockGameMode.WildRanked:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
                             default:
+                                SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
                         }
                         break;
                     case SceneMgr.Mode.TOURNAMENT:
                         ClearGameState();
                         ClearUIQuest();
-                        switch (GameMode)
+                        switch (gameMode)
                         {
-                            case RockGameMode.PRACTICE_NORMAL:
-                            case RockGameMode.PRACTICE_EXPERT:
+                            case RockGameMode.NormalPractice:
+                            case RockGameMode.ExpertPractice:
                                 SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
-                            case RockGameMode.PLAY_UNRANKED:
-                                OnRockTournamentMode(false);
-                                break;
-                            case RockGameMode.PLAY_RANKED:
-                                OnRockTournamentMode(true);
-                                break;
+                            case RockGameMode.Casual:
+                            case RockGameMode.WildCasual:
+                                return OnRockTournamentMode(false);
+                            case RockGameMode.Ranked:
+                            case RockGameMode.WildRanked:
+                                return OnRockTournamentMode(true);
                             default:
+                                SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
                                 break;
                         }
                         break;
                     case SceneMgr.Mode.GAMEPLAY:
-                        SingletonOnGameRequest = false;
                         return OnRockGamePlay();
                 }
             }
@@ -216,7 +219,6 @@ namespace Hearthrock
             return 1;
         }
 
-        bool SingletonOnGameRequest = false;
 
         bool TurnReady = false;
         private double OnRockGamePlay()
@@ -280,7 +282,7 @@ namespace Hearthrock
             if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid(GameState.Get()))
             {
                 var scene = RockSnapshotter.SnapshotScene(GameState.Get());
-                var rockAction = this.robotClient.GetAction(scene);
+                var rockAction = this.botClient.GetAction(scene);
                 if (rockAction != null)
                 {
                     this.rockActionContext = new RockActionContext(rockAction);
@@ -313,7 +315,6 @@ namespace Hearthrock
 
         public void Clear()
         {
-            SingletonOnGameRequest = false;
             ClearGameState();
             ClearUIQuest();
         }
@@ -394,28 +395,20 @@ namespace Hearthrock
             return 0.1;
         }
 
-        private void OnRockTournamentMode(bool ranked)
+        private double OnRockTournamentMode(bool ranked)
         {
-            if (SingletonOnGameRequest) return;
-            SingletonOnGameRequest = true;
-
             if (SceneMgr.Get().IsInGame() || Network.Get().IsFindingGame())
             {
-                HoldBack(1000);
-                return;
+                return 1;
             }
             if (DeckPickerTrayDisplay.Get() == null)
             {
-                HoldBack(1000);
-                SingletonOnGameRequest = false;
-                return;
+                return 1;
             }
             long deck = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
             if (deck == 0)
             {
-                HoldBack(1000);
-                SingletonOnGameRequest = false;
-                return;
+                return 1;
             }
             /*
             DeckPickerTrayDisplay.Get().GetSelectedDeckID();
@@ -432,8 +425,6 @@ namespace Hearthrock
             if (is_ranked != ranked)
             {
                 Options.Get().SetBool(Option.IN_RANKED_PLAY_MODE, ranked);
-                SingletonOnGameRequest = false;
-                return;
             }
 
             long selectedDeckID = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
@@ -458,23 +449,19 @@ namespace Hearthrock
 
             Enum[] args = new Enum[] { PresenceStatus.PLAY_QUEUE };
             PresenceMgr.Get().SetStatus(args);
+
+            return 1;
         }
 
-        private void OnRockPraticeMode(bool expert)
+        private double OnRockPraticeMode(bool expert)
         {
-            if (SingletonOnGameRequest) return;
-            SingletonOnGameRequest = true;
-
             if (SceneMgr.Get().IsInGame())
             {
-                HoldBack(1000);
-                return;
+                return 1;
             }
             if (DeckPickerTrayDisplay.Get() == null)
             {
-                HoldBack(1000);
                 Trace("DeckPickerTrayDisplay.Get() NULL");
-                SingletonOnGameRequest = false;
                 AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
                 AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
                 if (expert)
@@ -493,15 +480,13 @@ namespace Hearthrock
                     Trace("AdventureConfig.Get().CanPlayMode FALSE");
                 }
 
-                return;
+                return 1;
             }
             long deck = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
             if (deck == 0)
             {
-                HoldBack(1000);
                 Trace("DeckPickerTrayDisplay.Get() 0");
-                SingletonOnGameRequest = false;
-                return;
+                return 1;
             }
 
 
@@ -509,7 +494,6 @@ namespace Hearthrock
             if (currentSubScene == AdventureSubScenes.Practice)
             {
                 PracticePickerTrayDisplay.Get().Show();
-                HoldBack(3000);
             }
      //       if (currentSubScene == AdventureSubScenes.MissionDeckPicker)
      //       {
@@ -517,13 +501,13 @@ namespace Hearthrock
      //       }
 
 
-            HoldBack(5000);
             ScenarioDbId mission = HearthrockUtils.RandomPracticeMission();
 
 
             RockInfo("Mulligan");
 
             GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_STANDARD, (int)mission, deck, 0L);
+            return 5;
         }
 
 

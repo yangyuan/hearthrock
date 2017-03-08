@@ -9,10 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hearthrock</RootNamespace>
     <AssemblyName>Hearthrock</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,10 +61,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\RockEngineTracer.cs" />
     <Compile Include="Pegasus\RockPegasusHelper.cs" />
-    <Compile Include="HearthrockEngine.cs" />
+    <Compile Include="Engine\RockEngine.cs" />
     <Compile Include="Pegasus\RockPegasusClient.cs" />
-    <Compile Include="RockUnity.cs" />
+    <Compile Include="Unity\RockUnity.cs" />
     <Compile Include="HearthrockUtils.cs" />
     <Compile Include="Serialization\RockSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,9 +73,9 @@
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockBotClient.cs" />
     <Compile Include="Engine\RockSnapshotter.cs" />
+    <Compile Include="Unity\RockUnityConstants.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="hearthrock.json" />
     <None Include="packages.config" />
   </ItemGroup>

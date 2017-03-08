@@ -22,15 +22,5 @@ namespace Hearthrock
             Random random = new Random();
             return AI_EXPERT[random.Next(AI_EXPERT.Length)];
         }
-
-    }
-
-
-    public enum RockGameMode
-    {
-        PLAY_RANKED,
-        PLAY_UNRANKED,
-        PRACTICE_NORMAL,
-        PRACTICE_EXPERT,
     }
 }

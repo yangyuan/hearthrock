@@ -23,10 +23,10 @@ namespace Hearthrock.Pegasus
                 case RockGameMode.ExpertPractice:
                     return GameType.GT_VS_AI;
                 case RockGameMode.Casual:
-                case RockGameMode.WhildCasual:
+                case RockGameMode.WildCasual:
                     return GameType.GT_CASUAL;
                 case RockGameMode.Ranked:
-                case RockGameMode.WhildRanked:
+                case RockGameMode.WildRanked:
                     return GameType.GT_RANKED;
                 default:
                     return GameType.GT_UNKNOWN;
@@ -47,8 +47,8 @@ namespace Hearthrock.Pegasus
                     return FormatType.FT_STANDARD;
                 case RockGameMode.NormalPractice:
                 case RockGameMode.ExpertPractice:
-                case RockGameMode.WhildCasual:
-                case RockGameMode.WhildRanked:
+                case RockGameMode.WildCasual:
+                case RockGameMode.WildRanked:
                     return FormatType.FT_WILD;
                 default:
                     return FormatType.FT_UNKNOWN;

@@ -14,7 +14,7 @@ namespace Hearthrock.Contracts
         ExpertPractice,
         Casual,
         Ranked,
-        WhildCasual,
-        WhildRanked
+        WildCasual,
+        WildRanked
     }
 }

@@ -8,6 +8,7 @@ namespace Hearthrock.Engine
     using Hearthrock.Serialization;
     using System;
     using System.Net;
+    using System.Threading;
     using UnityEngine;
 
     /// <summary>
@@ -60,16 +61,19 @@ namespace Hearthrock.Engine
 
         public void SendTrace(string message)
         {
-            try
+            new Thread(delegate ()
             {
-                string json = $"{{\"trace\":\"{message}\"}}";
-                this.Post(configuration.TraceEndpoint, json);
-            }
-            catch (Exception e)
-            {
-                // for any exception
-                Console.WriteLine(e);
-            }
+                try
+                {
+                    string json = $"{{\"trace\":\"{message}\"}}";
+                    this.Post(configuration.TraceEndpoint, json);
+                }
+                catch (Exception e)
+                {
+                    // for any exception
+                    Console.WriteLine(e);
+                }
+            }).Start();
         }
 
         private T Post<T>(string endpoint, object obj)
