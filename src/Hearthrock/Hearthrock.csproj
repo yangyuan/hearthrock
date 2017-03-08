@@ -1,20 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8582D6DF-67B8-47CD-9104-A7CCEB1A43E2}</ProjectGuid>
+    <ProjectGuid>{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hearthrock</RootNamespace>
     <AssemblyName>Hearthrock</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,72 +21,51 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.2\lib\net40\Assembly-CSharp.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.2\lib\net40\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.2\lib\net40\Assembly-UnityScript.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-UnityScript.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.2\lib\net40\UnityEngine.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\RockEngineTracer.cs" />
-    <Compile Include="Pegasus\RockPegasusHelper.cs" />
-    <Compile Include="Engine\RockEngine.cs" />
-    <Compile Include="Pegasus\RockPegasusClient.cs" />
-    <Compile Include="Unity\RockUnity.cs" />
-    <Compile Include="HearthrockUtils.cs" />
-    <Compile Include="Serialization\RockSerializer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pegasus\RockPegasusInput.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockBotClient.cs" />
+    <Compile Include="Engine\RockEngine.cs" />
+    <Compile Include="Engine\RockEngineTracer.cs" />
+    <Compile Include="Engine\RockSerializer.cs" />
     <Compile Include="Engine\RockSnapshotter.cs" />
+    <Compile Include="HearthrockUtils.cs" />
+    <Compile Include="Pegasus\RockPegasusClient.cs" />
+    <Compile Include="Pegasus\RockPegasusHelper.cs" />
+    <Compile Include="Pegasus\RockPegasusInput.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unity\RockUnity.cs" />
     <Compile Include="Unity\RockUnityConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="hearthrock.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="..\Hearthrock.Contracts\Hearthrock.Contracts.projitems" Label="Shared" />
   <Import Project="..\Hearthrock.Bot\Hearthrock.Bot.projitems" Label="Shared" />
+  <Import Project="..\Hearthrock.Contracts\Hearthrock.Contracts.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

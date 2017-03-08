@@ -3,14 +3,14 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>d4d7c3fe-f5aa-4329-b6d8-11bf3f3d4e9e</SharedGUID>
+    <SharedGUID>86d38e0e-7e47-4135-9999-571dd428e93f</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>Hearthrock.Bot</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)RockBotHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RockBotCardDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockBot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockBotCardDatabase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockBotHelper.cs" />
   </ItemGroup>
 </Project>

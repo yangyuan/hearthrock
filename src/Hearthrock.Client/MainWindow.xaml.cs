@@ -169,7 +169,8 @@ namespace Hearthrock.Client
                 if (traceEndpoint.AbsoluteUri == defaultTraceEndpoint.AbsoluteUri)
                 {
                     TraceComboBox.SelectedIndex = 1;
-                } else
+                }
+                else
                 {
                     TraceComboBox.SelectedIndex = 2;
                 }
