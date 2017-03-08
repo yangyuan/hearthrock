@@ -7,6 +7,11 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 ## News
 
 - Reinitiated, Hearthrock is going to be a long term project. (Mar 1, 2017)
+- Hearthrock 0.3.0 Alpha for 2.5.0.8416. (Apr 17, 2015)
+- Hearthrock 0.2.0 Alpha for 2.1.0.7785. (Feb 23, 2015)
+- Hearthrock 0.1.0 Alpha for 1.0.0.5506. (May 28, 2014)
+
+
 
 ## Purposes and Features
 
