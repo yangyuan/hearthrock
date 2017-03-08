@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
+﻿// <copyright file="RockPegasusInput.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Pegasus
 {
+    using System.Reflection;
+
     public static class RockPegasusInput
     {
 

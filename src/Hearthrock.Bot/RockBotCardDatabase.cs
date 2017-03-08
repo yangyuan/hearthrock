@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="RockBotCardDatabase.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Bot
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Sample Card Database.
     /// Different bot may need different information, so bot auther is responsible to design and maintain their own card database.

@@ -1,4 +1,7 @@
-﻿
+﻿// <copyright file="RockSnapshotter.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
+
 namespace Hearthrock.Engine
 {
     using Hearthrock.Contracts;

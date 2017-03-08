@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// <copyright file="RockUnityConstants.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Unity
 {

@@ -1,9 +1,12 @@
-﻿namespace Hearthrock.Client.Hacking
+﻿// <copyright file="PatchHelper.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
+
+namespace Hearthrock.Client.Hacking
 {
     using System;
     using System.IO;
     using Mono.Cecil;
-    using Mono.Cecil.Cil;
     using System.Threading.Tasks;
     using Contracts;
     using Newtonsoft.Json;

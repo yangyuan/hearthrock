@@ -1,4 +1,4 @@
-﻿// <copyright file="DirectoryAsync.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockPlayer.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 

@@ -12,6 +12,7 @@ namespace Hearthrock.Engine
 
     using Hearthrock.Contracts;
     using Hearthrock.Serialization;
+    using Hearthrock.Pegasus;
 
     /// <summary>
     /// This class is the bridge between Pegasus and RockBot.
@@ -501,12 +502,12 @@ namespace Hearthrock.Engine
      //       }
 
 
-            ScenarioDbId mission = HearthrockUtils.RandomPracticeMission();
+            int mission = RockPegasusHelper.GetPracticeMissionId(0);
 
 
             RockInfo("Mulligan");
 
-            GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_STANDARD, (int)mission, deck, 0L);
+            GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_STANDARD, mission, deck, 0L);
             return 5;
         }
 

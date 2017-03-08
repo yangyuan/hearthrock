@@ -1,4 +1,8 @@
-﻿namespace Hearthrock.Client.Hacking
+﻿// <copyright file="MonoCecilExtensions.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
+
+namespace Hearthrock.Client.Hacking
 {
     using System;
     using Mono.Cecil;

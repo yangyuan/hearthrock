@@ -1,4 +1,4 @@
-﻿// <copyright file="MiniJsonSerializer.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockJsonSerializer.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 

@@ -1,11 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Hearthrock.Serialization;
-using Hearthrock.Contracts;
-using System.Collections.Generic;
+﻿// <copyright file="MiniJsonSerializerTests.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Hearthrock.Serialization;
+    using Hearthrock.Contracts;
+    using System.Collections.Generic;
+
     [TestClass]
     public class MiniJsonSerializerTests
     {

@@ -1,4 +1,7 @@
 ﻿{
-  "RobotEndpoint": "http://127.0.0.1:5000/",
-  "TraceEndpoint": "http://127.0.0.1:5000/trace"
+  "BotEndpoint": "",
+  "TraceEndpoint": "http://127.0.0.1:7625/trace",
+  "GameMode": 1,
+  "DeckIndex": 0,
+  "OpponentIndex": 0
 }

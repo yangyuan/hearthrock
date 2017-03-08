@@ -1,10 +1,11 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="RockActionContext.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Engine
 {
+    using System.Collections.Generic;
+
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
     using Hearthrock.Serialization;

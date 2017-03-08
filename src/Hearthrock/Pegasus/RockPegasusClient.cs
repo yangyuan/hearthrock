@@ -2,11 +2,11 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-
 namespace Hearthrock.Pegasus
 {
-    using PegasusShared;
     using Hearthrock.Contracts;
+
+    using PegasusShared;
 
     /// <summary>
     /// 

@@ -7,6 +7,7 @@ namespace Hearthrock.Pegasus
     using Hearthrock.Contracts;
 
     using PegasusShared;
+    using System;
 
     public static class RockPegasusHelper
     {
@@ -53,6 +54,40 @@ namespace Hearthrock.Pegasus
                 default:
                     return FormatType.FT_UNKNOWN;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gameMode"></param>
+        /// <returns></returns>
+        public static int GetPracticeMissionId(int index)
+        {
+            ScenarioDbId[] AI_EXPERT = {
+                ScenarioDbId.PRACTICE_EXPERT_MAGE,
+                ScenarioDbId.PRACTICE_EXPERT_WARLOCK,
+                ScenarioDbId.PRACTICE_EXPERT_HUNTER,
+                ScenarioDbId.PRACTICE_EXPERT_ROGUE,
+                ScenarioDbId.PRACTICE_EXPERT_PRIEST,
+                ScenarioDbId.PRACTICE_EXPERT_WARRIOR,
+                ScenarioDbId.PRACTICE_EXPERT_DRUID,
+                ScenarioDbId.PRACTICE_EXPERT_PALADIN,
+                ScenarioDbId.PRACTICE_EXPERT_SHAMAN
+            };
+
+            ScenarioDbId ret;
+
+            if (index <= 0 || index > AI_EXPERT.Length)
+            {
+                Random random = new Random();
+                ret = AI_EXPERT[random.Next(AI_EXPERT.Length)];
+            }
+            else
+            {
+                ret = AI_EXPERT[index - 1];
+            }
+
+            return (int)ret;
         }
     }
 }

@@ -47,13 +47,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\IRockPegasus.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockBotClient.cs" />
     <Compile Include="Engine\RockEngine.cs" />
     <Compile Include="Engine\RockEngineTracer.cs" />
     <Compile Include="Engine\RockSerializer.cs" />
     <Compile Include="Engine\RockSnapshotter.cs" />
-    <Compile Include="HearthrockUtils.cs" />
     <Compile Include="Pegasus\RockPegasusClient.cs" />
     <Compile Include="Pegasus\RockPegasusHelper.cs" />
     <Compile Include="Pegasus\RockPegasusInput.cs" />

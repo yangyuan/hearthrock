@@ -1,4 +1,4 @@
-﻿// <copyright file="RockGameMode.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockHeroClass.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 

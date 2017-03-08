@@ -1,4 +1,4 @@
-﻿// <copyright file="RockRobotClient.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockBotClient.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
