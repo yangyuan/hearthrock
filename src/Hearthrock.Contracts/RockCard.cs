@@ -4,6 +4,8 @@
 
 namespace Hearthrock.Contracts
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Card contract of Hearthrock
     /// </summary>
@@ -15,7 +17,7 @@ namespace Hearthrock.Contracts
 
         public int Cost { get; set; }
 
-        // AI auther is responsible to know all about card from CardId
+        // Bot author is responsible to know all about card from CardId
         public bool IsSpell { get; set; }
 
         public bool IsWeapon { get; set; }
@@ -25,5 +27,12 @@ namespace Hearthrock.Contracts
         public bool HasTaunt { get; set; }
 
         public bool HasCharge { get; set; }
+
+        /// <summary>
+        /// Requirements to play this card.
+        /// Should only be used as non-official reference.
+        /// Bot author is responsible to know all the requirements from CardId.
+        /// </summary>
+        public List<RockActionRequirement> ActionRequirements { get; set; }
     }
 }

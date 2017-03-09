@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Serialization
+namespace Hearthrock.Communication
 {
     using System;
     using System.Collections;

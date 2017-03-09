@@ -1,7 +1,0 @@
-﻿{
-  "BotEndpoint": "",
-  "TraceEndpoint": "http://127.0.0.1:7625/trace",
-  "GameMode": 1,
-  "DeckIndex": 0,
-  "OpponentIndex": 0
-}

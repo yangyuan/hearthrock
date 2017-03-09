@@ -5,7 +5,7 @@
 namespace Hearthrock.Engine
 {
     using Hearthrock.Contracts;
-    using Hearthrock.Serialization;
+    using Hearthrock.Communication;
     using System;
     using System.Net;
     using System.Threading;
@@ -17,13 +17,12 @@ namespace Hearthrock.Engine
     public class RockBotClient
     {
 
+
         private RockConfiguration configuration;
-        private WebClient webClient;
 
         public RockBotClient(RockConfiguration configuration)
         {
             this.configuration = configuration;
-            webClient = new WebClient();
         }
 
         public RockAction GetAction(RockScene scene)
@@ -31,61 +30,32 @@ namespace Hearthrock.Engine
             var robot = new Bot.RockBot();
             var action = robot.GetAction(scene);
 
-            SendTrace(RockJsonSerializer.Serialize(scene));
-            if (action != null)
-            {
-                SendTrace(RockJsonSerializer.Serialize(action));
-            } else
-            {
-                SendTrace("NO ACTION!");
-            }
+            /// SendTrace(RockJsonSerializer.Serialize(scene));
+            /// if (action != null)
+            /// {
+            ///     SendTrace(RockJsonSerializer.Serialize(action));
+            /// } else
+            /// {
+            ///     SendTrace("NO ACTION!");
+            /// }
             return action;
 
-            try
-            {
-                string sceneJson = RockJsonSerializer.Serialize(scene);
-                string actionJson = this.Post(configuration.BotEndpoint + "action", sceneJson);
-                SendTrace(actionJson);
-                var rockAction = RockJsonSerializer.Deserialize<RockAction>(actionJson);
-                SendTrace(RockJsonSerializer.Serialize(rockAction));
-                return rockAction;
-            }
-            catch (Exception e)
-            {
-                // for any exception
-                Console.WriteLine(e);
-            }
-
-            return null;
-        }
-
-        public void SendTrace(string message)
-        {
-            new Thread(delegate ()
-            {
-                try
-                {
-                    string json = $"{{\"trace\":\"{message}\"}}";
-                    this.Post(configuration.TraceEndpoint, json);
-                }
-                catch (Exception e)
-                {
-                    // for any exception
-                    Console.WriteLine(e);
-                }
-            }).Start();
-        }
-
-        private T Post<T>(string endpoint, object obj)
-        {
-            var ret  = this.Post(endpoint, JsonUtility.ToJson(obj));
-            return JsonUtility.FromJson<T>(ret);
-        }
-
-        private string Post(string endpoint, string json)
-        {
-            webClient.Headers[HttpRequestHeader.ContentType] = "application/json";
-            return webClient.UploadString(endpoint, json);
+            //// try
+            //// {
+            ////     string sceneJson = RockJsonSerializer.Serialize(scene);
+            ////     string actionJson = this.Post(configuration.BotEndpoint + "action", sceneJson);
+            ////     SendTrace(actionJson);
+            ////     var rockAction = RockJsonSerializer.Deserialize<RockAction>(actionJson);
+            ////     SendTrace(RockJsonSerializer.Serialize(rockAction));
+            ////     return rockAction;
+            //// }
+            //// catch (Exception e)
+            //// {
+            ////     // for any exception
+            ////     Console.WriteLine(e);
+            //// }
+            //// 
+            //// return null;
         }
     }
 }

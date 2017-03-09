@@ -8,7 +8,7 @@ namespace Hearthrock.Engine
 
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
-    using Hearthrock.Serialization;
+    using Hearthrock.Communication;
 
     class RockActionContext
     {
@@ -49,8 +49,8 @@ namespace Hearthrock.Engine
         public void Apply(GameState gameState, RockEngine engine)
         {
 
-            engine.Trace(RockJsonSerializer.Serialize(this.rockAction));
-            engine.Trace(this.step.ToString());
+            //engine.Trace(RockJsonSerializer.Serialize(this.rockAction));
+            //engine.Trace(this.step.ToString());
 
 
             // Pick source card

@@ -112,6 +112,22 @@ namespace Hearthrock.Bot
                 return action;
             }
 
+            if (player.Resources == 2)
+            {
+                action = TryPlayHeroPower(player, hero, cards, power, enemyHero, enemyNextTurnDamage);
+                if (action != null)
+                {
+                    return action;
+                }
+            }
+
+            // TryPlayBestMinionCard again
+            action = TryPlayBestMinionCard(player, enemyHero, enemyNextTurnDamage);
+            if (action != null)
+            {
+                return action;
+            }
+
             // TryPlaySpellCard
             action = TryPlaySpellCard(hero, resources, cards, enemyHero, enemyMinionsWithTaunt, minions);
             if (action != null)
@@ -215,23 +231,24 @@ namespace Hearthrock.Bot
                 return RockAction.Create(hero.RockId, enemyHero.RockId);
             }
 
-            if (resources >= 2 && player.PowerAvailable)
+            action = TryPlayHeroPower(player, hero, cards, power, enemyHero, enemyNextTurnDamage);
+            if (action != null)
             {
-                action = TryPlayHeroPower(hero, cards, power, enemyHero, enemyNextTurnDamage);
-                if (action != null)
-                {
-                    return action;
-                }
+                return action;
             }
 
             return null;
         }
 
 
-        private static RockAction TryPlayHeroPower(RockHero hero, List<RockCard> cards, RockCard power, RockHero enemyHero, int enemyNextTurnDamage)
+        private static RockAction TryPlayHeroPower(RockPlayer player, RockHero hero, List<RockCard> cards, RockCard power, RockHero enemyHero, int enemyNextTurnDamage)
         {
+            if (player.Resources < 2 || !player.PowerAvailable)
+            {
+                return null;
+            }
 
-            switch (hero.Class)
+                switch (hero.Class)
             {
                 case RockHeroClass.Warlock:
                     if (cards.Count > 8 || hero.Health < 5)
@@ -339,22 +356,21 @@ namespace Hearthrock.Bot
 
                 if (card.IsSpell)
                 {
-                    var cardInfo = RockBotCardDatabase.GetCardInfo(card.CardId);
-                    if (cardInfo.RequireTarget)
+                    if (card.RequireTarget())
                     {
-                        if (cardInfo.CanTargetEnemyHero)
+                        if (card.CanTargetEnemyHero())
                         {
                             return RockAction.Create(card.RockId, enemyHero.RockId);
                         }
-                        else if (cardInfo.CanTargetHero)
+                        else if (card.CanTargetHero())
                         {
                             return RockAction.Create(card.RockId, hero.RockId);
                         }
-                        else if (cardInfo.CanTargetEnemyMinion && enemyMinionsWithTaunt.Count != 0)
+                        else if (card.CanTargetEnemyMinion() && enemyMinionsWithTaunt.Count != 0)
                         {
                             return RockAction.Create(card.RockId, enemyMinionsWithTaunt[0].RockId);
                         }
-                        else if (cardInfo.CanTargetMinion && minions.Count != 0)
+                        else if (card.CanTargetMinion() && minions.Count != 0)
                         {
                             return RockAction.Create(card.RockId, minions[0].RockId);
                         }

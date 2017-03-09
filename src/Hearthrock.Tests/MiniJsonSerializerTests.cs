@@ -5,7 +5,7 @@
 namespace Hearthrock.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Hearthrock.Serialization;
+    using Hearthrock.Communication;
     using Hearthrock.Contracts;
     using System.Collections.Generic;
 

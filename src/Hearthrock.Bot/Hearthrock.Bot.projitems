@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RockBot.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RockBotCardDatabase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockBotHelper.cs" />
   </ItemGroup>
 </Project>

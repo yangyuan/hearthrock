@@ -5,29 +5,23 @@
 namespace Hearthrock.Unity
 {
     using System.Collections;
-    using UnityEngine;
 
     using Hearthrock.Engine;
+    using UnityEngine;
 
     /// <summary>
     /// Unity Component of Hearthrock
     /// </summary>
-    class RockUnity : MonoBehaviour
+    public class RockUnity : MonoBehaviour
     {
+        /// <summary>
+        /// Is RockUnity enabled.
+        /// </summary>
         private bool isRockEnabled = false;
 
-        const double UIScale = 1.75;
-
-        // static values
-        const int RockSpacing = (int)(4 * UIScale);
-        const int RockButtonHeight = (int)(22 * UIScale);
-        const int RockStatusHeight = 20;
-        const int WindowPadding = (int)(8 * UIScale);
-        const int WindowBorderSize = 2;
-        const int WindowTitleHeight = 15;
-        const int WindowContentWidth = 150;
-        const int WindowContentHeight = 80 + WindowTitleHeight + RockButtonHeight + RockSpacing * 2;
-
+        /// <summary>
+        /// The RockEngine instance.
+        /// </summary>
         private RockEngine rockEngine = new RockEngine();
 
         /// <summary>
@@ -44,8 +38,8 @@ namespace Hearthrock.Unity
         /// </summary>
         public void Start()
         {
-            // Init RockRoutine
-            StartCoroutine(RockRoutine());
+            // Init RockRoutine.
+            this.StartCoroutine(this.RockRoutine());
         }
 
         /// <summary>
@@ -53,12 +47,19 @@ namespace Hearthrock.Unity
         /// </summary>
         public void OnGUI()
         {
-            var WindowWidth = WindowContentWidth + (RockSpacing + WindowBorderSize) * 2;
-            var WindowHeight = WindowContentHeight + (RockSpacing + WindowBorderSize) * 2;
+            int windowContentHeight = (RockUnityConstants.RockStatusHeight * 4)
+                + RockUnityConstants.WindowTitleHeight
+                + RockUnityConstants.RockButtonHeight
+                + (RockUnityConstants.RockSpacing * 2);
 
-            Rect rect = new Rect(Screen.width - WindowWidth - WindowPadding, WindowPadding, WindowWidth, WindowHeight);
+            var windowWidth = RockUnityConstants.WindowContentWidth
+                + ((RockUnityConstants.RockSpacing + RockUnityConstants.WindowBorderSize) * 2);
+            var windowHeight = windowContentHeight
+                + ((RockUnityConstants.RockSpacing + RockUnityConstants.WindowBorderSize) * 2);
+
+            Rect rect = new Rect(Screen.width - windowWidth - RockUnityConstants.WindowPadding, RockUnityConstants.WindowPadding, windowWidth, windowHeight);
          
-            GUI.ModalWindow(0, rect, OnHearthrockWindow, RockUnityConstants.Title);
+            GUI.ModalWindow(0, rect, this.OnRockWindow, RockUnityConstants.Title);
         }
 
         /// <summary>
@@ -70,10 +71,12 @@ namespace Hearthrock.Unity
             while (true)
             {
                 double delay = 1;
+
+                this.rockEngine.Tick();
+
                 if (this.isRockEnabled)
                 {
-                    rockEngine.Tick();
-                    delay = rockEngine.Update();
+                    delay = this.rockEngine.Update();
                 }
 
                 yield return new WaitForSeconds((float)delay);
@@ -81,47 +84,52 @@ namespace Hearthrock.Unity
         }
 
         /// <summary>
-        /// Main function of HearthrockUnity ModalWindow
+        /// Main function of HearthrockUnity ModalWindow.
         /// </summary>
-        /// <param name="windowID"></param>
-        private void OnHearthrockWindow(int windowID)
+        /// <param name="windowID">The window id of an Unity Window.</param>
+        private void OnRockWindow(int windowID)
         {
-            int contentOffsetLeft = RockSpacing + WindowBorderSize;
-            int buttonOffsetTop = WindowBorderSize + RockSpacing + WindowTitleHeight;
-            int statusOffsetTop = buttonOffsetTop + RockButtonHeight + RockSpacing;
+            int contentOffsetLeft = RockUnityConstants.RockSpacing + RockUnityConstants.WindowBorderSize;
+            int buttonOffsetTop = RockUnityConstants.WindowBorderSize + RockUnityConstants.RockSpacing + RockUnityConstants.WindowTitleHeight;
+            int statusOffsetTop = buttonOffsetTop + RockUnityConstants.RockButtonHeight + RockUnityConstants.RockSpacing;
 
-            if (GUI.Button(new Rect(contentOffsetLeft, buttonOffsetTop, WindowContentWidth, RockButtonHeight), "Run / Pause"))
+            // The main rock button.
+            if (GUI.Button(
+                new Rect(contentOffsetLeft, buttonOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockButtonHeight),
+                RockUnityConstants.RockButtonTitle))
             {
                 if (this.isRockEnabled)
                 {
                     this.isRockEnabled = false;
 
-                    rockEngine.Reload();
-                    rockEngine.RockInfo("Hearthrock Paused");
+                    this.rockEngine.Reload();
+                    this.rockEngine.ShowRockInfo("Hearthrock Paused");
                 }
                 else
                 {
                     this.isRockEnabled = true;
 
-                    rockEngine.Reload();
-                    rockEngine.RockInfo("Hearthrock Started");
+                    this.rockEngine.Reload();
+                    this.rockEngine.ShowRockInfo("Hearthrock Started");
                 }
-                rockEngine.Clear();
+
+                this.rockEngine.Clear();
             }
 
-            string statusRockState = $"Status: " + (this.isRockEnabled?"Running": "Paused");
+            // The status texts.
+            string statusRockState = $"Status: " + (this.isRockEnabled ? "Running" : "Paused");
             string statusGameMode = $"Mode: " + this.rockEngine.GameMode.ToString();
-            string statusTrace = $"Trace: " + (this.rockEngine.UseLocalTrace?"Local":"Remote");
-            string statusBot = $"Bot: " + (this.rockEngine.UseBuildinBot ? "Buildin" : "Remote");
+            string statusTrace = $"Trace: " + (this.rockEngine.UseLocalTrace ? "Local" : "Remote");
+            string statusBot = $"Bot: " + (this.rockEngine.UseBuiltinBot ? "Buildin" : "Remote");
 
             int currentOffsetTop = statusOffsetTop;
-            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, WindowContentWidth, RockStatusHeight), statusRockState);
-            currentOffsetTop += RockStatusHeight;
-            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, WindowContentWidth, RockStatusHeight), statusGameMode);
-            currentOffsetTop += RockStatusHeight;
-            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, WindowContentWidth, RockStatusHeight), statusTrace);
-            currentOffsetTop += RockStatusHeight;
-            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, WindowContentWidth, RockStatusHeight), statusBot);
+            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockStatusHeight), statusRockState);
+            currentOffsetTop += RockUnityConstants.RockStatusHeight;
+            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockStatusHeight), statusGameMode);
+            currentOffsetTop += RockUnityConstants.RockStatusHeight;
+            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockStatusHeight), statusTrace);
+            currentOffsetTop += RockUnityConstants.RockStatusHeight;
+            GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockStatusHeight), statusBot);
         }
     }
 }

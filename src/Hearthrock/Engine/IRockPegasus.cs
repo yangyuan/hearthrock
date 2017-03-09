@@ -5,7 +5,17 @@ using System.Text;
 
 namespace Hearthrock.Engine
 {
-    interface IRockPegasus
+    public interface IRockPegasus
     {
+        void SetActive();
+
+        bool TryCloseDialog();
+
+        bool TryCloseQuests();
+
+
+        SceneMgr.Mode GetSceneMode();
+
+        void TrySetSceneMode(SceneMgr.Mode mode);
     }
 }

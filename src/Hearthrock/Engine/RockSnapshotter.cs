@@ -5,6 +5,7 @@
 namespace Hearthrock.Engine
 {
     using Hearthrock.Contracts;
+    using System;
     using System.Collections.Generic;
 
     class RockSnapshotter
@@ -29,6 +30,7 @@ namespace Hearthrock.Engine
             rockPlayer.Power = SnapshotPower(player);
             rockPlayer.Minions = SnapshotMinions(player);
             rockPlayer.Cards = SnapshotCards(player);
+            rockPlayer.PowerAvailable = !player.GetHeroPower().IsExhausted();
 
             return rockPlayer;
         }
@@ -157,7 +159,38 @@ namespace Hearthrock.Engine
             rockCard.HasTaunt = card.HasTaunt();
             rockCard.HasCharge = card.HasCharge();
 
+            rockCard.ActionRequirements = SnapshotActionRequirements(card.GetMasterPower().GetPlayRequirementInfo().requirementsMap);
+
             return rockCard;
+        }
+
+        private static List<RockActionRequirement> SnapshotActionRequirements(ulong requirementsMap)
+        {
+            var requirements = new List<RockActionRequirement>();
+
+            List<int> availableReqs = new List<int> { 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 13, 17, 22, 23, 24, 41, 44, 45, 46, 47, 49, 50, 51, 52, 54, 55, 56, 58, 59, 60, 62, 63 };
+
+            foreach (RockActionRequirement requirement in Enum.GetValues(typeof(RockActionRequirement)))
+            {
+                int requirementIndex = (int)requirement;
+                if (requirementIndex == 0 || requirementIndex > 64)
+                {
+                    continue;
+                }
+
+                if (!availableReqs.Contains(requirementIndex))
+                {
+                    continue;
+                }
+
+                if ((requirementsMap & ((ulong)1 << (requirementIndex - 1))) != 0)
+                {
+                    requirements.Add(requirement);
+                }
+
+            }
+
+            return requirements;
         }
     }
 }
