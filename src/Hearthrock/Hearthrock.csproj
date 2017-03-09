@@ -63,7 +63,8 @@
     <Compile Include="Pegasus\RockPegasusGameState.cs" />
     <Compile Include="Pegasus\RockPegasusHelper.cs" />
     <Compile Include="Pegasus\RockPegasusInput.cs" />
-    <Compile Include="Pegasus\RockPegasusState.cs" />
+    <Compile Include="Pegasus\RockPegasusSceneState.cs" />
+    <Compile Include="Pegasus\RockPegasusSubsceneState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\RockUnity.cs" />
     <Compile Include="Unity\RockUnityConstants.cs" />

@@ -1,4 +1,4 @@
-﻿// <copyright file="RockPegasusClient.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockPegasus.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
@@ -7,6 +7,7 @@ namespace Hearthrock.Pegasus
     using Hearthrock.Contracts;
     using Hearthrock.Engine;
     using PegasusShared;
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -61,17 +62,93 @@ namespace Hearthrock.Pegasus
             }
         }
 
-
         public void SelectPracticeOpponent(int index)
         {
+
+
             tracer.Verbose(GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton")?.name);
 
             List<PracticeAIButton> m_practiceAIButtons = GetPrivateField<List<PracticeAIButton>>(PracticePickerTrayDisplay.Get(), "m_practiceAIButtons");
-            m_practiceAIButtons[0].TriggerRelease();
+
+
+            if (index <= 0 || index > m_practiceAIButtons.Count)
+            {
+                Random r = new Random();
+                index = r.Next(0, m_practiceAIButtons.Count);
+            } else
+            {
+                index -= 1;
+            }
+            m_practiceAIButtons[index].TriggerRelease();
 
 
             tracer.Verbose(GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton")?.name);
+ 
+        }
+
+        public void PlayPractice()
+        {
             PracticePickerTrayDisplay.Get().m_playButton.TriggerRelease();
+        }
+
+
+
+        public long GetSelectedDeckID()
+        {
+            // DeckPickerTrayDisplay is used on both Tournament and Practice
+            return DeckPickerTrayDisplay.Get().GetSelectedDeckID();
+        }
+
+
+        public void ChooseDeck(int index)
+        {
+            AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
+            if (currentSubScene == AdventureSubScenes.Practice)
+            {
+                PracticePickerTrayDisplay.Get().Show();
+            }
+
+        }
+
+
+        public void ConfigTournament(bool ranked, bool wild)
+        {
+            bool is_ranked = Options.Get().GetBool(Option.IN_RANKED_PLAY_MODE);
+            if (is_ranked != ranked)
+            {
+                Options.Get().SetBool(Option.IN_RANKED_PLAY_MODE, ranked);
+            }
+
+            bool is_wild = Options.Get().GetBool(Option.IN_WILD_MODE);
+            if (is_wild != wild)
+            {
+                Options.Get().SetBool(Option.IN_RANKED_PLAY_MODE, wild);
+            }
+
+        }
+
+        public void PlayTournament()
+        {
+
+            DeckPickerTrayDisplay.Get().m_playButton.TriggerRelease();
+        }
+
+
+
+        public void ChoosePracticeMode(bool expert)
+        {
+            AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
+            AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
+            if (expert)
+            {
+                modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.EXPERT);
+            }
+
+            if (AdventureConfig.Get().CanPlayMode(adventureId, modeId))
+            {
+                AdventureConfig.Get().SetSelectedAdventureMode(adventureId, modeId);
+                AdventureConfig.Get().ChangeSubSceneToSelectedAdventure();
+            }
         }
 
 
@@ -114,29 +191,89 @@ namespace Hearthrock.Pegasus
             return false;
         }
 
-        public RockPegasusState GetSceneMode()
+
+
+        public RockPegasusSubsceneState GetPegasusSubsceneState(RockPegasusSceneState sceneState)
+        {
+            switch(sceneState)
+            {
+                case RockPegasusSceneState.Adventure:
+                    return GetPegasusAdventureSubsceneState();
+                case RockPegasusSceneState.Tournament:
+                    return GetPegasusTournamentSubsceneState();
+                default:
+                    return RockPegasusSubsceneState.None;
+            }
+        }
+
+        private RockPegasusSubsceneState GetPegasusAdventureSubsceneState()
+        {
+            if (AdventureConfig.Get() == null)
+            {
+                return RockPegasusSubsceneState.None;
+            }
+
+            AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
+
+            if (currentSubScene == AdventureSubScenes.Chooser)
+            {
+                return RockPegasusSubsceneState.WaitChooseMode;
+            }
+
+            if (currentSubScene == AdventureSubScenes.Practice)
+            {
+                if (PracticePickerTrayDisplay.Get().IsShown() == false)
+                {
+                    return RockPegasusSubsceneState.WaitChooseDeck;
+                }
+
+                if (GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton") == null)
+                {
+                    return RockPegasusSubsceneState.WaitChooseOpponent;
+                }
+                else
+                {
+                    return RockPegasusSubsceneState.Ready;
+                }
+            }
+
+            return RockPegasusSubsceneState.None;
+        }
+
+        private RockPegasusSubsceneState GetPegasusTournamentSubsceneState()
+        {
+            if (DeckPickerTrayDisplay.Get() == null)
+            {
+                return RockPegasusSubsceneState.None;
+            } else
+            {
+                return RockPegasusSubsceneState.Ready;
+            }
+        }
+
+        public RockPegasusSceneState GetPegasusSceneState()
         {
             if (WelcomeQuests.Get() != null)
             {
-                return RockPegasusState.QuestsDialog;
+                return RockPegasusSceneState.QuestsDialog;
             }
 
             if (DialogManager.Get() != null)
             {
                 if (DialogManager.Get().ShowingDialog())
                 {
-                    return RockPegasusState.GeneralDialog;
+                    return RockPegasusSceneState.GeneralDialog;
                 }
             }
 
             if (Network.Get().IsFindingGame())
             {
-                return RockPegasusState.BlockingSceneMode;
+                return RockPegasusSceneState.BlockingSceneMode;
             }
 
             if (GameMgr.Get().IsTransitionPopupShown())
             {
-                return RockPegasusState.BlockingSceneMode;
+                return RockPegasusSceneState.BlockingSceneMode;
             }
 
 
@@ -144,11 +281,11 @@ namespace Hearthrock.Pegasus
 
             var pegasusState = RockPegasusHelper.GetPegasusState(sceneMode);
 
-            if (pegasusState == RockPegasusState.GamePlay)
+            if (pegasusState == RockPegasusSceneState.GamePlay)
             {
                 if (GameState.Get() == null)
                 {
-                    return RockPegasusState.BlockingSceneMode;
+                    return RockPegasusSceneState.BlockingSceneMode;
                 }
             }
 

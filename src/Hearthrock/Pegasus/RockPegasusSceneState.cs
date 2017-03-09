@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// <copyright file="RockPegasusSceneState.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Pegasus
 {
@@ -9,9 +8,9 @@ namespace Hearthrock.Pegasus
     /// Why not use original SceneState and GameState
     /// SceneState and GameState are designed to manage game states, so Pegasus can know what to showup.
     /// But for hearthrock, we need to decide what to do, so we need a list of states to know what can be done.
-    /// SceneState does not fit the requirement so I designed 2 new states.
+    /// SceneState and GameState does not fit the requirement so I designed 3 new states.
     /// </summary>
-    public enum RockPegasusState
+    public enum RockPegasusSceneState
     {
         None,
         InvalidSceneMode,

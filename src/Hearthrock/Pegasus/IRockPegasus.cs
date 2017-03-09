@@ -14,7 +14,10 @@ namespace Hearthrock.Pegasus
 
         void TryFinishEndGame();
 
-        RockPegasusState GetSceneMode();
+        RockPegasusSceneState GetPegasusSceneState();
+
+        RockPegasusSubsceneState GetPegasusSubsceneState(RockPegasusSceneState sceneState);
+
         RockPegasusGameState GetPegasusGameState();
 
         void NavigateToHub();
@@ -26,5 +29,14 @@ namespace Hearthrock.Pegasus
         void TrySetSceneMode(SceneMgr.Mode mode);
 
         void SelectPracticeOpponent(int index);
+        void PlayPractice();
+        void PlayTournament();
+
+        long GetSelectedDeckID();
+
+        void ConfigTournament(bool ranked, bool wild);
+
+        void ChoosePracticeMode(bool expert);
+        void ChooseDeck(int index);
     }
 }

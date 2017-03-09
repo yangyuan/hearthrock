@@ -95,33 +95,33 @@ namespace Hearthrock.Pegasus
         /// </summary>
         /// <param name="gameMode"></param>
         /// <returns></returns>
-        public static RockPegasusState GetPegasusState(SceneMgr.Mode gameMode)
+        public static RockPegasusSceneState GetPegasusState(SceneMgr.Mode gameMode)
         {
             switch (gameMode)
             {
                 case SceneMgr.Mode.STARTUP:
                 case SceneMgr.Mode.LOGIN:
                 case SceneMgr.Mode.RESET:
-                    return RockPegasusState.BlockingSceneMode;
+                    return RockPegasusSceneState.BlockingSceneMode;
                 case SceneMgr.Mode.COLLECTIONMANAGER:
                 case SceneMgr.Mode.PACKOPENING:
                 case SceneMgr.Mode.FRIENDLY:
                 case SceneMgr.Mode.CREDITS:
                 case SceneMgr.Mode.DRAFT:
                 case SceneMgr.Mode.TAVERN_BRAWL:
-                    return RockPegasusState.CancelableSceneMode;
+                    return RockPegasusSceneState.CancelableSceneMode;
                 case SceneMgr.Mode.TOURNAMENT:
-                    return RockPegasusState.Tournament;
+                    return RockPegasusSceneState.Tournament;
                 case SceneMgr.Mode.HUB:
-                    return RockPegasusState.Hub;
+                    return RockPegasusSceneState.Hub;
                 case SceneMgr.Mode.GAMEPLAY:
-                    return RockPegasusState.GamePlay;
+                    return RockPegasusSceneState.GamePlay;
                 case SceneMgr.Mode.ADVENTURE:
-                    return RockPegasusState.Adventure;
+                    return RockPegasusSceneState.Adventure;
                 case SceneMgr.Mode.INVALID:
                 case SceneMgr.Mode.FATAL_ERROR:
                 default:
-                    return RockPegasusState.InvalidSceneMode;
+                    return RockPegasusSceneState.InvalidSceneMode;
             }
         }
     }

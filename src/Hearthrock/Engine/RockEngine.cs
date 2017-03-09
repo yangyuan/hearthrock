@@ -11,8 +11,6 @@ namespace Hearthrock.Engine
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
 
-    using PegasusShared;
-
     /// <summary>
     /// This class is the bridge between Pegasus and RockBot.
     /// </summary>
@@ -109,8 +107,19 @@ namespace Hearthrock.Engine
         {
             this.pegasus.SetActive();
 
-            var pegasusState = this.pegasus.GetSceneMode();
-            this.tracer.Verbose(pegasusState.ToString());
+            //// var pegasusState = this.pegasus.GetSceneMode();
+            //// this.tracer.Verbose(pegasusState.ToString());
+
+            try
+            {
+                AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
+                this.tracer.Verbose(currentSubScene.ToString());
+
+                this.tracer.Verbose(PracticePickerTrayDisplay.Get().IsShown().ToString());
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -131,22 +140,22 @@ namespace Hearthrock.Engine
         {
             try
             {
-                var pegasusState = this.pegasus.GetSceneMode();
+                var pegasusState = this.pegasus.GetPegasusSceneState();
 
                 switch (pegasusState)
                 {
-                    case RockPegasusState.BlockingSceneMode:
+                    case RockPegasusSceneState.BlockingSceneMode:
                         return 1;
-                    case RockPegasusState.QuestsDialog:
+                    case RockPegasusSceneState.QuestsDialog:
                         this.pegasus.TryCloseQuests();
                         return 2;
-                    case RockPegasusState.GeneralDialog:
+                    case RockPegasusSceneState.GeneralDialog:
                         this.pegasus.TryCloseDialog();
                         return 2;
-                    case RockPegasusState.CancelableSceneMode:
+                    case RockPegasusSceneState.CancelableSceneMode:
                         this.pegasus.NavigateToHub();
                         break;
-                    case RockPegasusState.Hub:
+                    case RockPegasusSceneState.Hub:
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
@@ -165,13 +174,13 @@ namespace Hearthrock.Engine
                         }
 
                         break;
-                    case RockPegasusState.Adventure:
+                    case RockPegasusSceneState.Adventure:
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
-                                return this.OnRockPraticeMode(false);
+                                return this.OnRockPracticeMode(false);
                             case RockGameMode.ExpertPractice:
-                                return this.OnRockPraticeMode(true);
+                                return this.OnRockPracticeMode(true);
                             case RockGameMode.Casual:
                             case RockGameMode.Ranked:
                             case RockGameMode.WildCasual:
@@ -184,7 +193,7 @@ namespace Hearthrock.Engine
                         }
 
                         break;
-                    case RockPegasusState.Tournament:
+                    case RockPegasusSceneState.Tournament:
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
@@ -192,21 +201,23 @@ namespace Hearthrock.Engine
                                 this.pegasus.NavigateToHub();
                                 break;
                             case RockGameMode.Casual:
+                                return this.OnRockTournamentMode(false, false);
                             case RockGameMode.WildCasual:
-                                return this.OnRockTournamentMode(false);
+                                return this.OnRockTournamentMode(false, true);
                             case RockGameMode.Ranked:
+                                return this.OnRockTournamentMode(true, false);
                             case RockGameMode.WildRanked:
-                                return this.OnRockTournamentMode(true);
+                                return this.OnRockTournamentMode(true, true);
                             default:
                                 this.pegasus.NavigateToHub();
                                 break;
                         }
 
                         break;
-                    case RockPegasusState.GamePlay:
+                    case RockPegasusSceneState.GamePlay:
                         return this.OnRockGamePlay();
-                    case RockPegasusState.InvalidSceneMode:
-                    case RockPegasusState.None:
+                    case RockPegasusSceneState.InvalidSceneMode:
+                    case RockPegasusSceneState.None:
                     default:
                         break;
                 }
@@ -233,13 +244,13 @@ namespace Hearthrock.Engine
                 case RockPegasusGameState.Blocking:
                     return 1;
                 case RockPegasusGameState.GameOver:
-                    ShowRockInfo("Game Over");
+                    this.ShowRockInfo("Game Over");
                     this.pegasus.TryFinishEndGame();
                     return 5;
                 case RockPegasusGameState.WaitForAction:
-                    return OnRockAction();
+                    return this.OnRockAction();
                 case RockPegasusGameState.WaitForMulligan:
-                    return OnRockMulligan();
+                    return this.OnRockMulligan();
                 case RockPegasusGameState.None:
                 default:
                     return 1;
@@ -254,7 +265,7 @@ namespace Hearthrock.Engine
         {
             if (EndTurnButton.Get().HasNoMorePlays())
             {
-                ShowRockInfo("Job's Done");
+                this.ShowRockInfo("Job's Done");
                 this.pegasus.EndTurn();
                 this.rockActionContext = null;
                 return 3;
@@ -267,11 +278,11 @@ namespace Hearthrock.Engine
                 if (rockAction != null)
                 {
                     this.rockActionContext = new RockActionContext(rockAction);
-                    ShowRockInfo(this.rockActionContext.Interpretion(GameState.Get()));
+                    this.ShowRockInfo(this.rockActionContext.Interpretion(GameState.Get()));
                 }
                 else
                 {
-                    ShowRockInfo("Job's Done");
+                    this.ShowRockInfo("Job's Done");
                     this.pegasus.EndTurn();
                     return 3;
                 }
@@ -289,7 +300,7 @@ namespace Hearthrock.Engine
         {
             if (this.rockMulliganContext == null)
             {
-                ShowRockInfo("Mulligan");
+                this.ShowRockInfo("Mulligan");
                 var scene = RockSnapshotter.SnapshotScene(GameState.Get());
                 var mulliganedCards = this.bot.GetMulligan(scene);
 
@@ -306,87 +317,58 @@ namespace Hearthrock.Engine
             return 1;
         }
 
-
-        private double OnRockTournamentMode(bool ranked)
+        /// <summary>
+        /// On Tournament state
+        /// </summary>
+        /// <param name="ranked">if play in rank mode.</param>
+        /// <param name="wild">if play in wild format.</param>
+        /// <returns>Seconds to be delayed before next call.</returns>
+        private double OnRockTournamentMode(bool ranked, bool wild)
         {
-            if (DeckPickerTrayDisplay.Get() == null)
+            RockPegasusSubsceneState subscene = this.pegasus.GetPegasusSubsceneState(RockPegasusSceneState.Tournament);
+
+            switch (subscene)
             {
-                return 1;
+                case RockPegasusSubsceneState.Ready:
+                    this.pegasus.ConfigTournament(ranked, wild);
+                    this.pegasus.PlayTournament();
+                    return 1;
+                default:
+                case RockPegasusSubsceneState.WaitChooseMode:
+                case RockPegasusSubsceneState.WaitChooseDeck:
+                case RockPegasusSubsceneState.WaitChooseOpponent:
+                case RockPegasusSubsceneState.None:
+                    return 0.5;
             }
-            long deck = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
-            if (deck == 0)
-            {
-                return 1;
-            }
-
-            bool is_ranked = Options.Get().GetBool(Option.IN_RANKED_PLAY_MODE);
-            if (is_ranked != ranked)
-            {
-                Options.Get().SetBool(Option.IN_RANKED_PLAY_MODE, ranked);
-            }
-
-            long selectedDeckID = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
-
-
-            PegasusShared.GameType type;
-            if (ranked)
-            {
-                type = PegasusShared.GameType.GT_RANKED;
-            }
-            else
-            {
-                type = PegasusShared.GameType.GT_CASUAL;
-            }
-
-            GameMgr.Get().FindGame(type, FormatType.FT_STANDARD, 2, selectedDeckID, 0L);
-
-            Enum[] args = new Enum[] { PresenceStatus.PLAY_QUEUE };
-            PresenceMgr.Get().SetStatus(args);
-
-            return 1;
         }
 
-        private double OnRockPraticeMode(bool expert)
+        /// <summary>
+        /// On Practice state
+        /// </summary>
+        /// <param name="expert">if play in expert mode.</param>
+        /// <returns>Seconds to be delayed before next call.</returns>
+        private double OnRockPracticeMode(bool expert)
         {
-            if (DeckPickerTrayDisplay.Get() == null)
+            RockPegasusSubsceneState subscene = this.pegasus.GetPegasusSubsceneState(RockPegasusSceneState.Adventure);
+
+            switch (subscene)
             {
-                this.tracer.Verbose("DeckPickerTrayDisplay.Get() NULL");
-                AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
-                AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
-                if (expert)
-                {
-                    modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.EXPERT);
-                }
-                this.tracer.Verbose("AdventureConfig.Get().GetSelectedMode " + AdventureConfig.Get().GetSelectedMode());
-
-                if (AdventureConfig.Get().CanPlayMode(adventureId, modeId))
-                {
-                    AdventureConfig.Get().SetSelectedAdventureMode(adventureId, modeId);
-                    AdventureConfig.Get().ChangeSubSceneToSelectedAdventure();
-                }
-                else
-                {
-                    this.tracer.Verbose("AdventureConfig.Get().CanPlayMode FALSE");
-                }
-
-                return 1;
+                case RockPegasusSubsceneState.WaitChooseMode:
+                    this.pegasus.ChoosePracticeMode(expert);
+                    return 1;
+                case RockPegasusSubsceneState.WaitChooseDeck:
+                    this.pegasus.ChooseDeck(this.configuration.DeckIndex);
+                    return 1;
+                case RockPegasusSubsceneState.WaitChooseOpponent:
+                    this.pegasus.SelectPracticeOpponent(this.configuration.OpponentIndex);
+                    return 1;
+                case RockPegasusSubsceneState.Ready:
+                    this.pegasus.PlayPractice();
+                    return 1;
+                default:
+                case RockPegasusSubsceneState.None:
+                    return 0.5;
             }
-            long deck = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
-            if (deck == 0)
-            {
-                this.tracer.Verbose("DeckPickerTrayDisplay.Get() 0");
-                return 1;
-            }
-
-
-            AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
-            if (currentSubScene == AdventureSubScenes.Practice)
-            {
-                PracticePickerTrayDisplay.Get().Show();
-            }
-
-            this.pegasus.SelectPracticeOpponent(1);
-            return 1;
         }
     }
 }
