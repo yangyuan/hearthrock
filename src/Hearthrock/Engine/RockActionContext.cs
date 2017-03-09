@@ -8,7 +8,6 @@ namespace Hearthrock.Engine
 
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
-    using Hearthrock.Communication;
 
     class RockActionContext
     {

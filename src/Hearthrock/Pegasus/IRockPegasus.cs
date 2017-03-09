@@ -10,7 +10,12 @@ namespace Hearthrock.Pegasus
 
         bool TryCloseQuests();
 
+        void EndTurn();
+
+        void TryFinishEndGame();
+
         RockPegasusState GetSceneMode();
+        RockPegasusGameState GetPegasusGameState();
 
         void NavigateToHub();
 

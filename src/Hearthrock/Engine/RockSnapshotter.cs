@@ -22,6 +22,7 @@ namespace Hearthrock.Engine
             return rockScene;
         }
 
+
         private static RockPlayer SnapshotPlayer(Player player)
         {
             var rockPlayer = new RockPlayer();

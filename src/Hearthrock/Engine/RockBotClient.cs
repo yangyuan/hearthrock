@@ -10,6 +10,7 @@ namespace Hearthrock.Engine
     using System.Net;
     using System.Threading;
     using UnityEngine;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 
@@ -23,6 +24,14 @@ namespace Hearthrock.Engine
         public RockBotClient(RockConfiguration configuration)
         {
             this.configuration = configuration;
+        }
+
+
+        public List<RockCard> GetMulligan(RockScene scene)
+        {
+            var robot = new Bot.RockBot();
+            var mulligan = robot.GetMulligan(scene);
+            return mulligan;
         }
 
         public RockAction GetAction(RockScene scene)

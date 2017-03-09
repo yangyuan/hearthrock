@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\RockApiClient.cs" />
+    <Compile Include="Engine\RockMulliganContext.cs" />
     <Compile Include="Pegasus\IRockPegasus.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockBotClient.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Communication\RockSerializer.cs" />
     <Compile Include="Engine\RockSnapshotter.cs" />
     <Compile Include="Pegasus\RockPegasus.cs" />
+    <Compile Include="Pegasus\RockPegasusGameState.cs" />
     <Compile Include="Pegasus\RockPegasusHelper.cs" />
     <Compile Include="Pegasus\RockPegasusInput.cs" />
     <Compile Include="Pegasus\RockPegasusState.cs" />

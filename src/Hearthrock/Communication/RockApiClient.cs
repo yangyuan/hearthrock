@@ -4,7 +4,9 @@
 
 namespace Hearthrock.Communication
 {
+    using System;
     using System.Net;
+    using System.Threading;
 
     /// <summary>
     /// The API client to communicate with trace service and bot.
@@ -17,16 +19,10 @@ namespace Hearthrock.Communication
         private const string JsonContentType = "application/json";
 
         /// <summary>
-        /// Internal WebClient;
-        /// </summary>
-        private WebClient webClient;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RockApiClient" /> class.
         /// </summary>
         public RockApiClient()
         {
-            this.webClient = new WebClient();
         }
 
         /// <summary>
@@ -50,8 +46,11 @@ namespace Hearthrock.Communication
         /// <returns>The return string.</returns>
         public string Post(string endpoint, string json)
         {
-            this.webClient.Headers[HttpRequestHeader.ContentType] = JsonContentType;
-            return this.webClient.UploadString(endpoint, json);
+            using (var webClient = new WebClient())
+            {
+                webClient.Headers[HttpRequestHeader.ContentType] = JsonContentType;
+                return webClient.UploadString(endpoint, json);
+            }
         }
 
         /// <summary>
@@ -59,9 +58,20 @@ namespace Hearthrock.Communication
         /// </summary>
         /// <param name="endpoint">The api endpoint.</param>
         /// <param name="obj">The object to be posted.</param>
-        public void Post(string endpoint, object obj)
+        public void PostAsync(string endpoint, object obj)
         {
-            this.Post(endpoint, RockJsonSerializer.Serialize(obj));
+            new Thread(delegate ()
+            {
+                try
+                {
+                    this.Post(endpoint, RockJsonSerializer.Serialize(obj));
+                }
+                catch (Exception e)
+                {
+                    // for any exception
+                    Console.WriteLine(e);
+                }
+            }).Start();
         }
     }
 }

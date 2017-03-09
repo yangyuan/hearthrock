@@ -6,11 +6,10 @@ namespace Hearthrock.Engine
 {
     using System;
     using System.IO;
-    using System.Reflection;
 
+    using Hearthrock.Communication;
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
-    using Hearthrock.Communication;
 
     using PegasusShared;
 
@@ -38,6 +37,16 @@ namespace Hearthrock.Engine
         /// The IRockPegasus
         /// </summary>
         private IRockPegasus pegasus;
+
+        /// <summary>
+        /// Context for action.
+        /// </summary>
+        private RockActionContext rockActionContext;
+
+        /// <summary>
+        /// Context for mulligan.
+        /// </summary>
+        private RockMulliganContext rockMulliganContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RockEngine" /> class.
@@ -126,6 +135,8 @@ namespace Hearthrock.Engine
 
                 switch (pegasusState)
                 {
+                    case RockPegasusState.BlockingSceneMode:
+                        return 1;
                     case RockPegasusState.QuestsDialog:
                         this.pegasus.TryCloseQuests();
                         return 2;
@@ -136,7 +147,6 @@ namespace Hearthrock.Engine
                         this.pegasus.NavigateToHub();
                         break;
                     case RockPegasusState.Hub:
-                        Clear();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
@@ -148,20 +158,20 @@ namespace Hearthrock.Engine
                             case RockGameMode.WildCasual:
                             case RockGameMode.WildRanked:
                                 this.pegasus.NavigateToTournament();
-                                Tournament.Get().NotifyOfBoxTransitionStart();
+                                //// Tournament.Get().NotifyOfBoxTransitionStart();
                                 break;
                             default:
                                 break;
                         }
+
                         break;
                     case RockPegasusState.Adventure:
-                        ClearGameState();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
-                                return OnRockPraticeMode(false);
+                                return this.OnRockPraticeMode(false);
                             case RockGameMode.ExpertPractice:
-                                return OnRockPraticeMode(true);
+                                return this.OnRockPraticeMode(true);
                             case RockGameMode.Casual:
                             case RockGameMode.Ranked:
                             case RockGameMode.WildCasual:
@@ -172,9 +182,9 @@ namespace Hearthrock.Engine
                                 this.pegasus.NavigateToHub();
                                 break;
                         }
+
                         break;
                     case RockPegasusState.Tournament:
-                        ClearGameState();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
@@ -183,17 +193,18 @@ namespace Hearthrock.Engine
                                 break;
                             case RockGameMode.Casual:
                             case RockGameMode.WildCasual:
-                                return OnRockTournamentMode(false);
+                                return this.OnRockTournamentMode(false);
                             case RockGameMode.Ranked:
                             case RockGameMode.WildRanked:
-                                return OnRockTournamentMode(true);
+                                return this.OnRockTournamentMode(true);
                             default:
                                 this.pegasus.NavigateToHub();
                                 break;
                         }
+
                         break;
                     case RockPegasusState.GamePlay:
-                        return OnRockGamePlay();
+                        return this.OnRockGamePlay();
                     case RockPegasusState.InvalidSceneMode:
                     case RockPegasusState.None:
                     default:
@@ -210,70 +221,43 @@ namespace Hearthrock.Engine
             }
         }
 
-
-        bool TurnReady = false;
+        /// <summary>
+        /// On GamePlay state
+        /// </summary>
+        /// <returns>Seconds to be delayed before next call.</returns>
         private double OnRockGamePlay()
         {
-            if (GameMgr.Get().IsTransitionPopupShown())
+            var pegasusGameState = this.pegasus.GetPegasusGameState();
+            switch (pegasusGameState)
             {
-                this.tracer.Verbose("IsTransitionPopupShown OnRockGamePlay");
-                return 1;
-            }
-
-            GameState state = GameState.Get();
-            if (state == null)
-            {
-                return 1;
-            }
-            
-            if (state.IsBlockingPowerProcessor())
-            {
-                this.tracer.Verbose("BlockingServer");
-                return 0.75;
-            }
-            else if (state.IsMulliganPhase())
-            {
-                TurnReady = false;
-                return OnRockMulligan();
-            }
-            else if (state.IsMulliganPhasePending())
-            {
-                // which means some pending about mulligan
-                ShowRockInfo("MulliganPhasePending");
-                return 0.75;
-            }
-            else if (state.IsGameOver())
-            {
-                Clear();
-                return OnRockGameOver();
-            }
-            else if (state.IsFriendlySidePlayerTurn() == true)
-            {
-                if (TurnReady)
-                {
-                    return OnRockAI2();
-                }
-                else
-                {
-                    return OnRockTurnStart();
-                }
-            }
-            else
-            {
-                TurnReady = false;
-                return 1;
+                case RockPegasusGameState.Blocking:
+                    return 1;
+                case RockPegasusGameState.GameOver:
+                    ShowRockInfo("Game Over");
+                    this.pegasus.TryFinishEndGame();
+                    return 5;
+                case RockPegasusGameState.WaitForAction:
+                    return OnRockAction();
+                case RockPegasusGameState.WaitForMulligan:
+                    return OnRockMulligan();
+                case RockPegasusGameState.None:
+                default:
+                    return 1;
             }
         }
 
-        private RockActionContext rockActionContext;
-
-        private double OnRockAI2()
+        /// <summary>
+        /// On WaitForAction state
+        /// </summary>
+        /// <returns>Seconds to be delayed before next call.</returns>
+        private double OnRockAction()
         {
             if (EndTurnButton.Get().HasNoMorePlays())
             {
-                OnRockTurnEnd();
+                ShowRockInfo("Job's Done");
+                this.pegasus.EndTurn();
                 this.rockActionContext = null;
-                return 0.25;
+                return 3;
             }
 
             if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid(GameState.Get()))
@@ -287,8 +271,9 @@ namespace Hearthrock.Engine
                 }
                 else
                 {
-                    OnRockTurnEnd();
-                    return 0.25;
+                    ShowRockInfo("Job's Done");
+                    this.pegasus.EndTurn();
+                    return 3;
                 }
             }
 
@@ -296,94 +281,34 @@ namespace Hearthrock.Engine
             return 1;
         }
 
-        private float OnRockTurnStart()
-        {
-            TurnReady = true;
-
-            return 5;
-        }
-        private float OnRockTurnEnd()
-        {
-            ShowRockInfo("Job's Done!");
-            TurnReady = false;
-            InputManager.Get().DoEndTurnButton();
-            return 3;
-        }
-
-        public void Clear()
-        {
-            ClearGameState();
-        }
-
-
-        private void ClearGameState()
-        {
-            MulliganState = 0;
-            TurnReady = false;
-        }
-
-        private double OnRockGameOver()
-        {
-            if (EndGameScreen.Get() != null)
-            {
-                ShowRockInfo("Game Over");
-                // EndGameScreen.Get().ContinueEvents();
-                try
-                {
-                    EndGameScreen.Get().m_hitbox.TriggerRelease();
-                }
-                catch { }
-            }
-
-            return 5;
-        }
-        
-
-        int MulliganState = 0;
+        /// <summary>
+        /// On WaitForMulligan state
+        /// </summary>
+        /// <returns>Seconds to be delayed before next call.</returns>
         private double OnRockMulligan()
         {
-            if (GameState.Get().IsMulliganManagerActive() == false || MulliganManager.Get() == null || MulliganManager.Get().GetMulliganButton() == null || MulliganManager.Get().GetMulliganButton().IsEnabled() == false)
-            {
-                return 0.5;
-            }
-
-            FieldInfo filedinfo = MulliganManager.Get().GetType().GetField("m_waitingForUserInput", BindingFlags.NonPublic | BindingFlags.Instance);
-            bool iswaiting = (bool)filedinfo.GetValue(MulliganManager.Get());
-            if (!iswaiting)
-            {
-                return 0.5;
-            }
-            
-            if (MulliganState <= 0)
+            if (this.rockMulliganContext == null)
             {
                 ShowRockInfo("Mulligan");
-                Card[] cards = GameState.Get().GetFriendlySidePlayer().GetHandZone().GetCards().ToArray();
-                foreach (Card current in cards)
-                {
-                    if (current.GetEntity().GetCardId() == "GAME_005") continue;
-                    if (current.GetEntity().GetCost() > 4)
-                    {
-                        HearthstoneClickCard(current);
-                    }
-                }
-                MulliganState = 1;
-                return 1;
+                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
+                var mulliganedCards = this.bot.GetMulligan(scene);
+
+                this.rockMulliganContext = new RockMulliganContext(mulliganedCards);
             }
-            if (MulliganState <= 1)
+
+            if (this.rockMulliganContext.IsDone())
             {
                 MulliganManager.Get().GetMulliganButton().TriggerRelease();
-                MulliganState = 2;
                 return 5;
             }
-            return 0.1;
+
+            this.rockMulliganContext.Apply(GameState.Get());
+            return 1;
         }
+
 
         private double OnRockTournamentMode(bool ranked)
         {
-            if (SceneMgr.Get().IsInGame() || Network.Get().IsFindingGame())
-            {
-                return 1;
-            }
             if (DeckPickerTrayDisplay.Get() == null)
             {
                 return 1;
@@ -393,16 +318,6 @@ namespace Hearthrock.Engine
             {
                 return 1;
             }
-            /*
-            DeckPickerTrayDisplay.Get().GetSelectedDeckID();
-
-            HoldBack(5000);
-            MissionID mission = HearthRockEngine.RandomAIMissionID(expert);
-
-            Notify("PraticeMode: Deck " + deck + "Mission " + mission);
-            GameMgr.Get().StartGame(GameMode.PRACTICE, mission, deck);
-            GameMgr.Get().UpdatePresence();
-             * */
 
             bool is_ranked = Options.Get().GetBool(Option.IN_RANKED_PLAY_MODE);
             if (is_ranked != ranked)
@@ -413,20 +328,15 @@ namespace Hearthrock.Engine
             long selectedDeckID = DeckPickerTrayDisplay.Get().GetSelectedDeckID();
 
 
-            //Network.TrackWhat what;
             PegasusShared.GameType type;
             if (ranked)
             {
-                //what = Network.TrackWhat.TRACK_PLAY_TOURNAMENT_WITH_CUSTOM_DECK;
                 type = PegasusShared.GameType.GT_RANKED;
             }
             else
             {
-                //what = Network.TrackWhat.TRACK_PLAY_CASUAL_WITH_CUSTOM_DECK;
                 type = PegasusShared.GameType.GT_CASUAL;
             }
-            //Network.TrackClient(Network.TrackLevel.LEVEL_INFO, what);
-
 
             GameMgr.Get().FindGame(type, FormatType.FT_STANDARD, 2, selectedDeckID, 0L);
 
@@ -438,17 +348,6 @@ namespace Hearthrock.Engine
 
         private double OnRockPraticeMode(bool expert)
         {
-            if (SceneMgr.Get().IsInGame())
-            {
-                return 1;
-            }
-
-            if (GameMgr.Get().IsTransitionPopupShown())
-            {
-                this.tracer.Verbose("IsTransitionPopupShown");
-                return 1;
-            }
-
             if (DeckPickerTrayDisplay.Get() == null)
             {
                 this.tracer.Verbose("DeckPickerTrayDisplay.Get() NULL");
@@ -485,29 +384,9 @@ namespace Hearthrock.Engine
             {
                 PracticePickerTrayDisplay.Get().Show();
             }
-     //       if (currentSubScene == AdventureSubScenes.MissionDeckPicker)
-     //       {
-     //           GameMgr.Get().FindGame(GameType.GT_VS_AI, formatType, (int)adventureConfig.GetMission(), selectedDeckID3, 0L);
-     //       }
-
-
-            int mission = RockPegasusHelper.GetPracticeMissionId(0);
-
-
-            ShowRockInfo("FindGame GT_VS_AI");
 
             this.pegasus.SelectPracticeOpponent(1);
-            //GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_WILD, mission, deck, 0L);
             return 1;
         }
-
-
-        public static void HearthstoneClickCard(Card card)
-        {
-            InputManager input = InputManager.Get();
-            MethodInfo method = input.GetType().GetMethod("HandleClickOnCard", BindingFlags.NonPublic | BindingFlags.Instance);
-            method.Invoke(input, new object[] { card.gameObject , true});
-        }
-
     }
 }

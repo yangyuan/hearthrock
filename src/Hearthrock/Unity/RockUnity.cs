@@ -112,8 +112,6 @@ namespace Hearthrock.Unity
                     this.rockEngine.Reload();
                     this.rockEngine.ShowRockInfo("Hearthrock Started");
                 }
-
-                this.rockEngine.Clear();
             }
 
             // The status texts.

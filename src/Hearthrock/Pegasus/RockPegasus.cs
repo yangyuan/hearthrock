@@ -18,7 +18,7 @@ namespace Hearthrock.Pegasus
 
         RockEngineTracer tracer;
 
-        public RockPegasus (RockEngineTracer tracer)
+        public RockPegasus(RockEngineTracer tracer)
         {
             this.tracer = tracer;
         }
@@ -42,6 +42,24 @@ namespace Hearthrock.Pegasus
             SceneMgr.Get().SetNextMode(mode);
         }
 
+
+        public void EndTurn()
+        {
+            InputManager.Get().DoEndTurnButton();
+        }
+
+
+        public void TryFinishEndGame()
+        {
+            if (EndGameScreen.Get() != null)
+            {
+                try
+                {
+                    EndGameScreen.Get().m_hitbox.TriggerRelease();
+                }
+                catch { }
+            }
+        }
 
 
         public void SelectPracticeOpponent(int index)
@@ -111,6 +129,11 @@ namespace Hearthrock.Pegasus
                 }
             }
 
+            if (Network.Get().IsFindingGame())
+            {
+                return RockPegasusState.BlockingSceneMode;
+            }
+
             if (GameMgr.Get().IsTransitionPopupShown())
             {
                 return RockPegasusState.BlockingSceneMode;
@@ -119,8 +142,66 @@ namespace Hearthrock.Pegasus
 
             var sceneMode = SceneMgr.Get().GetMode();
 
-            return RockPegasusHelper.GetPegasusState(sceneMode);
+            var pegasusState = RockPegasusHelper.GetPegasusState(sceneMode);
 
+            if (pegasusState == RockPegasusState.GamePlay)
+            {
+                if (GameState.Get() == null)
+                {
+                    return RockPegasusState.BlockingSceneMode;
+                }
+            }
+
+            return pegasusState;
+
+        }
+        public RockPegasusGameState GetPegasusGameState()
+        {
+            GameState state = GameState.Get();
+
+            if (state.IsBlockingPowerProcessor())
+            {
+                return RockPegasusGameState.Blocking;
+            }
+            if (state.IsBusy())
+            {
+                return RockPegasusGameState.Blocking;
+            }
+            else if (state.IsMulliganPhase())
+            {
+                if (state.IsMulliganManagerActive() == false || MulliganManager.Get() == null || MulliganManager.Get().GetMulliganButton() == null || MulliganManager.Get().GetMulliganButton().IsEnabled() == false)
+                {
+                    return RockPegasusGameState.Blocking;
+                }
+
+                FieldInfo filedinfo = MulliganManager.Get().GetType().GetField("m_waitingForUserInput", BindingFlags.NonPublic | BindingFlags.Instance);
+                bool iswaiting = (bool)filedinfo.GetValue(MulliganManager.Get());
+                if (!iswaiting)
+                {
+                    return RockPegasusGameState.Blocking;
+                }
+
+                return RockPegasusGameState.WaitForMulligan;
+            }
+            else if (state.IsMulliganPhasePending())
+            {
+                return RockPegasusGameState.Blocking;
+            }
+            else if (state.IsGameOver())
+            {
+                return RockPegasusGameState.GameOver;
+            }
+            else if (state.IsFriendlySidePlayerTurn() == true)
+            {
+                if (EndTurnButton.Get().IsInWaitingState())
+                {
+                    return RockPegasusGameState.Blocking;
+                }
+
+                return RockPegasusGameState.WaitForAction;
+            }
+
+            return RockPegasusGameState.None;
         }
 
         public void NavigateToHub()

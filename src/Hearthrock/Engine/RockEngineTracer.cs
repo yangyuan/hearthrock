@@ -59,18 +59,7 @@ namespace Hearthrock.Engine
 
             if (!string.IsNullOrEmpty(this.configuration.TraceEndpoint))
             {
-                new Thread(delegate ()
-                {
-                    try
-                    {
-                        webApiClient.Post(configuration.TraceEndpoint, traceMessage);
-                    }
-                    catch (Exception e)
-                    {
-                        // for any exception
-                        Console.WriteLine(e);
-                    }
-                }).Start();
+                webApiClient.PostAsync(configuration.TraceEndpoint, traceMessage);
             }
         }
     }
