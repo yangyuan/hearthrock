@@ -100,8 +100,8 @@ namespace Hearthrock.Engine
         {
             this.pegasus.SetActive();
 
-            SceneMgr.Mode sceneMode = this.pegasus.GetSceneMode();
-            this.tracer.Verbose(sceneMode.ToString());
+            var pegasusState = this.pegasus.GetSceneMode();
+            this.tracer.Verbose(pegasusState.ToString());
         }
 
         /// <summary>
@@ -122,63 +122,40 @@ namespace Hearthrock.Engine
         {
             try
             {
-                SceneMgr.Mode sceneMode = this.pegasus.GetSceneMode();
-                this.tracer.TraceSceneMode(sceneMode);
+                var pegasusState = this.pegasus.GetSceneMode();
 
-                switch (sceneMode)
+                switch (pegasusState)
                 {
-                    case SceneMgr.Mode.STARTUP:
-                    case SceneMgr.Mode.LOGIN:
-
-                        if (this.pegasus.TryCloseQuests())
-                        {
-                            return 2;
-                        }
-
+                    case RockPegasusState.QuestsDialog:
+                        this.pegasus.TryCloseQuests();
+                        return 2;
+                    case RockPegasusState.GeneralDialog:
+                        this.pegasus.TryCloseDialog();
+                        return 2;
+                    case RockPegasusState.CancelableSceneMode:
+                        this.pegasus.NavigateToHub();
                         break;
-                    case SceneMgr.Mode.DRAFT:
-                        this.tracer.Verbose("SceneMgr.Mode.DRAFT");
-                        break;
-                    case SceneMgr.Mode.COLLECTIONMANAGER:
-                    case SceneMgr.Mode.PACKOPENING:
-                    case SceneMgr.Mode.FRIENDLY:
-                    case SceneMgr.Mode.CREDITS:
-
-
-                        if (this.pegasus.TryCloseDialog())
-                        {
-                            return 2;
-                        }
-
-                        this.pegasus.TrySetSceneMode(SceneMgr.Mode.HUB);
-                        break;
-                    case SceneMgr.Mode.INVALID:
-                    case SceneMgr.Mode.FATAL_ERROR:
-                    case SceneMgr.Mode.RESET:
-                    default:
-                        break;
-                    case SceneMgr.Mode.HUB:
+                    case RockPegasusState.Hub:
                         Clear();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
                             case RockGameMode.ExpertPractice:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.ADVENTURE);
+                                this.pegasus.NavigateToAdventure();
                                 break;
                             case RockGameMode.Casual:
                             case RockGameMode.Ranked:
                             case RockGameMode.WildCasual:
                             case RockGameMode.WildRanked:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.TOURNAMENT);
+                                this.pegasus.NavigateToTournament();
                                 Tournament.Get().NotifyOfBoxTransitionStart();
                                 break;
                             default:
                                 break;
                         }
                         break;
-                    case SceneMgr.Mode.ADVENTURE:
+                    case RockPegasusState.Adventure:
                         ClearGameState();
-                        ClearUIQuest();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
@@ -189,21 +166,20 @@ namespace Hearthrock.Engine
                             case RockGameMode.Ranked:
                             case RockGameMode.WildCasual:
                             case RockGameMode.WildRanked:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.HUB);
+                                this.pegasus.NavigateToHub();
                                 break;
                             default:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.HUB);
+                                this.pegasus.NavigateToHub();
                                 break;
                         }
                         break;
-                    case SceneMgr.Mode.TOURNAMENT:
+                    case RockPegasusState.Tournament:
                         ClearGameState();
-                        ClearUIQuest();
                         switch (this.GameMode)
                         {
                             case RockGameMode.NormalPractice:
                             case RockGameMode.ExpertPractice:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.HUB);
+                                this.pegasus.NavigateToHub();
                                 break;
                             case RockGameMode.Casual:
                             case RockGameMode.WildCasual:
@@ -212,12 +188,16 @@ namespace Hearthrock.Engine
                             case RockGameMode.WildRanked:
                                 return OnRockTournamentMode(true);
                             default:
-                                this.pegasus.TrySetSceneMode(SceneMgr.Mode.HUB);
+                                this.pegasus.NavigateToHub();
                                 break;
                         }
                         break;
-                    case SceneMgr.Mode.GAMEPLAY:
+                    case RockPegasusState.GamePlay:
                         return OnRockGamePlay();
+                    case RockPegasusState.InvalidSceneMode:
+                    case RockPegasusState.None:
+                    default:
+                        break;
                 }
 
                 return 1;
@@ -234,6 +214,12 @@ namespace Hearthrock.Engine
         bool TurnReady = false;
         private double OnRockGamePlay()
         {
+            if (GameMgr.Get().IsTransitionPopupShown())
+            {
+                this.tracer.Verbose("IsTransitionPopupShown OnRockGamePlay");
+                return 1;
+            }
+
             GameState state = GameState.Get();
             if (state == null)
             {
@@ -327,7 +313,6 @@ namespace Hearthrock.Engine
         public void Clear()
         {
             ClearGameState();
-            ClearUIQuest();
         }
 
 
@@ -335,19 +320,6 @@ namespace Hearthrock.Engine
         {
             MulliganState = 0;
             TurnReady = false;
-        }
-
-        private void ClearUIQuest()
-        {
-            try
-            {
-                WelcomeQuests wq = WelcomeQuests.Get();
-                if (wq != null) wq.m_clickCatcher.TriggerRelease();
-            }
-            catch (Exception e)
-            {
-                ShowRockInfo(e.ToString());
-            }
         }
 
         private double OnRockGameOver()
@@ -470,6 +442,13 @@ namespace Hearthrock.Engine
             {
                 return 1;
             }
+
+            if (GameMgr.Get().IsTransitionPopupShown())
+            {
+                this.tracer.Verbose("IsTransitionPopupShown");
+                return 1;
+            }
+
             if (DeckPickerTrayDisplay.Get() == null)
             {
                 this.tracer.Verbose("DeckPickerTrayDisplay.Get() NULL");
@@ -517,8 +496,9 @@ namespace Hearthrock.Engine
 
             ShowRockInfo("FindGame GT_VS_AI");
 
-            GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_STANDARD, mission, deck, 0L);
-            return 5;
+            this.pegasus.SelectPracticeOpponent(1);
+            //GameMgr.Get().FindGame(PegasusShared.GameType.GT_VS_AI, FormatType.FT_WILD, mission, deck, 0L);
+            return 1;
         }
 
 

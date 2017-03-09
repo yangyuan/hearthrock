@@ -7,6 +7,7 @@ namespace Hearthrock.Pegasus
     using Hearthrock.Contracts;
     using Hearthrock.Engine;
     using PegasusShared;
+    using System.Collections.Generic;
     using System.Reflection;
 
     /// <summary>
@@ -42,6 +43,29 @@ namespace Hearthrock.Pegasus
         }
 
 
+
+        public void SelectPracticeOpponent(int index)
+        {
+            tracer.Verbose(GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton")?.name);
+
+            List<PracticeAIButton> m_practiceAIButtons = GetPrivateField<List<PracticeAIButton>>(PracticePickerTrayDisplay.Get(), "m_practiceAIButtons");
+            m_practiceAIButtons[0].TriggerRelease();
+
+
+            tracer.Verbose(GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton")?.name);
+            PracticePickerTrayDisplay.Get().m_playButton.TriggerRelease();
+        }
+
+
+        private static T GetPrivateField<T>(object obj, string field)
+        {
+            FieldInfo fieldinfo = obj.GetType().GetField(field, BindingFlags.NonPublic | BindingFlags.Instance);
+            T m_practiceAIButtons = (T)fieldinfo.GetValue(obj);
+
+            return m_practiceAIButtons;
+        }
+
+
         public bool TryCloseDialog()
         {
             if (DialogManager.Get() == null)
@@ -72,9 +96,46 @@ namespace Hearthrock.Pegasus
             return false;
         }
 
-        public SceneMgr.Mode GetSceneMode()
+        public RockPegasusState GetSceneMode()
         {
-            return SceneMgr.Get().GetMode();
+            if (WelcomeQuests.Get() != null)
+            {
+                return RockPegasusState.QuestsDialog;
+            }
+
+            if (DialogManager.Get() != null)
+            {
+                if (DialogManager.Get().ShowingDialog())
+                {
+                    return RockPegasusState.GeneralDialog;
+                }
+            }
+
+            if (GameMgr.Get().IsTransitionPopupShown())
+            {
+                return RockPegasusState.BlockingSceneMode;
+            }
+
+
+            var sceneMode = SceneMgr.Get().GetMode();
+
+            return RockPegasusHelper.GetPegasusState(sceneMode);
+
+        }
+
+        public void NavigateToHub()
+        {
+            SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
+        }
+
+        public void NavigateToTournament()
+        {
+            SceneMgr.Get().SetNextMode(SceneMgr.Mode.TOURNAMENT);
+        }
+
+        public void NavigateToAdventure()
+        {
+            SceneMgr.Get().SetNextMode(SceneMgr.Mode.ADVENTURE);
         }
 
         /// <summary>

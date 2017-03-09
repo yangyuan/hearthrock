@@ -73,15 +73,5 @@ namespace Hearthrock.Engine
                 }).Start();
             }
         }
-
-        SceneMgr.Mode scenemgr_mode = SceneMgr.Mode.INVALID;
-        public void TraceSceneMode(SceneMgr.Mode mode)
-        {
-            if (scenemgr_mode != mode)
-            {
-                scenemgr_mode = mode;
-                this.Info(scenemgr_mode.ToString());
-            }
-        }
     }
 }
