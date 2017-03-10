@@ -9,7 +9,7 @@ namespace Hearthrock.Bot
 
     public class RockBot : IRockBot
     {
-        public List<int> GetMulligan(RockScene scene)
+        public List<int> GetMulliganAction(RockScene scene)
         {
             // return null; // You can just return an null or empty list, which means keep all cards.
 
@@ -25,11 +25,11 @@ namespace Hearthrock.Bot
             return cards;
         }
 
-        public RockAction GetAction(RockScene scene)
+        public List<int> GetPlayAction(RockScene scene)
         {
             // return null; // You can just return null, which means no action.
 
-            RockAction action = null;
+            List<int> action = null;
 
             var player = scene.Self;
             var enemyPlayer = scene.Opponent;
@@ -226,19 +226,19 @@ namespace Hearthrock.Bot
             // attack face
             foreach (var card in minionsAttacker)
             {
-                return RockAction.Create(card.RockId, enemyHero.RockId);
+                return CreateRockAction(card.RockId, enemyHero.RockId);
             }
 
             // attack face with hero weapon
             if (enemyMinionsWithTaunt.Count == 0 && hero.HasWeapon && hero.WeaponCanAttack)
             {
-                return RockAction.Create(hero.WeaponRockId, enemyHero.RockId);
+                return CreateRockAction(hero.WeaponRockId, enemyHero.RockId);
             }
 
             // attack face with hero
             if (enemyMinionsWithTaunt.Count == 0 && !hero.IsExhausted && hero.CanAttack && hero.Damage > 0)
             {
-                return RockAction.Create(hero.RockId, enemyHero.RockId);
+                return CreateRockAction(hero.RockId, enemyHero.RockId);
             }
 
             action = TryPlayHeroPower(player, hero, cards, power, enemyHero, enemyNextTurnDamage);
@@ -251,7 +251,7 @@ namespace Hearthrock.Bot
         }
 
 
-        private static RockAction TryPlayHeroPower(RockPlayer player, RockHero hero, List<RockCard> cards, RockCard power, RockHero enemyHero, int enemyNextTurnDamage)
+        private static List<int> TryPlayHeroPower(RockPlayer player, RockHero hero, List<RockCard> cards, RockCard power, RockHero enemyHero, int enemyNextTurnDamage)
         {
             if (player.Resources < 2 || !player.PowerAvailable)
             {
@@ -273,12 +273,12 @@ namespace Hearthrock.Bot
                         }
                         else
                         {
-                            return RockAction.Create(power.RockId);
+                            return CreateRockAction(power.RockId);
                         }
                     }
                     else
                     {
-                        return RockAction.Create(power.RockId);
+                        return CreateRockAction(power.RockId);
                     }
                 case RockHeroClass.Hunter:
                 case RockHeroClass.Druid:
@@ -286,11 +286,11 @@ namespace Hearthrock.Bot
                 case RockHeroClass.Rogue:
                 case RockHeroClass.Shaman:
                 case RockHeroClass.Warrior:
-                    return RockAction.Create(power.RockId);
+                    return CreateRockAction(power.RockId);
                 case RockHeroClass.Priest:
-                    return RockAction.Create(power.RockId, hero.RockId);
+                    return CreateRockAction(power.RockId, hero.RockId);
                 case RockHeroClass.Mage:
-                    return RockAction.Create(power.RockId, enemyHero.RockId);
+                    return CreateRockAction(power.RockId, enemyHero.RockId);
                 default:
                     break;
             }
@@ -298,7 +298,7 @@ namespace Hearthrock.Bot
             return null;
         }
 
-        private static RockAction TryPlayKill(List<RockMinion> attackers, List<RockMinion> targets)
+        private static List<int> TryPlayKill(List<RockMinion> attackers, List<RockMinion> targets)
         {
             RockMinion bestTarget = null;
             RockMinion bestAttacker = null;
@@ -327,7 +327,7 @@ namespace Hearthrock.Bot
 
                 if (bestTarget != null)
                 {
-                    return RockAction.Create(bestAttacker.RockId, bestTarget.RockId);
+                    return CreateRockAction(bestAttacker.RockId, bestTarget.RockId);
                 }
             }
 
@@ -335,21 +335,21 @@ namespace Hearthrock.Bot
         }
 
 
-        private static RockAction TryRandomAttack(List<RockMinion> attackers, List<RockMinion> targets)
+        private static List<int> TryRandomAttack(List<RockMinion> attackers, List<RockMinion> targets)
         {
             //deal damage with no taunt
             foreach (var target in targets)
             {
                 foreach (var attacker in attackers)
                 {
-                    return RockAction.Create(attacker.RockId, target.RockId);
+                    return CreateRockAction(attacker.RockId, target.RockId);
                 }
             }
 
             return null;
         }
 
-        private static RockAction TryPlaySpellCard(RockHero hero, int resources, List<RockCard> cards, RockHero enemyHero, List<RockMinion> enemyMinionsWithTaunt, List<RockMinion> minions)
+        private static List<int> TryPlaySpellCard(RockHero hero, int resources, List<RockCard> cards, RockHero enemyHero, List<RockMinion> enemyMinionsWithTaunt, List<RockMinion> minions)
         {
             foreach (var card in cards)
             {
@@ -370,39 +370,39 @@ namespace Hearthrock.Bot
                     {
                         if (card.CanTargetEnemyHero())
                         {
-                            return RockAction.Create(card.RockId, enemyHero.RockId);
+                            return CreateRockAction(card.RockId, enemyHero.RockId);
                         }
                         else if (card.CanTargetHero())
                         {
-                            return RockAction.Create(card.RockId, hero.RockId);
+                            return CreateRockAction(card.RockId, hero.RockId);
                         }
                         else if (card.CanTargetEnemyMinion() && enemyMinionsWithTaunt.Count != 0)
                         {
-                            return RockAction.Create(card.RockId, enemyMinionsWithTaunt[0].RockId);
+                            return CreateRockAction(card.RockId, enemyMinionsWithTaunt[0].RockId);
                         }
                         else if (card.CanTargetMinion() && minions.Count != 0)
                         {
-                            return RockAction.Create(card.RockId, minions[0].RockId);
+                            return CreateRockAction(card.RockId, minions[0].RockId);
                         }
 
                         continue;
                     }
                     else
                     {
-                        return RockAction.Create(card.RockId);
+                        return CreateRockAction(card.RockId);
                     }
                 }
 
                 if (card.IsWeapon && !hero.HasWeapon)
                 {
-                    return RockAction.Create(card.RockId);
+                    return CreateRockAction(card.RockId);
                 }
             }
 
             return null;
         }
 
-        private static RockAction TryPlayCoinCard(int resources, List<RockCard> cards)
+        private static List<int> TryPlayCoinCard(int resources, List<RockCard> cards)
         {
             RockCard coinCard = null;
             bool needCoinCard = false;
@@ -422,13 +422,13 @@ namespace Hearthrock.Bot
 
             if (coinCard != null && needCoinCard)
             {
-                return RockAction.Create(coinCard.RockId);
+                return CreateRockAction(coinCard.RockId);
             }
 
             return null;
         }
 
-        private static RockAction TryPlayBestMinionCard(RockPlayer player, RockHero enemyHero, int enemyNextTurnDamage)
+        private static List<int> TryPlayBestMinionCard(RockPlayer player, RockHero enemyHero, int enemyNextTurnDamage)
         {
             if (player.Minions.Count >= 7)
             {
@@ -450,7 +450,7 @@ namespace Hearthrock.Bot
                 if (card.HasTaunt &&
                     (card.Cost == player.Resources || ((card.Cost == player.Resources - 2) && player.PowerAvailable)))
                 {
-                    return RockAction.Create(card.RockId);
+                    return CreateRockAction(card.RockId);
                 }
             }
 
@@ -463,7 +463,7 @@ namespace Hearthrock.Bot
                     if (card.HasTaunt &&
                         (card.Cost == player.Resources - 1 || ((card.Cost == player.Resources - 3) && player.PowerAvailable)))
                     {
-                        return RockAction.Create(card.RockId);
+                        return CreateRockAction(card.RockId);
                     }
                 }
             }
@@ -475,7 +475,7 @@ namespace Hearthrock.Bot
                 {
                     if (card.HasCharge)
                     {
-                        return RockAction.Create(card.RockId);
+                        return CreateRockAction(card.RockId);
                     }
                 }
             }
@@ -483,7 +483,7 @@ namespace Hearthrock.Bot
             return null;
         }
 
-        private static RockAction TryPlayMinionCard(RockPlayer player)
+        private static List<int> TryPlayMinionCard(RockPlayer player)
         {
             if (player.Minions.Count >= 7)
             {
@@ -506,12 +506,17 @@ namespace Hearthrock.Bot
                 {
                     if (card.Cost == i)
                     {
-                        return RockAction.Create(card.RockId);
+                        return CreateRockAction(card.RockId);
                     }
                 }
             }
 
             return null;
+        }
+
+        private static List<int> CreateRockAction (params int[] cardids)
+        {
+            return new List<int>(cardids);
         }
     }
 }

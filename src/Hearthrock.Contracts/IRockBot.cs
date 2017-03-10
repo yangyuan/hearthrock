@@ -12,17 +12,17 @@ namespace Hearthrock.Contracts
     public interface IRockBot
     {
         /// <summary>
-        /// Mulligan cards for starting hand.
-        /// </summary>
-        /// <param name="cards">The starting hand.</param>
-        /// <returns>The cards mulliganed.</returns>
-        List<int> GetMulligan(RockScene scene);
-
-        /// <summary>
-        /// Generate an action for current scene.
+        /// Generate a mulligan action for current scene.
         /// </summary>
         /// <param name="scene">The scene.</param>
-        /// <returns>The action.</returns>
-        RockAction GetAction(RockScene scene);
+        /// <returns>The cards to be mulliganed.</returns>
+        List<int> GetMulliganAction(RockScene scene);
+
+        /// <summary>
+        /// Generate a play action for current scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        /// <returns>The cards to be played.</returns>
+        List<int> GetPlayAction(RockScene scene);
     }
 }

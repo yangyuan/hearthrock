@@ -42,11 +42,6 @@ namespace Hearthrock.Engine
         private RockActionContext rockActionContext;
 
         /// <summary>
-        /// Context for mulligan.
-        /// </summary>
-        private RockMulliganContext rockMulliganContext;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RockEngine" /> class.
         /// </summary>
         public RockEngine()
@@ -110,16 +105,16 @@ namespace Hearthrock.Engine
             //// var pegasusState = this.pegasus.GetSceneMode();
             //// this.tracer.Verbose(pegasusState.ToString());
 
-            try
-            {
-                AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
-                this.tracer.Verbose(currentSubScene.ToString());
-
-                this.tracer.Verbose(PracticePickerTrayDisplay.Get().IsShown().ToString());
-            }
-            catch
-            {
-            }
+            //// try
+            //// {
+            ////     //// AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
+            ////     //// this.tracer.Verbose(currentSubScene.ToString());
+            //// 
+            ////     //// this.tracer.Verbose(PracticePickerTrayDisplay.Get().IsShown().ToString());
+            //// }
+            //// catch
+            //// {
+            //// }
         }
 
         /// <summary>
@@ -274,14 +269,14 @@ namespace Hearthrock.Engine
             if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid())
             {
                 var scene = RockPegasusSnapshotter.SnapshotScene();
-                var rockAction = this.bot.GetAction(scene);
+                var rockAction = this.bot.GetPlayAction(scene);
                 if (rockAction != null)
                 {
                     var rockActionContext = new RockActionContext(rockAction, this.pegasus);
                     if (!rockActionContext.IsInvalid())
                     {
                         this.rockActionContext = rockActionContext;
-                        this.ShowRockInfo(this.rockActionContext.Interpretion());
+                        this.ShowRockInfo(this.rockActionContext.Interpretion);
                     }
                     else
                     {
@@ -310,22 +305,22 @@ namespace Hearthrock.Engine
         /// <returns>Seconds to be delayed before next call.</returns>
         private double OnRockMulligan()
         {
-            if (this.rockMulliganContext == null)
+            if (this.rockActionContext == null)
             {
                 this.ShowRockInfo("Mulligan");
                 var scene = RockPegasusSnapshotter.SnapshotScene();
-                var mulliganedCards = this.bot.GetMulligan(scene);
+                var mulliganedCards = this.bot.GetMulliganAction(scene);
 
-                this.rockMulliganContext = new RockMulliganContext(mulliganedCards, this.pegasus);
+                this.rockActionContext = new RockActionContext(mulliganedCards, this.pegasus);
             }
 
-            if (this.rockMulliganContext.IsDone())
+            if (this.rockActionContext.IsDone())
             {
                 MulliganManager.Get().GetMulliganButton().TriggerRelease();
                 return 5;
             }
 
-            this.rockMulliganContext.Apply();
+            this.rockActionContext.ApplyAll();
             return 1;
         }
 

@@ -12,7 +12,7 @@ namespace Hearthrock.Contracts
 
         public const string DefaultBotPath = "/";
 
-        public const string DefaultBotActionRelativePath = "action";
+        public const string DefaultBotPlayRelativePath = "play";
 
         public const string DefaultBotMulliganRelativePath = "mulligan";
     }

@@ -12,53 +12,69 @@ namespace Hearthrock.Engine
     /// <summary>
     /// Context for RockAction
     /// </summary>
-    class RockActionContext
+    public class RockActionContext
     {
         /// <summary>
         /// The RockAction.
         /// </summary>
-        RockAction rockAction;
+        private List<int> rockAction;
 
         /// <summary>
         /// The IRockPegasus.
         /// </summary>
-        IRockPegasus pegasus;
+        private IRockPegasus pegasus;
 
         /// <summary>
         /// The steps.
         /// </summary>
-        int step;
+        private int step;
+
+        public string Interpretion { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RockActionContext" /> class.
         /// </summary>
-        public RockActionContext(RockAction rockAction, IRockPegasus pegasus)
+        /// <param name="rockAction">The rockAction</param>
+        /// <param name="pegasus">The IRockPegasus.</param>
+        public RockActionContext(List<int> rockAction, IRockPegasus pegasus)
         {
-            this.rockAction = rockAction;
 
-            if (this.rockAction.Targets == null)
+            if (rockAction == null)
             {
-                this.rockAction.Targets = new List<int>();
+                this.rockAction = new List<int>();
+            }
+            else
+            {
+                this.rockAction = rockAction;
             }
 
             this.pegasus = pegasus;
             this.step = 0;
+            this.Interpretion = this.GetInterpretion();
         }
 
-        public string Interpretion()
+        public string GetInterpretion()
         {
-            var sourceObject = this.pegasus.GetObject(this.rockAction.Source);
-            if (this.rockAction.Targets.Count == 0)
+            if (this.rockAction.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var sourceObject = this.pegasus.GetObject(this.rockAction[0]);
+            if (this.rockAction.Count == 1)
             {
                 return "Play: " + sourceObject.Name;
             }
             else
             {
                 var targetEnities = new List<RockPegasusObject>();
-                foreach (var rockId in this.rockAction.Targets)
+
+                for (int i=1; i< this.rockAction.Count; i++)
                 {
+                    var rockId = this.rockAction[i];
                     targetEnities.Add(this.pegasus.GetObject(rockId));
                 }
+             
 
                 string ret = "Attack: " + sourceObject.Name + " ";
                 foreach (var targetEnity in targetEnities)
@@ -75,13 +91,13 @@ namespace Hearthrock.Engine
             // Pick source card
             if (this.step == 0)
             {
-                this.pegasus.ClickObject(this.rockAction.Source);
+                this.pegasus.ClickObject(this.rockAction[0]);
 
                 this.step = 1;
                 return;
             }
 
-            if (this.step == 1 && this.rockAction.Targets.Count == 0)
+            if (this.step == 1 && this.rockAction.Count == 1)
             {
                 this.pegasus.DropObject();
 
@@ -90,9 +106,9 @@ namespace Hearthrock.Engine
             }
 
             // other scenarios
-            if (this.rockAction.Targets.Count >= this.step)
+            if (this.rockAction.Count > this.step)
             {
-                this.pegasus.ClickObject(this.rockAction.Targets[this.step - 1]);
+                this.pegasus.ClickObject(this.rockAction[this.step]);
                 this.step++;
                 return;
             }
@@ -109,12 +125,12 @@ namespace Hearthrock.Engine
         /// <returns></returns>
         public bool IsInvalid()
         {
-            if (null == this.pegasus.GetObject(this.rockAction.Source))
+            if (this.rockAction.Count == 0)
             {
                 return true;
             }
 
-            foreach (var rockId in this.rockAction.Targets)
+            foreach (var rockId in this.rockAction)
             {
                 if (null == this.pegasus.GetObject(rockId))
                 {
@@ -131,7 +147,20 @@ namespace Hearthrock.Engine
         /// <returns></returns>
         public bool IsDone()
         {
-            return (this.step > this.rockAction.Targets.Count + 1);
+            return (this.step > this.rockAction.Count);
+        }
+
+
+        public void ApplyAll()
+        {
+            foreach (int cardId in this.rockAction)
+            {
+                var card = this.pegasus.GetObject(cardId);
+                if (card.CardId == "GAME_005") continue;
+                this.pegasus.ClickObject(card.RockId);
+            }
+
+            this.step = this.rockAction.Count + 1;
         }
     }
 }

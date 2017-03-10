@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IRockBot.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RockAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCardExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCardType.cs" />

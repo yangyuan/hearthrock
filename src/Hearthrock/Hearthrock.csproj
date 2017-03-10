@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\RockApiClient.cs" />
-    <Compile Include="Engine\RockMulliganContext.cs" />
     <Compile Include="Pegasus\IRockPegasus.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
     <Compile Include="Engine\RockEngineBot.cs" />
