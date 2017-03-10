@@ -59,12 +59,13 @@
     <Compile Include="Communication\RockJsonSerializer.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Pegasus\RockPegasusObject.cs" />
-    <Compile Include="Pegasus\RockPegasusSnapshotter.cs" />
-    <Compile Include="Pegasus\RockPegasus.cs" />
+    <Compile Include="Pegasus\RockPegasusFactory.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusObject.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusSnapshotter.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasus.cs" />
     <Compile Include="Pegasus\RockPegasusGameState.cs" />
-    <Compile Include="Pegasus\RockPegasusHelper.cs" />
-    <Compile Include="Pegasus\RockPegasusInput.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusHelper.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusInput.cs" />
     <Compile Include="Pegasus\RockPegasusSceneState.cs" />
     <Compile Include="Pegasus\RockPegasusSubsceneState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

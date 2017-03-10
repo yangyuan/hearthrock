@@ -5,23 +5,58 @@
 namespace Hearthrock.Pegasus
 {
     /// <summary>
-    /// Why not use original SceneState and GameState
-    /// SceneState and GameState are designed to manage game states, so Pegasus can know what to showup.
-    /// But for hearthrock, we need to decide what to do, so we need a list of states to know what can be done.
-    /// SceneState and GameState does not fit the requirement so I designed 3 new states.
+    /// SceneState for Pegasus.
     /// </summary>
     public enum RockPegasusSceneState
     {
+        /// <summary>
+        /// The None.
+        /// </summary>
         None,
-        InvalidSceneMode,
-        BlockingSceneMode,
-        CancelableSceneMode,
-        Hub,
-        Dialog,
-        GamePlay,
+
+        /// <summary>
+        /// Invalid Scene, can do nothing.
+        /// </summary>
+        InvalidScene,
+
+        /// <summary>
+        /// Blocking Scene, should wait.
+        /// </summary>
+        BlockingScene,
+
+        /// <summary>
+        /// A not support scene but can be canceled to hub.
+        /// </summary>
+        CancelableScene,
+
+        /// <summary>
+        /// A quests dialog is showing.
+        /// </summary>
         QuestsDialog,
+
+        /// <summary>
+        /// A general dialog is showing.
+        /// </summary>
         GeneralDialog,
-        Tournament,
-        Adventure,
+
+        /// <summary>
+        /// The hub scene.
+        /// </summary>
+        HubScene,
+
+        /// <summary>
+        /// The adventure (PVE) scene.
+        /// </summary>
+        AdventureScene,
+
+        /// <summary>
+        /// The tournament (PVP) scene.
+        /// </summary>
+        TournamentScene,
+
+        /// <summary>
+        /// Playing the game.
+        /// </summary>
+        GamePlay
     }
 }

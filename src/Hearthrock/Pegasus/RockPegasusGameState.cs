@@ -4,12 +4,34 @@
 
 namespace Hearthrock.Pegasus
 {
+    /// <summary>
+    /// GameState of Pegasus
+    /// </summary>
     public enum RockPegasusGameState
     {
+        /// <summary>
+        /// The None.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Game is over.
+        /// </summary>
         GameOver,
+
+        /// <summary>
+        /// Wait for mulligan action.
+        /// </summary>
         WaitForMulligan,
-        WaitForAction,
+
+        /// <summary>
+        /// Wait for play action.
+        /// </summary>
+        WaitForPlay,
+
+        /// <summary>
+        /// Blocking by opponent, system, or some animation.
+        /// </summary>
         Blocking
     }
 }

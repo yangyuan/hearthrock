@@ -4,8 +4,14 @@
 
 namespace Hearthrock.Contracts
 {
-    public class RockMinion : RockObject
+    public class RockMinion : IRockObject
     {
+        public int RockId { get; set; }
+
+        public string Name { get; set; }
+
+        public string CardId { get; set; }
+
         public int Damage { get; set; }
 
         public int Health { get; set; }

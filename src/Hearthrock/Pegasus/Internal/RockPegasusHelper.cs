@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Pegasus
+namespace Hearthrock.Pegasus.Internal
 {
     using Hearthrock.Contracts;
 
@@ -102,26 +102,26 @@ namespace Hearthrock.Pegasus
                 case SceneMgr.Mode.STARTUP:
                 case SceneMgr.Mode.LOGIN:
                 case SceneMgr.Mode.RESET:
-                    return RockPegasusSceneState.BlockingSceneMode;
+                    return RockPegasusSceneState.BlockingScene;
                 case SceneMgr.Mode.COLLECTIONMANAGER:
                 case SceneMgr.Mode.PACKOPENING:
                 case SceneMgr.Mode.FRIENDLY:
                 case SceneMgr.Mode.CREDITS:
                 case SceneMgr.Mode.DRAFT:
                 case SceneMgr.Mode.TAVERN_BRAWL:
-                    return RockPegasusSceneState.CancelableSceneMode;
+                    return RockPegasusSceneState.CancelableScene;
                 case SceneMgr.Mode.TOURNAMENT:
-                    return RockPegasusSceneState.Tournament;
+                    return RockPegasusSceneState.TournamentScene;
                 case SceneMgr.Mode.HUB:
-                    return RockPegasusSceneState.Hub;
+                    return RockPegasusSceneState.HubScene;
                 case SceneMgr.Mode.GAMEPLAY:
                     return RockPegasusSceneState.GamePlay;
                 case SceneMgr.Mode.ADVENTURE:
-                    return RockPegasusSceneState.Adventure;
+                    return RockPegasusSceneState.AdventureScene;
                 case SceneMgr.Mode.INVALID:
                 case SceneMgr.Mode.FATAL_ERROR:
                 default:
-                    return RockPegasusSceneState.InvalidSceneMode;
+                    return RockPegasusSceneState.InvalidScene;
             }
         }
     }

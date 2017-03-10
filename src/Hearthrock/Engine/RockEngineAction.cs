@@ -7,6 +7,7 @@ namespace Hearthrock.Engine
     using System.Collections.Generic;
 
     using Hearthrock.Pegasus;
+    using Hearthrock.Contracts;
 
     /// <summary>
     /// Action for RockEngine
@@ -158,7 +159,7 @@ namespace Hearthrock.Engine
             }
             else
             {
-                var targetEnities = new List<RockPegasusObject>();
+                var targetEnities = new List<IRockObject>();
 
                 for (int i = 1; i < this.actions.Count; i++)
                 {

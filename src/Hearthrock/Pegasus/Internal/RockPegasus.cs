@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Pegasus
+namespace Hearthrock.Pegasus.Internal
 {
     using Hearthrock.Contracts;
     using Hearthrock.Diagnostics;
@@ -24,7 +24,7 @@ namespace Hearthrock.Pegasus
             this.tracer = tracer;
         }
 
-        public void SetActive()
+        public void TriggerUserActive()
         {
             InactivePlayerKicker ipk = InactivePlayerKicker.Get();
             if (ipk == null)
@@ -44,13 +44,13 @@ namespace Hearthrock.Pegasus
         }
 
 
-        public void EndTurn()
+        public void DoEndTurn()
         {
             InputManager.Get().DoEndTurnButton();
         }
 
 
-        public void TryFinishEndGame()
+        public void DoEndFinishedGame()
         {
             if (EndGameScreen.Get() != null)
             {
@@ -62,7 +62,7 @@ namespace Hearthrock.Pegasus
             }
         }
 
-        public void SelectPracticeOpponent(int index)
+        public void ConfigPracticeOpponent(int index)
         {
 
 
@@ -86,7 +86,7 @@ namespace Hearthrock.Pegasus
  
         }
 
-        public void PlayPractice()
+        public void PlayPracticeGame()
         {
             PracticePickerTrayDisplay.Get().m_playButton.TriggerRelease();
         }
@@ -100,7 +100,7 @@ namespace Hearthrock.Pegasus
         }
 
 
-        public void ChooseDeck(int index)
+        public void ConfigDeck(int index)
         {
             AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
             if (currentSubScene == AdventureSubScenes.Practice)
@@ -111,7 +111,7 @@ namespace Hearthrock.Pegasus
         }
 
 
-        public void ConfigTournament(bool ranked, bool wild)
+        public void ConfigTournamentMode(bool ranked, bool wild)
         {
             bool is_ranked = Options.Get().GetBool(Option.IN_RANKED_PLAY_MODE);
             if (is_ranked != ranked)
@@ -127,7 +127,7 @@ namespace Hearthrock.Pegasus
 
         }
 
-        public void PlayTournament()
+        public void PlayTournamentGame()
         {
 
             DeckPickerTrayDisplay.Get().m_playButton.TriggerRelease();
@@ -135,7 +135,7 @@ namespace Hearthrock.Pegasus
 
 
 
-        public void ChoosePracticeMode(bool expert)
+        public void ConfigPracticeMode(bool expert)
         {
             AdventureDbId adventureId = Options.Get().GetEnum<AdventureDbId>(Option.SELECTED_ADVENTURE, AdventureDbId.PRACTICE);
             AdventureModeDbId modeId = Options.Get().GetEnum<AdventureModeDbId>(Option.SELECTED_ADVENTURE_MODE, AdventureModeDbId.NORMAL);
@@ -161,7 +161,7 @@ namespace Hearthrock.Pegasus
         }
 
 
-        public bool TryCloseDialog()
+        public bool DoCloseGeneralDialog()
         {
             if (DialogManager.Get() == null)
             {
@@ -179,7 +179,7 @@ namespace Hearthrock.Pegasus
 
 
 
-        public bool TryCloseQuests()
+        public bool DoCloseQuestsDialog()
         {
             WelcomeQuests wq = WelcomeQuests.Get();
             if (wq != null)
@@ -197,9 +197,9 @@ namespace Hearthrock.Pegasus
         {
             switch(sceneState)
             {
-                case RockPegasusSceneState.Adventure:
+                case RockPegasusSceneState.AdventureScene:
                     return GetPegasusAdventureSubsceneState();
-                case RockPegasusSceneState.Tournament:
+                case RockPegasusSceneState.TournamentScene:
                     return GetPegasusTournamentSubsceneState();
                 default:
                     return RockPegasusSubsceneState.None;
@@ -217,19 +217,19 @@ namespace Hearthrock.Pegasus
 
             if (currentSubScene == AdventureSubScenes.Chooser)
             {
-                return RockPegasusSubsceneState.WaitChooseMode;
+                return RockPegasusSubsceneState.WaitForChooseMode;
             }
 
             if (currentSubScene == AdventureSubScenes.Practice)
             {
                 if (PracticePickerTrayDisplay.Get().IsShown() == false)
                 {
-                    return RockPegasusSubsceneState.WaitChooseDeck;
+                    return RockPegasusSubsceneState.WaitForChooseDeck;
                 }
 
                 if (GetPrivateField<PracticeAIButton>(PracticePickerTrayDisplay.Get(), "m_selectedPracticeAIButton") == null)
                 {
-                    return RockPegasusSubsceneState.WaitChooseOpponent;
+                    return RockPegasusSubsceneState.WaitForChooseOpponent;
                 }
                 else
                 {
@@ -268,12 +268,12 @@ namespace Hearthrock.Pegasus
 
             if (Network.Get().IsFindingGame())
             {
-                return RockPegasusSceneState.BlockingSceneMode;
+                return RockPegasusSceneState.BlockingScene;
             }
 
             if (GameMgr.Get().IsTransitionPopupShown())
             {
-                return RockPegasusSceneState.BlockingSceneMode;
+                return RockPegasusSceneState.BlockingScene;
             }
 
 
@@ -285,7 +285,7 @@ namespace Hearthrock.Pegasus
             {
                 if (GameState.Get() == null)
                 {
-                    return RockPegasusSceneState.BlockingSceneMode;
+                    return RockPegasusSceneState.BlockingScene;
                 }
             }
 
@@ -335,23 +335,23 @@ namespace Hearthrock.Pegasus
                     return RockPegasusGameState.Blocking;
                 }
 
-                return RockPegasusGameState.WaitForAction;
+                return RockPegasusGameState.WaitForPlay;
             }
 
             return RockPegasusGameState.None;
         }
 
-        public void NavigateToHub()
+        public void NavigateToHubScene()
         {
             SceneMgr.Get().SetNextMode(SceneMgr.Mode.HUB);
         }
 
-        public void NavigateToTournament()
+        public void NavigateToTournamentScene()
         {
             SceneMgr.Get().SetNextMode(SceneMgr.Mode.TOURNAMENT);
         }
 
-        public void NavigateToAdventure()
+        public void NavigateToAdventureScene()
         {
             SceneMgr.Get().SetNextMode(SceneMgr.Mode.ADVENTURE);
         }
@@ -374,7 +374,7 @@ namespace Hearthrock.Pegasus
 
         public void ClickObject(int rockId)
         {
-            RockPegasusInput.ClickCard(GetObject(rockId).PegasusCard);
+            RockPegasusInput.ClickCard(((RockPegasusObject)GetObject(rockId)).PegasusCard);
         }
 
 
@@ -384,7 +384,7 @@ namespace Hearthrock.Pegasus
         }
 
 
-        public RockPegasusObject GetObject(int rockId)
+        public IRockObject GetObject(int rockId)
         {
             var card = GetCard(GameState.Get(), rockId);
             if (card == null)
@@ -402,6 +402,11 @@ namespace Hearthrock.Pegasus
         public static Entity GetEntity(GameState gameState, int rockId)
         {
             return GameState.Get().GetEntity(rockId);
+        }
+
+        public RockScene SnapshotScene()
+        {
+            return RockPegasusSnapshotter.SnapshotScene();
         }
     }
 }

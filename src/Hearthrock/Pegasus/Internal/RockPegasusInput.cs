@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Pegasus
+namespace Hearthrock.Pegasus.Internal
 {
     using System.Reflection;
 

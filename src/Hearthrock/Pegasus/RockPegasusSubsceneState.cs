@@ -4,12 +4,34 @@
 
 namespace Hearthrock.Pegasus
 {
+    /// <summary>
+    /// Subscene State for Pegasus.
+    /// </summary>
     public enum RockPegasusSubsceneState
     {
+        /// <summary>
+        /// The None.
+        /// </summary>
         None,
-        WaitChooseMode,
-        WaitChooseDeck,
-        WaitChooseOpponent,
-        Ready,
+
+        /// <summary>
+        /// Wait for choose a mode.
+        /// </summary>
+        WaitForChooseMode,
+
+        /// <summary>
+        /// Wait for choose a deck.
+        /// </summary>
+        WaitForChooseDeck,
+
+        /// <summary>
+        /// Wait for choose an opponent.
+        /// </summary>
+        WaitForChooseOpponent,
+
+        /// <summary>
+        /// All set.
+        /// </summary>
+        Ready
     }
 }
