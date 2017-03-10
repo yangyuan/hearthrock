@@ -1,16 +1,21 @@
-﻿// <copyright file="MiniJsonSerializerTests.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockJsonSerializerTests.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Tests
+namespace Hearthrock.Tests.CommunicationTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Hearthrock.Communication;
-    using Hearthrock.Contracts;
     using System.Collections.Generic;
 
+    using Hearthrock.Communication;
+    using Hearthrock.Contracts;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    /// <summary>
+    /// Tests for <see cref="RockJsonSerializer" /> class.
+    /// </summary>
     [TestClass]
-    public class MiniJsonSerializerTests
+    public class RockJsonSerializerTests
     {
         [TestMethod]
         public void TestMethod2()

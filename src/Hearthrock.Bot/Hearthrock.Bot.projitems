@@ -11,5 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RockBot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockBotHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockCardExtension.cs" />
   </ItemGroup>
 </Project>

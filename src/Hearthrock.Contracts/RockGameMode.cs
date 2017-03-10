@@ -5,16 +5,43 @@
 namespace Hearthrock.Contracts
 {
     /// <summary>
-    /// The game modes supported by hearthstone.
+    /// The GameModes supported by hearthrock.
     /// </summary>
     public enum RockGameMode
     {
+        /// <summary>
+        /// The None.
+        /// </summary>
         None,
+
+        /// <summary>
+        /// The Normal Practice.
+        /// </summary>
         NormalPractice,
+
+        /// <summary>
+        /// The Expert Practice.
+        /// </summary>
         ExpertPractice,
+
+        /// <summary>
+        /// The Standard Casual.
+        /// </summary>
         Casual,
+
+        /// <summary>
+        /// The Standard Ranked.
+        /// </summary>
         Ranked,
+
+        /// <summary>
+        /// The Wild Casual.
+        /// </summary>
         WildCasual,
+
+        /// <summary>
+        /// The Wild Ranked.
+        /// </summary>
         WildRanked
     }
 }

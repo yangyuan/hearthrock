@@ -8,33 +8,50 @@ namespace Hearthrock.Contracts
 
     /// <summary>
     /// Card contract of Hearthrock
+    /// Bot author is responsible to know all about a card from CardId.
     /// </summary>
     public class RockCard : IRockObject
     {
+        /// <summary>
+        /// Gets or sets the Id of the card.
+        /// </summary>
         public int RockId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the Name of the card.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the CardId of the card.
+        /// </summary>
         public string CardId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the CardType of the card.
+        /// </summary>
+        public RockCardType CardType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cost of the card.
+        /// </summary>
         public int Cost { get; set; }
 
-        // Bot author is responsible to know all about card from CardId
-        public bool IsSpell { get; set; }
-
-        public bool IsWeapon { get; set; }
-
-        public bool IsMinion { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether the card has taunt.
+        /// </summary>
         public bool HasTaunt { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the card has charge.
+        /// </summary>
         public bool HasCharge { get; set; }
 
         /// <summary>
-        /// Requirements to play this card.
+        /// Gets or sets the requirements to play this card.
         /// Should only be used as non-official reference.
         /// Bot author is responsible to know all the requirements from CardId.
         /// </summary>
-        public List<RockPlayRequirement> ActionRequirements { get; set; }
+        public List<int> PlayRequirements { get; set; }
     }
 }

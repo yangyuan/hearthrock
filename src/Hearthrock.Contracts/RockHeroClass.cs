@@ -9,15 +9,54 @@ namespace Hearthrock.Contracts
     /// </summary>
     public enum RockHeroClass
     {
+        /// <summary>
+        /// The None.
+        /// </summary>
         None,
-        Druid,
-        Hunter,
-        Paladin,
-        Priest,
-        Rogue,
-        Shaman,
+
+        /// <summary>
+        /// The Mage.
+        /// </summary>
         Mage,
-        Warlock,
-        Warrior
+
+        /// <summary>
+        /// The Hunter.
+        /// </summary>
+        Hunter,
+
+        /// <summary>
+        /// The Warrior.
+        /// </summary>
+        Warrior,
+
+        /// <summary>
+        /// The Shaman.
+        /// </summary>
+        Shaman,
+
+        /// <summary>
+        /// The Druid.
+        /// </summary>
+        Druid,
+
+        /// <summary>
+        /// The Priest.
+        /// </summary>
+        Priest,
+
+        /// <summary>
+        /// The Rogue.
+        /// </summary>
+        Rogue,
+
+        /// <summary>
+        /// The Paladin.
+        /// </summary>
+        Paladin,
+
+        /// <summary>
+        /// The Warlock.
+        /// </summary>
+        Warlock
     }
 }

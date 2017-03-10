@@ -5,12 +5,18 @@
 namespace Hearthrock.Contracts
 {
     /// <summary>
-    /// 
+    /// Scene contract of Hearthrock
     /// </summary>
     public class RockScene
     {
-        public RockPlayer Self { set; get; }
+        /// <summary>
+        /// Gets or sets the friendly player.
+        /// </summary>
+        public RockPlayer Self { get; set; }
 
-        public RockPlayer Opponent { set; get; }
+        /// <summary>
+        /// Gets or sets the enemy player.
+        /// </summary>
+        public RockPlayer Opponent { get; set; }
     }
 }

@@ -364,7 +364,7 @@ namespace Hearthrock.Bot
                     continue;
                 }
 
-                if (card.IsSpell)
+                if (card.CardType == RockCardType.Spell)
                 {
                     if (card.RequireTarget())
                     {
@@ -393,7 +393,7 @@ namespace Hearthrock.Bot
                     }
                 }
 
-                if (card.IsWeapon && !hero.HasWeapon)
+                if ((card.CardType == RockCardType.Weapon) && !hero.HasWeapon)
                 {
                     return CreateRockAction(card.RockId);
                 }
@@ -439,7 +439,7 @@ namespace Hearthrock.Bot
 
             foreach (var card in player.Cards)
             {
-                if (player.Resources >= card.Cost && card.IsMinion)
+                if (player.Resources >= card.Cost && (card.CardType == RockCardType.Minion))
                 {
                     availableCards.Add(card);
                 }
@@ -494,7 +494,7 @@ namespace Hearthrock.Bot
 
             foreach (var card in player.Cards)
             {
-                if (player.Resources >= card.Cost && card.IsMinion)
+                if (player.Resources >= card.Cost && (card.CardType == RockCardType.Minion))
                 {
                     availableCards.Add(card);
                 }
