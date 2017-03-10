@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="RockPlayRequirement.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Contracts
 {
-    public enum RockActionRequirement
+    public enum RockPlayRequirement
     {
         None = 0,
         RequireMinionTarget = 1,

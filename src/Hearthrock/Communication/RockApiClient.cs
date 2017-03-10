@@ -60,7 +60,7 @@ namespace Hearthrock.Communication
         /// <param name="obj">The object to be posted.</param>
         public void PostAsync(string endpoint, object obj)
         {
-            new Thread(delegate ()
+            new Thread(delegate()
             {
                 try
                 {

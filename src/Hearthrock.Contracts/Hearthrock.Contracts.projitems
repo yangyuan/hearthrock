@@ -11,7 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IRockBot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RockCardExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockContractExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCardType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockConstants.cs" />
@@ -21,7 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RockMinion.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockPlayer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RockActionRequirement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockPlayRequirement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockScene.cs" />
   </ItemGroup>
 </Project>

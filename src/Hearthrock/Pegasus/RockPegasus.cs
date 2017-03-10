@@ -5,7 +5,7 @@
 namespace Hearthrock.Pegasus
 {
     using Hearthrock.Contracts;
-    using Hearthrock.Engine;
+    using Hearthrock.Diagnostics;
     using PegasusShared;
     using System;
     using System.Collections.Generic;
@@ -17,9 +17,9 @@ namespace Hearthrock.Pegasus
     public class RockPegasus : IRockPegasus
     {
 
-        RockEngineTracer tracer;
+        RockTracer tracer;
 
-        public RockPegasus(RockEngineTracer tracer)
+        public RockPegasus(RockTracer tracer)
         {
             this.tracer = tracer;
         }

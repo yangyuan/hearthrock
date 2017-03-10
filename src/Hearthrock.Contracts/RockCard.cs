@@ -31,6 +31,6 @@ namespace Hearthrock.Contracts
         /// Should only be used as non-official reference.
         /// Bot author is responsible to know all the requirements from CardId.
         /// </summary>
-        public List<RockActionRequirement> ActionRequirements { get; set; }
+        public List<RockPlayRequirement> ActionRequirements { get; set; }
     }
 }

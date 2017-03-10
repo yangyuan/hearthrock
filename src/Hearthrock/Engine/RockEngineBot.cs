@@ -29,13 +29,13 @@ namespace Hearthrock.Engine
         }
 
         /// <summary>
-        /// 
+        /// Generate a mulligan action for current scene.
         /// </summary>
-        /// <param name="scene"></param>
-        /// <returns></returns>
+        /// <param name="scene">The scene.</param>
+        /// <returns>The cards to be mulligan-ed.</returns>
         public List<int> GetMulliganAction(RockScene scene)
         {
-            if (string.IsNullOrEmpty(configuration.BotEndpoint))
+            if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
             {
                 var robot = new Bot.RockBot();
                 var mulligan = robot.GetMulliganAction(scene);
@@ -44,19 +44,19 @@ namespace Hearthrock.Engine
             else
             {
                 var apiClient = new RockApiClient();
-                var mulligan = apiClient.Post<List<int>>(configuration.BotEndpoint + RockConstants.DefaultBotMulliganRelativePath, scene);
+                var mulligan = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotMulliganRelativePath}", scene);
                 return mulligan;
             }
         }
 
         /// <summary>
-        /// Generate an action for current scene.
+        /// Generate a play action for current scene.
         /// </summary>
         /// <param name="scene">The scene.</param>
-        /// <returns>The action.</returns>
+        /// <returns>The cards to be played.</returns>
         public List<int> GetPlayAction(RockScene scene)
         {
-            if (string.IsNullOrEmpty(configuration.BotEndpoint))
+            if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
             {
                 var robot = new Bot.RockBot();
                 var action = robot.GetPlayAction(scene);
@@ -65,7 +65,7 @@ namespace Hearthrock.Engine
             else
             {
                 var apiClient = new RockApiClient();
-                var action = apiClient.Post<List<int>>(configuration.BotEndpoint + RockConstants.DefaultBotPlayRelativePath, scene);
+                var action = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotPlayRelativePath}", scene);
                 return action;
             }
         }

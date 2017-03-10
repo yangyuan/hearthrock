@@ -9,6 +9,7 @@ namespace Hearthrock.Engine
 
     using Hearthrock.Communication;
     using Hearthrock.Contracts;
+    using Hearthrock.Diagnostics;
     using Hearthrock.Pegasus;
 
     /// <summary>
@@ -29,7 +30,7 @@ namespace Hearthrock.Engine
         /// <summary>
         /// The RockEngineTracer
         /// </summary>
-        private RockEngineTracer tracer;
+        private RockTracer tracer;
 
         /// <summary>
         /// The IRockPegasus
@@ -39,7 +40,7 @@ namespace Hearthrock.Engine
         /// <summary>
         /// Context for action.
         /// </summary>
-        private RockActionContext rockActionContext;
+        private RockEngineAction currentAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RockEngine" /> class.
@@ -91,7 +92,7 @@ namespace Hearthrock.Engine
             var configurationString = File.ReadAllText(RockEngineConstants.ConfigurationFilePath);
             this.configuration = RockJsonSerializer.Deserialize<RockConfiguration>(configurationString);
             this.bot = new RockEngineBot(this.configuration);
-            this.tracer = new RockEngineTracer(this.configuration);
+            this.tracer = new RockTracer(this.configuration);
             this.pegasus = new RockPegasus(this.tracer);
         }
 
@@ -262,21 +263,21 @@ namespace Hearthrock.Engine
             {
                 this.ShowRockInfo("Job's Done");
                 this.pegasus.EndTurn();
-                this.rockActionContext = null;
+                this.currentAction = null;
                 return 3;
             }
 
-            if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid())
+            if (this.currentAction == null || this.currentAction.IsDone() || !this.currentAction.IsValid())
             {
                 var scene = RockPegasusSnapshotter.SnapshotScene();
                 var rockAction = this.bot.GetPlayAction(scene);
                 if (rockAction != null)
                 {
-                    var rockActionContext = new RockActionContext(rockAction, this.pegasus);
-                    if (!rockActionContext.IsInvalid())
+                    var rockActionContext = new RockEngineAction(this.pegasus, rockAction);
+                    if (rockActionContext.IsValid())
                     {
-                        this.rockActionContext = rockActionContext;
-                        this.ShowRockInfo(this.rockActionContext.Interpretion);
+                        this.currentAction = rockActionContext;
+                        this.ShowRockInfo(this.currentAction.Interpretation);
                     }
                     else
                     {
@@ -291,9 +292,9 @@ namespace Hearthrock.Engine
                 }
             }
 
-            if (this.rockActionContext != null && !this.rockActionContext.IsInvalid())
+            if (this.currentAction != null && this.currentAction.IsValid())
             {
-                this.rockActionContext.Apply();
+                this.currentAction.Apply();
             }
 
             return 1;
@@ -305,22 +306,22 @@ namespace Hearthrock.Engine
         /// <returns>Seconds to be delayed before next call.</returns>
         private double OnRockMulligan()
         {
-            if (this.rockActionContext == null)
+            if (this.currentAction == null)
             {
                 this.ShowRockInfo("Mulligan");
                 var scene = RockPegasusSnapshotter.SnapshotScene();
                 var mulliganedCards = this.bot.GetMulliganAction(scene);
 
-                this.rockActionContext = new RockActionContext(mulliganedCards, this.pegasus);
+                this.currentAction = new RockEngineAction(this.pegasus, mulliganedCards);
             }
 
-            if (this.rockActionContext.IsDone())
+            if (this.currentAction.IsDone())
             {
                 MulliganManager.Get().GetMulliganButton().TriggerRelease();
                 return 5;
             }
 
-            this.rockActionContext.ApplyAll();
+            this.currentAction.ApplyAll();
             return 1;
         }
 

@@ -10,20 +10,62 @@ namespace Hearthrock.Communication
 
     using Facebook.MiniJSON;
 
+    /// <summary>
+    /// A JsonSerializer based on Facebook.MiniJSON.
+    /// </summary>
     public class RockJsonSerializer
     {
+        /// <summary>
+        /// List of built-in types.
+        /// </summary>
+        private static readonly List<Type> BuiltinTypes = new List<Type>
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(char),
+            typeof(decimal),
+            typeof(double),
+            typeof(float),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(bool),
+            typeof(short),
+            typeof(ushort),
+            typeof(string)
+        };
+
+        /// <summary>
+        /// Deserialize a json string to an object.
+        /// </summary>
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="json">The json string.</param>
+        /// <returns>The object deserialized.</returns>
         public static T Deserialize<T>(string json)
         {
             var obj = Json.Deserialize(json);
-            return (T)Construct(obj, typeof(T));
+            return (T)ConvertToType(obj, typeof(T));
         }
 
-        public static string Serialize(object obj)
+        /// <summary>
+        /// Serialize an object to a json string.
+        /// </summary>
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="obj">The object.</param>
+        /// <returns>The serialized json string.</returns>
+        public static string Serialize<T>(T obj)
         {
-            return Json.Serialize(ToToken(obj, obj.GetType()));
+            return Json.Serialize(ConvertToGenetal(obj, typeof(T)));
         }
 
-        private static object Construct(object obj, Type type)
+        /// <summary>
+        /// Convert an object to a certain type.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>The object converted.</returns>
+        private static object ConvertToType(object obj, Type type)
         {
             if (IsBuiltinType(type))
             {
@@ -45,12 +87,11 @@ namespace Hearthrock.Communication
 
                 foreach (var item in array)
                 {
-                    list.Add(Construct(item, genericArgument));
+                    list.Add(ConvertToType(item, genericArgument));
                 }
 
                 return list;
             }
-
 
             var map = obj as Dictionary<string, object>;
 
@@ -61,7 +102,7 @@ namespace Hearthrock.Communication
 
                 foreach (var item in map)
                 {
-                    dictionary.Add(item.Key, Construct(item.Value, genericArgument));
+                    dictionary.Add(item.Key, ConvertToType(item.Value, genericArgument));
                 }
 
                 return dictionary;
@@ -72,15 +113,24 @@ namespace Hearthrock.Communication
             {
                 try
                 {
-                    pro.SetValue(instance, Construct(map[pro.Name], pro.PropertyType), null);
+                    pro.SetValue(instance, ConvertToType(map[pro.Name], pro.PropertyType), null);
                 }
-                catch { }
+                catch
+                {
+                    // Ignore.
+                }
             }
 
             return instance;
         }
 
-        private static object ToToken(object obj, Type type)
+        /// <summary>
+        /// Convert an object to a general type.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="type">The type.</param>
+        /// <returns>The object converted.</returns>
+        private static object ConvertToGenetal(object obj, Type type)
         {
             foreach (var builtinTypes in BuiltinTypes)
             {
@@ -107,7 +157,6 @@ namespace Hearthrock.Communication
                 return (int)obj;
             }
 
-
             if (obj == null)
             {
                 return null;
@@ -122,7 +171,7 @@ namespace Hearthrock.Communication
 
                 foreach (var item in list)
                 {
-                    token.Add(ToToken(item, genericArgument));
+                    token.Add(ConvertToGenetal(item, genericArgument));
                 }
 
                 return token;
@@ -138,7 +187,7 @@ namespace Hearthrock.Communication
 
                     foreach (var key in dictionary.Keys)
                     {
-                        token.Add(key.ToString(), ToToken(dictionary[key], genericArgument));
+                        token.Add(key.ToString(), ConvertToGenetal(dictionary[key], genericArgument));
                     }
 
                     return token;
@@ -147,14 +196,20 @@ namespace Hearthrock.Communication
                 // other types
                 foreach (var pro in obj.GetType().GetProperties())
                 {
-                    token.Add(pro.Name, ToToken(pro.GetValue(obj, null), pro.PropertyType));
+                    token.Add(pro.Name, ConvertToGenetal(pro.GetValue(obj, null), pro.PropertyType));
                 }
 
                 return token;
             }
         }
 
-        private static bool IsBuiltinType (Type type)
+        /// <summary>
+        /// Is built-in Type.
+        /// Avoid to use Contains because Type equal might not be implemented.
+        /// </summary>
+        /// <param name="type">The type</param>
+        /// <returns>True if the type is build in type.</returns>
+        private static bool IsBuiltinType(Type type)
         {
             foreach (var builtinTypes in BuiltinTypes)
             {
@@ -166,21 +221,5 @@ namespace Hearthrock.Communication
 
             return false;
         }
-
-        private static readonly List<Type> BuiltinTypes = new List<Type> {
-            typeof(byte),
-            typeof(sbyte),
-            typeof(char),
-            typeof(decimal),
-            typeof(double),
-            typeof(float),
-            typeof(int),
-            typeof(uint),
-            typeof(long),
-            typeof(ulong),
-            typeof(bool),
-            typeof(short),
-            typeof(ushort),
-            typeof(string) };
     }
 }

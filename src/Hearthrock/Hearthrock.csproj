@@ -49,14 +49,16 @@
   <ItemGroup>
     <Compile Include="Communication\RockApiClient.cs" />
     <Compile Include="Pegasus\IRockPegasus.cs" />
-    <Compile Include="Engine\RockActionContext.cs" />
+    <Compile Include="Engine\RockEngineAction.cs" />
     <Compile Include="Engine\RockEngineBot.cs" />
     <Compile Include="Engine\RockEngine.cs" />
     <Compile Include="Engine\RockEngineConstants.cs" />
-    <Compile Include="Engine\RockEngineTracer.cs">
+    <Compile Include="Diagnostics\RockTracer.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
-    <Compile Include="Communication\RockSerializer.cs" />
+    <Compile Include="Communication\RockJsonSerializer.cs">
+      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Pegasus\RockPegasusObject.cs" />
     <Compile Include="Pegasus\RockPegasusSnapshotter.cs" />
     <Compile Include="Pegasus\RockPegasus.cs" />

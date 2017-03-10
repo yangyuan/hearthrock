@@ -15,7 +15,7 @@ namespace Hearthrock.Contracts
         /// Generate a mulligan action for current scene.
         /// </summary>
         /// <param name="scene">The scene.</param>
-        /// <returns>The cards to be mulliganed.</returns>
+        /// <returns>The cards to be mulligan-ed.</returns>
         List<int> GetMulliganAction(RockScene scene);
 
         /// <summary>
