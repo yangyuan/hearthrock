@@ -22,9 +22,9 @@ namespace Hearthrock.Engine
         private RockConfiguration configuration;
 
         /// <summary>
-        /// The RockBotClient
+        /// The IRockBot
         /// </summary>
-        private RockBotClient bot;
+        private IRockBot bot;
 
         /// <summary>
         /// The RockEngineTracer
@@ -95,7 +95,7 @@ namespace Hearthrock.Engine
         {
             var configurationString = File.ReadAllText(RockEngineConstants.ConfigurationFilePath);
             this.configuration = RockJsonSerializer.Deserialize<RockConfiguration>(configurationString);
-            this.bot = new RockBotClient(this.configuration);
+            this.bot = new RockEngineBot(this.configuration);
             this.tracer = new RockEngineTracer(this.configuration);
             this.pegasus = new RockPegasus(this.tracer);
         }
@@ -271,14 +271,22 @@ namespace Hearthrock.Engine
                 return 3;
             }
 
-            if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid(GameState.Get()))
+            if (this.rockActionContext == null || this.rockActionContext.IsDone() || this.rockActionContext.IsInvalid())
             {
-                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
+                var scene = RockPegasusSnapshotter.SnapshotScene();
                 var rockAction = this.bot.GetAction(scene);
                 if (rockAction != null)
                 {
-                    this.rockActionContext = new RockActionContext(rockAction);
-                    this.ShowRockInfo(this.rockActionContext.Interpretion(GameState.Get()));
+                    var rockActionContext = new RockActionContext(rockAction, this.pegasus);
+                    if (!rockActionContext.IsInvalid())
+                    {
+                        this.rockActionContext = rockActionContext;
+                        this.ShowRockInfo(this.rockActionContext.Interpretion());
+                    }
+                    else
+                    {
+                        this.tracer.Warning("Invalid rockAction");
+                    }
                 }
                 else
                 {
@@ -288,7 +296,11 @@ namespace Hearthrock.Engine
                 }
             }
 
-            this.rockActionContext.Apply(GameState.Get(), this);
+            if (this.rockActionContext != null && !this.rockActionContext.IsInvalid())
+            {
+                this.rockActionContext.Apply();
+            }
+
             return 1;
         }
 
@@ -301,10 +313,10 @@ namespace Hearthrock.Engine
             if (this.rockMulliganContext == null)
             {
                 this.ShowRockInfo("Mulligan");
-                var scene = RockSnapshotter.SnapshotScene(GameState.Get());
+                var scene = RockPegasusSnapshotter.SnapshotScene();
                 var mulliganedCards = this.bot.GetMulligan(scene);
 
-                this.rockMulliganContext = new RockMulliganContext(mulliganedCards);
+                this.rockMulliganContext = new RockMulliganContext(mulliganedCards, this.pegasus);
             }
 
             if (this.rockMulliganContext.IsDone())
@@ -313,7 +325,7 @@ namespace Hearthrock.Engine
                 return 5;
             }
 
-            this.rockMulliganContext.Apply(GameState.Get());
+            this.rockMulliganContext.Apply();
             return 1;
         }
 

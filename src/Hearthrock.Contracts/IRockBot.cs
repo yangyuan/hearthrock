@@ -16,7 +16,7 @@ namespace Hearthrock.Contracts
         /// </summary>
         /// <param name="cards">The starting hand.</param>
         /// <returns>The cards mulliganed.</returns>
-        List<RockCard> GetMulligan(RockScene scene);
+        List<int> GetMulligan(RockScene scene);
 
         /// <summary>
         /// Generate an action for current scene.

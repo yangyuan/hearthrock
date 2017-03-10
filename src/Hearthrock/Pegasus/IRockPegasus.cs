@@ -38,5 +38,8 @@ namespace Hearthrock.Pegasus
 
         void ChoosePracticeMode(bool expert);
         void ChooseDeck(int index);
+        RockPegasusObject GetObject(int rockId);
+        void ClickObject(int rockId);
+        void DropObject();
     }
 }

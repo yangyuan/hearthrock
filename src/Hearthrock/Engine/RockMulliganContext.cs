@@ -7,19 +7,21 @@ namespace Hearthrock.Engine
     class RockMulliganContext
     {
         bool applied;
-        List<RockCard> cards;
+        List<int> cards;
+        IRockPegasus pegasus;
 
-        public RockMulliganContext(List<RockCard> c)
+        public RockMulliganContext(List<int> cards, IRockPegasus pegasus)
         {
             applied = false;
+            this.pegasus = pegasus;
 
-            if (c == null)
+            if (cards == null)
             {
-                cards = new List<RockCard>();
+                this.cards = new List<int>();
             }
             else
             {
-                cards = c;
+                this.cards = cards;
             }
         }
 
@@ -28,25 +30,15 @@ namespace Hearthrock.Engine
             return applied;
         }
 
-        public void Apply(GameState gameState)
+        public void Apply()
         {
-
-            foreach (RockCard card in this.cards)
+            foreach (int cardId in this.cards)
             {
+                var card = this.pegasus.GetObject(cardId);
                 if (card.CardId == "GAME_005") continue;
-                RockPegasusInput.ClickCard(GetCard(gameState, card.RockId));
+                this.pegasus.ClickObject(card.RockId);
             }
             applied = true;
-        }
-
-        public static Card GetCard(GameState gameState, int rockId)
-        {
-            return GameState.Get().GetEntity(rockId)?.GetCard();
-        }
-
-        public static Entity GetEntity(GameState gameState, int rockId)
-        {
-            return GameState.Get().GetEntity(rockId);
         }
     }
 }

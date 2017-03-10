@@ -370,5 +370,38 @@ namespace Hearthrock.Pegasus
 
             GameMgr.Get().FindGame(gameType, formatType, missionId, deckId, 0L);
         }
+
+
+        public void ClickObject(int rockId)
+        {
+            RockPegasusInput.ClickCard(GetObject(rockId).PegasusCard);
+        }
+
+
+        public void DropObject()
+        {
+            RockPegasusInput.DropCard();
+        }
+
+
+        public RockPegasusObject GetObject(int rockId)
+        {
+            var card = GetCard(GameState.Get(), rockId);
+            if (card == null)
+            {
+                return null;
+            }
+            return new RockPegasusObject(card);
+        }
+
+        public static Card GetCard(GameState gameState, int rockId)
+        {
+            return GameState.Get().GetEntity(rockId)?.GetCard();
+        }
+
+        public static Entity GetEntity(GameState gameState, int rockId)
+        {
+            return GameState.Get().GetEntity(rockId);
+        }
     }
 }

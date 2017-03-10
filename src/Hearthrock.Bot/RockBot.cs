@@ -9,16 +9,16 @@ namespace Hearthrock.Bot
 
     public class RockBot : IRockBot
     {
-        public List<RockCard> GetMulligan(RockScene scene)
+        public List<int> GetMulligan(RockScene scene)
         {
             // return null; // You can just return an null or empty list, which means keep all cards.
 
-            List<RockCard> cards = new List<RockCard>();
+            List<int> cards = new List<int>();
             foreach(RockCard card in scene.Self.Cards)
             {
                 if (card.Cost >= 4)
                 {
-                    cards.Add(card);
+                    cards.Add(card.RockId);
                 }
             }
 

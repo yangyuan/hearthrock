@@ -32,18 +32,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.1.4\lib\net20\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.1.4\lib\net20\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\Assembly-UnityScript.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.1.4\lib\net20\Assembly-UnityScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.7.1.0.3\lib\net20\UnityEngine.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.7.1.1.4\lib\net20\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -51,14 +51,15 @@
     <Compile Include="Engine\RockMulliganContext.cs" />
     <Compile Include="Pegasus\IRockPegasus.cs" />
     <Compile Include="Engine\RockActionContext.cs" />
-    <Compile Include="Engine\RockBotClient.cs" />
+    <Compile Include="Engine\RockEngineBot.cs" />
     <Compile Include="Engine\RockEngine.cs" />
     <Compile Include="Engine\RockEngineConstants.cs" />
     <Compile Include="Engine\RockEngineTracer.cs">
       <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Communication\RockSerializer.cs" />
-    <Compile Include="Engine\RockSnapshotter.cs" />
+    <Compile Include="Pegasus\RockPegasusObject.cs" />
+    <Compile Include="Pegasus\RockPegasusSnapshotter.cs" />
     <Compile Include="Pegasus\RockPegasus.cs" />
     <Compile Include="Pegasus\RockPegasusGameState.cs" />
     <Compile Include="Pegasus\RockPegasusHelper.cs" />

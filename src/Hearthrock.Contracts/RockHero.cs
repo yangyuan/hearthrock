@@ -4,10 +4,8 @@
 
 namespace Hearthrock.Contracts
 {
-    public class RockHero
+    public class RockHero : RockObject
     {
-        public int RockId { get; set; }
-
         public RockHeroClass Class { get; set; }
 
         public int Damage { get; set; }

@@ -9,10 +9,8 @@ namespace Hearthrock.Contracts
     /// <summary>
     /// Card contract of Hearthrock
     /// </summary>
-    public class RockCard
+    public class RockCard : RockObject
     {
-        public int RockId { get; set; }
-
         public string CardId { get; set; }
 
         public int Cost { get; set; }

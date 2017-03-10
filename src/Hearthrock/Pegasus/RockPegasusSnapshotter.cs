@@ -1,16 +1,16 @@
-﻿// <copyright file="RockSnapshotter.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockPegasusSnapshotter.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Engine
+namespace Hearthrock.Pegasus
 {
     using Hearthrock.Contracts;
     using System;
     using System.Collections.Generic;
 
-    class RockSnapshotter
+    class RockPegasusSnapshotter
     {
-        public static RockScene SnapshotScene(GameState state)
+        public static RockScene SnapshotScene()
         {
             var rockScene = new RockScene();
 

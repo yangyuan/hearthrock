@@ -14,6 +14,10 @@ namespace Hearthrock.Pegasus
             InputManager inputManager = InputManager.Get();
             MethodInfo method = inputManager.GetType().GetMethod("HandleClickOnCard", BindingFlags.NonPublic | BindingFlags.Instance);
             method.Invoke(inputManager, new object[] { card.gameObject, true });
+
+            //RockInputManager.DisableInput();
+            // InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
+            //RockInputManager.EnableInput();
         }
 
         public static void DropCard()

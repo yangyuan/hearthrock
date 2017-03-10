@@ -9,54 +9,73 @@ namespace Hearthrock.Engine
     using Hearthrock.Contracts;
     using Hearthrock.Pegasus;
 
+    /// <summary>
+    /// Context for RockAction
+    /// </summary>
     class RockActionContext
     {
+        /// <summary>
+        /// The RockAction.
+        /// </summary>
         RockAction rockAction;
+
+        /// <summary>
+        /// The IRockPegasus.
+        /// </summary>
+        IRockPegasus pegasus;
+
+        /// <summary>
+        /// The steps.
+        /// </summary>
         int step;
 
-        public RockActionContext(RockAction rockAction)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RockActionContext" /> class.
+        /// </summary>
+        public RockActionContext(RockAction rockAction, IRockPegasus pegasus)
         {
             this.rockAction = rockAction;
+
+            if (this.rockAction.Targets == null)
+            {
+                this.rockAction.Targets = new List<int>();
+            }
+
+            this.pegasus = pegasus;
             this.step = 0;
         }
 
-        public string Interpretion(GameState gameState)
+        public string Interpretion()
         {
-            var sourceEnity = GetEntity(gameState, this.rockAction.Source);
+            var sourceObject = this.pegasus.GetObject(this.rockAction.Source);
             if (this.rockAction.Targets.Count == 0)
             {
-                return "Play: " + sourceEnity.GetName();
+                return "Play: " + sourceObject.Name;
             }
             else
             {
-                var targetEnities = new List<Entity>();
+                var targetEnities = new List<RockPegasusObject>();
                 foreach (var rockId in this.rockAction.Targets)
                 {
-                    targetEnities.Add(GetEntity(gameState, rockId));
+                    targetEnities.Add(this.pegasus.GetObject(rockId));
                 }
 
-                string ret = "Attack: " + sourceEnity.GetName() + " ";
+                string ret = "Attack: " + sourceObject.Name + " ";
                 foreach (var targetEnity in targetEnities)
                 {
-                    ret += " > " + targetEnity.GetName();
+                    ret += " > " + targetEnity.Name;
                 }
 
                 return ret;
             }
         }
 
-        public void Apply(GameState gameState, RockEngine engine)
+        public void Apply()
         {
-
-            //engine.Trace(RockJsonSerializer.Serialize(this.rockAction));
-            //engine.Trace(this.step.ToString());
-
-
             // Pick source card
             if (this.step == 0)
             {
-                //RockInputManager.DisableInput();
-                RockPegasusInput.ClickCard(GetCard(gameState, this.rockAction.Source));
+                this.pegasus.ClickObject(this.rockAction.Source);
 
                 this.step = 1;
                 return;
@@ -64,9 +83,7 @@ namespace Hearthrock.Engine
 
             if (this.step == 1 && this.rockAction.Targets.Count == 0)
             {
-                // InputManager.Get().DoNetworkResponse(GetCard(gameState, this.rockAction.Source).GetEntity(), true);
-                RockPegasusInput.DropCard();
-                //RockInputManager.EnableInput();
+                this.pegasus.DropObject();
 
                 this.step = 2;
                 return;
@@ -75,14 +92,13 @@ namespace Hearthrock.Engine
             // other scenarios
             if (this.rockAction.Targets.Count >= this.step)
             {
-                RockPegasusInput.ClickCard(GetCard(gameState, this.rockAction.Targets[this.step - 1]));
+                this.pegasus.ClickObject(this.rockAction.Targets[this.step - 1]);
                 this.step++;
                 return;
             }
             else
             {
-                RockPegasusInput.DropCard();
-                //RockInputManager.EnableInput();
+                this.pegasus.DropObject();
                 this.step++;
             }
         }
@@ -91,16 +107,16 @@ namespace Hearthrock.Engine
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool IsInvalid(GameState gameState)
+        public bool IsInvalid()
         {
-            if (null == GetCard(gameState, this.rockAction.Source))
+            if (null == this.pegasus.GetObject(this.rockAction.Source))
             {
                 return true;
             }
 
             foreach (var rockId in this.rockAction.Targets)
             {
-                if (null == GetCard(gameState, rockId))
+                if (null == this.pegasus.GetObject(rockId))
                 {
                     return true;
                 }
@@ -116,16 +132,6 @@ namespace Hearthrock.Engine
         public bool IsDone()
         {
             return (this.step > this.rockAction.Targets.Count + 1);
-        }
-
-        public static Card GetCard(GameState gameState, int rockId)
-        {
-            return GameState.Get().GetEntity(rockId)?.GetCard();
-        }
-
-        public static Entity GetEntity(GameState gameState, int rockId)
-        {
-            return GameState.Get().GetEntity(rockId);
         }
     }
 }

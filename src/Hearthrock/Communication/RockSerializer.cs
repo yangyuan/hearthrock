@@ -88,6 +88,11 @@ namespace Hearthrock.Communication
                 {
                     if (obj == null)
                     {
+                        if (type == typeof(string))
+                        {
+                            return string.Empty;
+                        }
+
                         return Activator.CreateInstance(type);
                     }
                     else
