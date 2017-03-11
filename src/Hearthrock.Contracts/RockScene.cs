@@ -4,6 +4,8 @@
 
 namespace Hearthrock.Contracts
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Scene contract of Hearthrock
     /// </summary>
@@ -18,5 +20,10 @@ namespace Hearthrock.Contracts
         /// Gets or sets the enemy player.
         /// </summary>
         public RockPlayer Opponent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the play options.
+        /// </summary>
+        public List<List<int>> PlayOptions { get; set; }
     }
 }

@@ -61,11 +61,11 @@
     </Compile>
     <Compile Include="Pegasus\RockPegasusFactory.cs" />
     <Compile Include="Pegasus\Internal\RockPegasusObject.cs" />
-    <Compile Include="Pegasus\Internal\RockPegasusSnapshotter.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusSnapshotHelper.cs" />
     <Compile Include="Pegasus\Internal\RockPegasus.cs" />
     <Compile Include="Pegasus\RockPegasusGameState.cs" />
     <Compile Include="Pegasus\Internal\RockPegasusHelper.cs" />
-    <Compile Include="Pegasus\Internal\RockPegasusInput.cs" />
+    <Compile Include="Pegasus\Internal\RockPegasusInputHelper.cs" />
     <Compile Include="Pegasus\RockPegasusSceneState.cs" />
     <Compile Include="Pegasus\RockPegasusSubsceneState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

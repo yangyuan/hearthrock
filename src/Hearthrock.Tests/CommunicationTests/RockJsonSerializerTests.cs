@@ -5,6 +5,7 @@
 namespace Hearthrock.Tests.CommunicationTests
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     using Hearthrock.Communication;
     using Hearthrock.Contracts;
@@ -17,6 +18,20 @@ namespace Hearthrock.Tests.CommunicationTests
     [TestClass]
     public class RockJsonSerializerTests
     {
+        /// <summary>
+        /// TestMethod for Serialize TraceInfo
+        /// </summary>
+        [TestMethod]
+        public void RockJsonSerializerOnTraceInfo()
+        {
+            var traceMessage = new Dictionary<string, string>();
+            traceMessage.Add("Level", TraceLevel.Verbose.ToString());
+            traceMessage.Add("Message", "Message");
+
+            string jsonTraceMessage = RockJsonSerializer.Serialize((object)traceMessage);
+            Assert.AreEqual("{\"Level\":\"Verbose\",\"Message\":\"Message\"}", jsonTraceMessage);
+        }
+
         /// <summary>
         /// TestMethod for Serialize
         /// </summary>

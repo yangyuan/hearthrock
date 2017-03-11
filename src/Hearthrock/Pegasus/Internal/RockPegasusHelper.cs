@@ -4,21 +4,24 @@
 
 namespace Hearthrock.Pegasus.Internal
 {
-    using Hearthrock.Contracts;
-
-    using PegasusShared;
     using System;
 
-    public static class RockPegasusHelper
+    using Hearthrock.Contracts;
+    using PegasusShared;
+
+    /// <summary>
+    /// Helper class for RockPegasus.
+    /// </summary>
+    internal static class RockPegasusHelper
     {
         /// <summary>
-        /// 
+        /// Get Pegasus Game Type from RockGameMode
         /// </summary>
-        /// <param name="gameMode"></param>
-        /// <returns></returns>
+        /// <param name="gameMode">The RockGameMode</param>
+        /// <returns>The GameType</returns>
         public static GameType GetGameType(RockGameMode gameMode)
         {
-            switch(gameMode)
+            switch (gameMode)
             {
                 case RockGameMode.NormalPractice:
                 case RockGameMode.ExpertPractice:
@@ -35,10 +38,10 @@ namespace Hearthrock.Pegasus.Internal
         }
 
         /// <summary>
-        /// 
+        /// Get Pegasus Format Type from RockGameMode
         /// </summary>
-        /// <param name="gameMode"></param>
-        /// <returns></returns>
+        /// <param name="gameMode">The RockGameMode</param>
+        /// <returns>The FormatType</returns>
         public static FormatType GetFormatType(RockGameMode gameMode)
         {
             switch (gameMode)
@@ -57,47 +60,13 @@ namespace Hearthrock.Pegasus.Internal
         }
 
         /// <summary>
-        /// 
+        /// Get RockPegasusSceneState from scene mode.
         /// </summary>
-        /// <param name="gameMode"></param>
-        /// <returns></returns>
-        public static int GetPracticeMissionId(int index)
+        /// <param name="sceneMode">The Pegasus Scene Mode.</param>
+        /// <returns>The RockPegasusSceneState.</returns>
+        public static RockPegasusSceneState GetPegasusSceneState(SceneMgr.Mode sceneMode)
         {
-            ScenarioDbId[] AI_EXPERT = {
-                ScenarioDbId.PRACTICE_EXPERT_MAGE,
-                ScenarioDbId.PRACTICE_EXPERT_WARLOCK,
-                ScenarioDbId.PRACTICE_EXPERT_HUNTER,
-                ScenarioDbId.PRACTICE_EXPERT_ROGUE,
-                ScenarioDbId.PRACTICE_EXPERT_PRIEST,
-                ScenarioDbId.PRACTICE_EXPERT_WARRIOR,
-                ScenarioDbId.PRACTICE_EXPERT_DRUID,
-                ScenarioDbId.PRACTICE_EXPERT_PALADIN,
-                ScenarioDbId.PRACTICE_EXPERT_SHAMAN
-            };
-
-            ScenarioDbId ret;
-
-            if (index <= 0 || index > AI_EXPERT.Length)
-            {
-                Random random = new Random();
-                ret = AI_EXPERT[random.Next(AI_EXPERT.Length)];
-            }
-            else
-            {
-                ret = AI_EXPERT[index - 1];
-            }
-
-            return (int)ret;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameMode"></param>
-        /// <returns></returns>
-        public static RockPegasusSceneState GetPegasusState(SceneMgr.Mode gameMode)
-        {
-            switch (gameMode)
+            switch (sceneMode)
             {
                 case SceneMgr.Mode.STARTUP:
                 case SceneMgr.Mode.LOGIN:

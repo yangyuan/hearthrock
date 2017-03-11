@@ -91,8 +91,8 @@ namespace Hearthrock.Engine
         {
             var configurationString = File.ReadAllText(RockEngineConstants.ConfigurationFilePath);
             this.configuration = RockJsonSerializer.Deserialize<RockConfiguration>(configurationString);
-            this.bot = new RockEngineBot(this.configuration);
             this.tracer = new RockTracer(this.configuration);
+            this.bot = new RockEngineBot(this.configuration, this.tracer);
             this.pegasus = RockPegasusFactory.CreatePegasus(this.tracer);
         }
 

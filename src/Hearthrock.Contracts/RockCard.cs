@@ -46,12 +46,5 @@ namespace Hearthrock.Contracts
         /// Gets or sets a value indicating whether the card has charge.
         /// </summary>
         public bool HasCharge { get; set; }
-
-        /// <summary>
-        /// Gets or sets the requirements to play this card.
-        /// Should only be used as non-official reference.
-        /// Bot author is responsible to know all the requirements from CardId.
-        /// </summary>
-        public List<int> PlayRequirements { get; set; }
     }
 }

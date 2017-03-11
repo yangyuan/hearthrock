@@ -9,7 +9,7 @@ namespace Hearthrock.Pegasus.Internal
     /// <summary>
     /// Pegasus Object
     /// </summary>
-    public class RockPegasusObject : IRockObject
+    internal class RockPegasusObject : IRockObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RockPegasusObject" /> class.

@@ -51,12 +51,11 @@ namespace Hearthrock.Communication
         /// <summary>
         /// Serialize an object to a json string.
         /// </summary>
-        /// <typeparam name="T">The type of the object.</typeparam>
         /// <param name="obj">The object.</param>
         /// <returns>The serialized json string.</returns>
-        public static string Serialize<T>(T obj)
+        public static string Serialize(object obj)
         {
-            return Json.Serialize(ConvertToGenetal(obj, typeof(T)));
+            return Json.Serialize(ConvertToGenetal(obj, obj.GetType()));
         }
 
         /// <summary>
@@ -196,7 +195,14 @@ namespace Hearthrock.Communication
                 // other types
                 foreach (var pro in obj.GetType().GetProperties())
                 {
-                    token.Add(pro.Name, ConvertToGenetal(pro.GetValue(obj, null), pro.PropertyType));
+                    try
+                    {
+                        token.Add(pro.Name, ConvertToGenetal(pro.GetValue(obj, null), pro.PropertyType));
+                    }
+                    catch
+                    {
+                        // Ignore.
+                    }
                 }
 
                 return token;

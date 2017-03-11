@@ -1,15 +1,22 @@
-﻿// <copyright file="RockPegasusSnapshotter.cs" company="https://github.com/yangyuan">
+﻿// <copyright file="RockPegasusSnapshotHelper.cs" company="https://github.com/yangyuan">
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
 namespace Hearthrock.Pegasus.Internal
 {
-    using Hearthrock.Contracts;
-    using System;
     using System.Collections.Generic;
 
-    class RockPegasusSnapshotter
+    using Hearthrock.Contracts;
+
+    /// <summary>
+    /// Pegasus Snapshot Helper
+    /// </summary>
+    internal class RockPegasusSnapshotHelper
     {
+        /// <summary>
+        /// Snapshot Scene
+        /// </summary>
+        /// <returns>The RockScene.</returns>
         public static RockScene SnapshotScene()
         {
             var rockScene = new RockScene();
@@ -19,10 +26,15 @@ namespace Hearthrock.Pegasus.Internal
 
             rockScene.Self = SnapshotPlayer(self);
             rockScene.Opponent = SnapshotPlayer(opponent);
+            rockScene.PlayOptions = SnapshotOptions();
             return rockScene;
         }
 
-
+        /// <summary>
+        /// Snapshot a Player.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The RockPlayer.</returns>
         private static RockPlayer SnapshotPlayer(Player player)
         {
             var rockPlayer = new RockPlayer();
@@ -36,6 +48,11 @@ namespace Hearthrock.Pegasus.Internal
             return rockPlayer;
         }
 
+        /// <summary>
+        /// Snapshot a Hero.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The RockHero.</returns>
         private static RockHero SnapshotHero(Player player)
         {
             var rockHero = new RockHero();
@@ -74,6 +91,7 @@ namespace Hearthrock.Pegasus.Internal
                     rockHero.Class = RockHeroClass.None;
                     break;
             }
+
             rockHero.RockId = heroEntity.GetEntityId();
             rockHero.Damage = heroEntity.GetATK();
             rockHero.CanAttack = heroEntity.CanAttack();
@@ -94,17 +112,27 @@ namespace Hearthrock.Pegasus.Internal
             return rockHero;
         }
 
+        /// <summary>
+        /// Snapshot a Hero Power.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The RockCard.</returns>
         private static RockCard SnapshotPower(Player player)
         {
             return SnapshotCard(player.GetHeroPower());
         }
 
+        /// <summary>
+        /// Snapshot minions.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The list of RockMinion.</returns>
         private static List<RockMinion> SnapshotMinions(Player player)
         {
             var rockMinions = new List<RockMinion>();
 
             List<Card> minions = player.GetBattlefieldZone().GetCards();
-            foreach(var minion in minions)
+            foreach (var minion in minions)
             {
                 rockMinions.Add(SnapshotMinion(minion.GetEntity()));
             }
@@ -112,6 +140,11 @@ namespace Hearthrock.Pegasus.Internal
             return rockMinions;
         }
 
+        /// <summary>
+        /// Snapshot a minion.
+        /// </summary>
+        /// <param name="minion">The Entity.</param>
+        /// <returns>The RockMinion.</returns>
         private static RockMinion SnapshotMinion(Entity minion)
         {
             var rockMinion = new RockMinion();
@@ -133,7 +166,11 @@ namespace Hearthrock.Pegasus.Internal
             return rockMinion;
         }
 
-
+        /// <summary>
+        /// Snapshot cards.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The list of RockCard.</returns>
         private static List<RockCard> SnapshotCards(Player player)
         {
             var rockCards = new List<RockCard>();
@@ -147,6 +184,11 @@ namespace Hearthrock.Pegasus.Internal
             return rockCards;
         }
 
+        /// <summary>
+        /// Snapshot a card.
+        /// </summary>
+        /// <param name="card">The Entity.</param>
+        /// <returns>The RockCard.</returns>
         private static RockCard SnapshotCard(Entity card)
         {
             var rockCard = new RockCard();
@@ -157,46 +199,104 @@ namespace Hearthrock.Pegasus.Internal
             if (card.IsMinion())
             {
                 rockCard.CardType = RockCardType.Minion;
-            } else if (card.IsSpell())
+            }
+            else if (card.IsSpell())
             {
                 rockCard.CardType = RockCardType.Spell;
             }
             else if (card.IsWeapon())
             {
                 rockCard.CardType = RockCardType.Weapon;
-            } else
+            }
+            else
             {
                 rockCard.CardType = RockCardType.None;
             }
+
             rockCard.HasTaunt = card.HasTaunt();
             rockCard.HasCharge = card.HasCharge();
-
-            rockCard.PlayRequirements = SnapshotActionRequirements(card.GetMasterPower().GetPlayRequirementInfo().requirementsMap);
 
             return rockCard;
         }
 
-        private static List<int> SnapshotActionRequirements(ulong requirementsMap)
+        /// <summary>
+        /// Snapshot play options.
+        /// </summary>
+        /// <returns>The play options.</returns>
+        private static List<List<int>> SnapshotOptions()
         {
-            var requirements = new List<int>();
+            var ret = new List<List<int>>();
 
-            List<int> availableRequirements = new List<int> { 1, 2, 3, 4, 6, 8, 9, 10, 11, 12, 13, 17, 22, 23, 24, 41, 44, 45, 46, 47, 49, 50, 51, 52, 54, 55, 56, 58, 59, 60, 62, 63 };
-
-            foreach (int requirement in availableRequirements)
+            var options = GameState.Get()?.GetOptionsPacket();
+            if (options == null || options.List == null)
             {
-                if (requirement == 0 || requirement > 64)
-                {
-                    continue;
-                }
-
-                if ((requirementsMap & ((ulong)1 << (requirement - 1))) != 0)
-                {
-                    requirements.Add(requirement);
-                }
-
+                return ret;
             }
 
-            return requirements;
+            foreach (var option in options.List)
+            {
+                foreach (var subOption in SnapshotOptions(option))
+                {
+                    ret.Add(subOption);
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Snapshot play options.
+        /// </summary>
+        /// <param name="option">The Network Option.</param>
+        /// <returns>The play options.</returns>
+        private static IEnumerable<List<int>> SnapshotOptions(Network.Options.Option option)
+        {
+            if (option.Subs != null && option.Subs.Count > 0)
+            {
+                foreach (var sub in option.Subs)
+                {
+                    foreach (var subOption in SnapshotSubOptions(sub))
+                    {
+                        var ret = new List<int> { option.Main.ID };
+                        ret.AddRange(subOption);
+                        yield return ret;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var mainOption in SnapshotSubOptions(option.Main))
+                {
+                    yield return mainOption;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Snapshot play sub options.
+        /// </summary>
+        /// <param name="subOption">The Network SubOption.</param>
+        /// <returns>The play sub options.</returns>
+        private static IEnumerable<List<int>> SnapshotSubOptions(Network.Options.Option.SubOption subOption)
+        {
+            if (subOption.Targets == null || subOption.Targets.Count == 0)
+            {
+                if (subOption.ID == 0)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return new List<int> { subOption.ID };
+                }
+            }
+            else
+            {
+                foreach (var target in subOption.Targets)
+                {
+                    yield return new List<int> { subOption.ID, target };
+                }
+            }
         }
     }
 }

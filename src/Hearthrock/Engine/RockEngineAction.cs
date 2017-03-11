@@ -6,8 +6,8 @@ namespace Hearthrock.Engine
 {
     using System.Collections.Generic;
 
-    using Hearthrock.Pegasus;
     using Hearthrock.Contracts;
+    using Hearthrock.Pegasus;
 
     /// <summary>
     /// Action for RockEngine
