@@ -5,38 +5,52 @@
 namespace Hearthrock.Client.Hacking
 {
     using System;
+
     using Mono.Cecil;
     using Mono.Cecil.Cil;
 
     /// <summary>
-    /// 
+    /// Extensions for MonoCecil
     /// </summary>
-    static class MonoCecilExtensions
+    public static class MonoCecilExtensions
     {
-        public static MethodDefinition GetMethod(this AssemblyDefinition ad, string type, string method)
+        /// <summary>
+        /// Get a MethodDefinition with type name and method name.
+        /// </summary>
+        /// <param name="assemblyDefinition">The AssemblyDefinition</param>
+        /// <param name="typeName">The type name.</param>
+        /// <param name="methodName">The method name.</param>
+        /// <returns>The MethodDefinition.</returns>
+        public static MethodDefinition GetMethod(this AssemblyDefinition assemblyDefinition, string typeName, string methodName)
         {
             // find hook method
             try
             {
                 TypeDefinition td = null;
-                foreach (TypeDefinition t in ad.MainModule.Types)
+                foreach (TypeDefinition t in assemblyDefinition.MainModule.Types)
                 {
-                    if (t.Name == type)
+                    if (t.Name == typeName)
                     {
                         td = t;
                         break;
                     }
                 }
-                if (td == null) return null;
+
+                if (td == null)
+                {
+                    return null;
+                }
+
                 MethodDefinition md = null;
                 foreach (MethodDefinition t in td.Methods)
                 {
-                    if (t.Name == method)
+                    if (t.Name == methodName)
                     {
                         md = t;
                         break;
                     }
                 }
+
                 return md;
             }
             catch (Exception e)
@@ -46,15 +60,22 @@ namespace Hearthrock.Client.Hacking
             }
         }
 
-        public static AssemblyDefinition InjectMethod(this AssemblyDefinition ad, MethodDefinition method, MethodDefinition method_tobe_inject)
+        /// <summary>
+        /// Inject a method to an existing method.
+        /// </summary>
+        /// <param name="assemblyDefinition">The AssemblyDefinition</param>
+        /// <param name="newMethodDefinition">The MethodDefinition.</param>
+        /// <param name="baseMethodDefinition">The MethodDefinition To Inject</param>
+        /// <returns>The updated AssemblyDefinition.</returns>
+        public static AssemblyDefinition InjectMethod(this AssemblyDefinition assemblyDefinition, MethodDefinition newMethodDefinition, MethodDefinition baseMethodDefinition)
         {
             try
             {
-                ILProcessor ilp = method.Body.GetILProcessor();
+                ILProcessor ilp = newMethodDefinition.Body.GetILProcessor();
                 Instruction ins_first = ilp.Body.Instructions[0];
-                Instruction ins = ilp.Create(OpCodes.Call, ad.MainModule.Import(method_tobe_inject.Resolve()));
+                Instruction ins = ilp.Create(OpCodes.Call, assemblyDefinition.MainModule.Import(baseMethodDefinition.Resolve()));
                 ilp.InsertBefore(ins_first, ins);
-                return ad;
+                return assemblyDefinition;
             }
             catch (Exception e)
             {

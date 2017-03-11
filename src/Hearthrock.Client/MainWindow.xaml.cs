@@ -1,34 +1,39 @@
-﻿using Hearthrock.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿// <copyright file = "MainWindow.xaml.cs" company="https://github.com/yangyuan">
+//     Copyright (c) The Hearthrock Project. All rights reserved.
+// </copyright>
 
 namespace Hearthrock.Client
 {
+    using System;
+    using System.Windows;
+    using System.Windows.Controls;
+
+    using Hearthrock.Contracts;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        RockConfiguration configuration = new RockConfiguration();
+        /// <summary>
+        /// The RockConfiguration.
+        /// </summary>
+        private RockConfiguration configuration = new RockConfiguration();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow" /> class.
+        /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
-            InitializeConfigurationAsync();
+            this.InitializeComponent();
+            this.InitializeConfigurationAsync();
         }
 
+        /// <summary>
+        /// The method to response Click event for PatchButton.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private async void PatchButton_Click(object sender, RoutedEventArgs e)
         {
             PatchButton.IsEnabled = false;
@@ -61,9 +66,14 @@ namespace Hearthrock.Client
             PatchButton.IsEnabled = true;
         }
 
-        private async void UnpatchButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// The method to response Click event for RecoverButton.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private async void RecoverButton_Click(object sender, RoutedEventArgs e)
         {
-            UnpatchButton.IsEnabled = false;
+            RecoverButton.IsEnabled = false;
 
             var patcher = new Hacking.PatchHelper();
             var path = string.Empty;
@@ -85,13 +95,18 @@ namespace Hearthrock.Client
             catch
             {
                 MessageBox.Show("Hearthstone broken, or Hearthrock out of date.");
-                UnpatchButton.IsEnabled = true;
+                RecoverButton.IsEnabled = true;
                 return;
             }
 
-            UnpatchButton.IsEnabled = true;
+            RecoverButton.IsEnabled = true;
         }
 
+        /// <summary>
+        /// The method to response Click event for DebugButton.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private async void DebugButton_Click(object sender, RoutedEventArgs e)
         {
             DebugButton.IsEnabled = false;
@@ -113,36 +128,39 @@ namespace Hearthrock.Client
             {
                 default:
                 case 0:
-                    configuration.TraceEndpoint = string.Empty;
+                    this.configuration.TraceEndpoint = string.Empty;
                     break;
                 case 1:
-                    configuration.TraceEndpoint = RockConstants.DefaultEndpoint + RockConstants.DefaultTracePath;
+                    this.configuration.TraceEndpoint = RockConstants.DefaultEndpoint + RockConstants.DefaultTracePath;
                     break;
                 case 2:
-                    configuration.TraceEndpoint = TraceTextBox.Text;
+                    this.configuration.TraceEndpoint = TraceTextBox.Text;
                     break;
             }
 
-            switch (BotComboBox.SelectedIndex)
+            switch (this.BotComboBox.SelectedIndex)
             {
                 default:
                 case 0:
-                    configuration.BotEndpoint = string.Empty;
+                    this.configuration.BotEndpoint = string.Empty;
                     break;
                 case 1:
-                    configuration.BotEndpoint = RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath;
+                    this.configuration.BotEndpoint = RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath;
                     break;
                 case 2:
-                    configuration.BotEndpoint = configuration.BotEndpoint;
+                    this.configuration.BotEndpoint = this.configuration.BotEndpoint;
                     break;
             }
 
-            await patcher.WriteConfigurationAsync(path, configuration);
-            InitializeConfigurationAsync();
+            await patcher.WriteConfigurationAsync(path, this.configuration);
+            this.InitializeConfigurationAsync();
 
             DebugButton.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Initialize Configuration and UI.
+        /// </summary>
         private async void InitializeConfigurationAsync()
         {
             var patcher = new Hacking.PatchHelper();
@@ -157,7 +175,7 @@ namespace Hearthrock.Client
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(configuration.TraceEndpoint))
+            if (string.IsNullOrWhiteSpace(this.configuration.TraceEndpoint))
             {
                 TraceComboBox.SelectedIndex = 0;
             }
@@ -165,7 +183,7 @@ namespace Hearthrock.Client
             try
             {
                 var defaultTraceEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultTracePath);
-                var traceEndpoint = new Uri(configuration.TraceEndpoint);
+                var traceEndpoint = new Uri(this.configuration.TraceEndpoint);
                 if (traceEndpoint.AbsoluteUri == defaultTraceEndpoint.AbsoluteUri)
                 {
                     TraceComboBox.SelectedIndex = 1;
@@ -175,9 +193,11 @@ namespace Hearthrock.Client
                     TraceComboBox.SelectedIndex = 2;
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
-            if (string.IsNullOrWhiteSpace(configuration.BotEndpoint))
+            if (string.IsNullOrWhiteSpace(this.configuration.BotEndpoint))
             {
                 BotComboBox.SelectedIndex = 0;
             }
@@ -185,7 +205,7 @@ namespace Hearthrock.Client
             try
             {
                 var defaultBotEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath);
-                var botEndpoint = new Uri(configuration.BotEndpoint);
+                var botEndpoint = new Uri(this.configuration.BotEndpoint);
                 if (botEndpoint.AbsoluteUri == defaultBotEndpoint.AbsoluteUri)
                 {
                     BotComboBox.SelectedIndex = 1;
@@ -195,7 +215,9 @@ namespace Hearthrock.Client
                     BotComboBox.SelectedIndex = 2;
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             DeckComboBox.SelectedIndex = 0;
             DeckComboBox.IsEnabled = false;
@@ -203,14 +225,19 @@ namespace Hearthrock.Client
             OpponentComboBox.SelectedIndex = 0;
             OpponentComboBox.IsEnabled = false;
 
-            if (configuration.GameMode == RockGameMode.None)
+            if (this.configuration.GameMode == RockGameMode.None)
             {
-                configuration.GameMode = RockGameMode.NormalPractice;
+                this.configuration.GameMode = RockGameMode.NormalPractice;
             }
 
-            GameModeComboBox.SelectedIndex = (int)configuration.GameMode - 1;
+            GameModeComboBox.SelectedIndex = (int)this.configuration.GameMode - 1;
         }
 
+        /// <summary>
+        /// The method to response SelectionChanged event for TraceComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private void TraceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (TraceComboBox.SelectedIndex)
@@ -226,11 +253,16 @@ namespace Hearthrock.Client
                     break;
                 case 2:
                     TraceTextBox.IsEnabled = true;
-                    TraceTextBox.Text = configuration.TraceEndpoint;
+                    TraceTextBox.Text = this.configuration.TraceEndpoint;
                     break;
             }
         }
-
+        
+        /// <summary>
+        /// The method to response SelectionChanged event for BotComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private void BotComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (BotComboBox.SelectedIndex)
@@ -245,25 +277,40 @@ namespace Hearthrock.Client
                     BotTextBox.IsEnabled = false;
                     break;
                 case 2:
-                    BotTextBox.Text = configuration.BotEndpoint;
+                    BotTextBox.Text = this.configuration.BotEndpoint;
                     BotTextBox.IsEnabled = true;
                     break;
             }
         }
 
+        /// <summary>
+        /// The method to response SelectionChanged event for GameModeComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private void GameModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            configuration.GameMode = (RockGameMode)(GameModeComboBox.SelectedIndex + 1);
+            this.configuration.GameMode = (RockGameMode)(GameModeComboBox.SelectedIndex + 1);
         }
-
+        
+        /// <summary>
+        /// The method to response SelectionChanged event for DeckComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private void DeckComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            configuration.DeckIndex = DeckComboBox.SelectedIndex;
+            this.configuration.DeckIndex = DeckComboBox.SelectedIndex;
         }
 
+        /// <summary>
+        /// The method to response SelectionChanged event for OpponentComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
         private void OpponentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            configuration.OpponentIndex = OpponentComboBox.SelectedIndex;
+            this.configuration.OpponentIndex = OpponentComboBox.SelectedIndex;
         }
     }
 }

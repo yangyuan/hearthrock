@@ -5,6 +5,8 @@
       <Value>Hearthrock</Value>
       <Value>API</Value>
       <Value>JSON</Value>
+      <Value>dll</Value>
+      <Value>xaml</Value>
     </CollectionProperty>
   </GlobalSettings>
   <Analyzers>

@@ -6,9 +6,10 @@ namespace Hearthrock.Client.Hacking
 {
     using System;
     using System.IO;
-    using Mono.Cecil;
     using System.Threading.Tasks;
-    using Contracts;
+
+    using Hearthrock.Contracts;
+    using Mono.Cecil;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -19,32 +20,42 @@ namespace Hearthrock.Client.Hacking
         /// <summary>
         /// The name of Hearthrock main dll, aka Hearthrock.dll.
         /// </summary>
-        const string HearthrockAssemblyName = @"Hearthrock.dll";
+        private const string HearthrockAssemblyName = @"Hearthrock.dll";
+
         /// <summary>
         /// The name of Hearthrock configuration file, aka hearthrock.json.
         /// </summary>
-        const string HearthrockConfigurationName = @"hearthrock.json";
+        private const string HearthrockConfigurationName = @"hearthrock.json";
 
         /// <summary>
         /// The name of Hearthstone main dll, aka Assembly-CSharp.dll.
         /// </summary>
-        const string HearthstoneAssemblyName = @"Assembly-CSharp.dll";
+        private const string HearthstoneAssemblyName = @"Assembly-CSharp.dll";
 
         /// <summary>
         /// The name of Hearthstone main dll backup.
         /// </summary>
-        const string HearthstoneBackupAssemblyName = @"Assembly-CSharp-original.dll";
+        private const string HearthstoneBackupAssemblyName = @"Assembly-CSharp-original.dll";
 
         /// <summary>
         /// Relative path to Hearthstone assembly directory, aka the directory contains Assembly-CSharp.dll.
         /// </summary>
-        const string RelativePathToHearthstoneAssemblyDirectory = @"Hearthstone\Hearthstone_Data\Managed";
+        private const string RelativePathToHearthstoneAssemblyDirectory = @"Hearthstone\Hearthstone_Data\Managed";
 
+        /// <summary>
+        /// Inject Hearthrock into The Hearthstone
+        /// </summary>
+        /// <param name="root">The root path of Hearthstone.</param>
+        /// <returns>The async task.</returns>
         public async Task InjectAsync(string root)
         {
-            await Task.Run(() => Inject(root));
+            await Task.Run(() => this.Inject(root));
         }
 
+        /// <summary>
+        /// Inject Hearthrock into The Hearthstone
+        /// </summary>
+        /// <param name="root">The root path of Hearthstone.</param>
         public void Inject(string root)
         {
             SetupHearthrock(root);
@@ -68,16 +79,58 @@ namespace Hearthrock.Client.Hacking
             {
                 throw new Exception("Hearthstone Start Not Found!");
             }
+
             AssemblyDefinition assembly_csharp = hearthstoneAssembly.InjectMethod(method_hearthstone, method_hearthrock);
 
             assembly_csharp.Write(hearthstoneAssemblyPath);
         }
 
         /// <summary>
+        /// Search Hearthstone Directory
+        /// </summary>
+        /// <returns>The Hearthstone Directory or null.</returns>
+        public async Task<string> SearchHearthstoneDirectoryAsync()
+        {
+            return await Task.Run(() => SearchHearthstoneDirectory());
+        }
+
+        /// <summary>
+        /// Recover Hearthstone client
+        /// </summary>
+        /// <param name="root">Hearthstone client folder.</param>
+        /// <param name="clientRoot">Hearthrock client folder.</param>
+        /// <returns>The async task.</returns>
+        public async Task RecoverHearthstoneAsync(string root, string clientRoot)
+        {
+            await Task.Run(() => RecoverHearthstone(root, clientRoot));
+        }
+
+        /// <summary>
+        /// Read Current Configuration
+        /// </summary>
+        /// <param name="root">The hearthstone root.</param>
+        /// <returns>The RockConfiguration.</returns>
+        public async Task<RockConfiguration> ReadConfigurationAsync(string root)
+        {
+            return await Task.Run(() => ReadConfiguration(root));
+        }
+
+        /// <summary>
+        /// Write Configuration
+        /// </summary>
+        /// <param name="root">The hearthstone root.</param>
+        /// <param name="rockConfiguration">The RockConfiguration.</param>
+        /// <returns>The async task.</returns>
+        public async Task WriteConfigurationAsync(string root, RockConfiguration rockConfiguration)
+        {
+            await Task.Run(() => WriteConfiguration(root, rockConfiguration));
+        }
+
+        /// <summary>
         /// Is the path a Hearthstone directory.
         /// </summary>
         /// <param name="path">The path as string.</param>
-        /// <returns>True iff the path is a Hearthstone directory.</returns>
+        /// <returns>True if the path is a Hearthstone directory.</returns>
         private static bool IsHearthstoneDirectory(string path)
         {
             if (!Directory.Exists(path))
@@ -93,19 +146,30 @@ namespace Hearthrock.Client.Hacking
             return false;
         }
 
-
-        public async Task<string> SearchHearthstoneDirectoryAsync()
+        /// <summary>
+        /// Setup Hearthrock environments
+        /// </summary>
+        /// <param name="root">The Hearthstone root path.</param>
+        /// <returns>True if Hearthrock environments setup successful.</returns>
+        private static bool SetupHearthrock(string root)
         {
-            return await Task.Run(() => SearchHearthstoneDirectory());
+            var hearthstoneAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneAssemblyName);
+            var hearthstoneBackupAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneBackupAssemblyName);
+            var hearthrockAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockAssemblyName);
+
+            File.Copy(hearthstoneAssemblyPath, hearthstoneBackupAssemblyPath, true);
+            File.Copy(HearthrockAssemblyName, hearthrockAssemblyPath, true);
+
+            return true;
         }
 
         /// <summary>
         /// Search Hearthstone directory (from a built-in lists)
         /// </summary>
         /// <returns>The hearthstone directory</returns>
-        private string SearchHearthstoneDirectory()
+        private static string SearchHearthstoneDirectory()
         {
-            var candicates = new string[] { "", @"C:\Program Files\", @"C:\Program Files (x86)\", @"C:\Games\" };
+            var candicates = new string[] { string.Empty, @"C:\Program Files\", @"C:\Program Files (x86)\", @"C:\Games\" };
 
             foreach (var candicate in candicates)
             {
@@ -119,29 +183,11 @@ namespace Hearthrock.Client.Hacking
         }
 
         /// <summary>
-        /// Setup Hearthrock environments
+        /// Recover Hearthstone client
         /// </summary>
-        /// <param name="root">The Hearthstone root path.</param>
-        /// <returns>True iff Hearthrock environments setup successful.</returns>
-        private static bool SetupHearthrock(string root)
-        {
-            var hearthstoneAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneAssemblyName);
-            var hearthstoneBackupAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneBackupAssemblyName);
-            var hearthrockAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockAssemblyName);
-
-            File.Copy(hearthstoneAssemblyPath, hearthstoneBackupAssemblyPath, true);
-            File.Copy(HearthrockAssemblyName, hearthrockAssemblyPath, true);
-
-            return true;
-        }
-
-
-        public async Task RecoverHearthstoneAsync(string root, string clientRoot)
-        {
-            await Task.Run(() => RecoverHearthstone(root, clientRoot));
-        }
-
-        private void RecoverHearthstone(string root, string clientRoot)
+        /// <param name="root">Hearthstone client folder.</param>
+        /// <param name="clientRoot">Hearthrock client folder.</param>
+        private static void RecoverHearthstone(string root, string clientRoot)
         {
             var sampleHearthstoneAssembly = Path.Combine(clientRoot, HearthstoneAssemblyName);
             var hearthstoneAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneAssemblyName);
@@ -160,7 +206,6 @@ namespace Hearthrock.Client.Hacking
                 }
             }
 
-
             if (File.Exists(hearthstoneBackupAssemblyPath))
             {
                 if (CompareFiles(hearthstoneBackupAssemblyPath, sampleHearthstoneAssembly))
@@ -173,12 +218,12 @@ namespace Hearthrock.Client.Hacking
             throw new Exception();
         }
 
-        public async Task<RockConfiguration> ReadConfigurationAsync(string root)
-        {
-            return await Task.Run(() => ReadConfiguration(root));
-        }
-
-        private RockConfiguration ReadConfiguration(string root)
+        /// <summary>
+        /// Read Current Configuration
+        /// </summary>
+        /// <param name="root">The hearthstone root.</param>
+        /// <returns>The RockConfiguration.</returns>
+        private static RockConfiguration ReadConfiguration(string root)
         {
             var hearthstoneConfigurationPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationName);
             var configurationJson = File.ReadAllText(hearthstoneConfigurationPath);
@@ -187,12 +232,12 @@ namespace Hearthrock.Client.Hacking
             return configuration;
         }
 
-        public async Task WriteConfigurationAsync(string root, RockConfiguration rockConfiguration)
-        {
-            await Task.Run(() => WriteConfiguration(root, rockConfiguration));
-        }
-
-        private void WriteConfiguration(string root, RockConfiguration rockConfiguration)
+        /// <summary>
+        /// Write Configuration
+        /// </summary>
+        /// <param name="root">The hearthstone root.</param>
+        /// <param name="rockConfiguration">The RockConfiguration.</param>
+        private static void WriteConfiguration(string root, RockConfiguration rockConfiguration)
         {
             var hearthstoneConfigurationPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationName);
             var configurationJson = JsonConvert.SerializeObject(rockConfiguration, Formatting.Indented);
@@ -204,8 +249,8 @@ namespace Hearthrock.Client.Hacking
         /// </summary>
         /// <param name="fileName1">The path of the first file.</param>
         /// <param name="fileName2">The path of the second file.</param>
-        /// <returns>True iff the files are equal.</returns>
-        private bool CompareFiles(string fileName1, string fileName2)
+        /// <returns>True if the files are equal.</returns>
+        private static bool CompareFiles(string fileName1, string fileName2)
         {
             FileInfo fi1 = new FileInfo(fileName1);
             FileInfo fi2 = new FileInfo(fileName2);

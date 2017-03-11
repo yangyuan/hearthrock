@@ -17,6 +17,9 @@ namespace Hearthrock.Tests.CommunicationTests
     [TestClass]
     public class RockJsonSerializerTests
     {
+        /// <summary>
+        /// TestMethod for Serialize
+        /// </summary>
         [TestMethod]
         public void TestMethod2()
         {
@@ -24,7 +27,10 @@ namespace Hearthrock.Tests.CommunicationTests
             var x = RockJsonSerializer.Serialize(rockScene);
         }
 
-
+        /// <summary>
+        /// Generate a sample RockScene.
+        /// </summary>
+        /// <returns>A RockScene.</returns>
         private static RockScene GenerateRockScene()
         {
             var rockScene = new RockScene();
@@ -34,6 +40,10 @@ namespace Hearthrock.Tests.CommunicationTests
             return rockScene;
         }
 
+        /// <summary>
+        /// Generate a sample RockPlayer.
+        /// </summary>
+        /// <returns>A RockPlayer.</returns>
         private static RockPlayer GenerateRockPlayer()
         {
             var rockPlayer = new RockPlayer();
@@ -48,6 +58,10 @@ namespace Hearthrock.Tests.CommunicationTests
             return rockPlayer;
         }
 
+        /// <summary>
+        /// Generate a sample RockHero.
+        /// </summary>
+        /// <returns>A RockHero.</returns>
         private static RockHero GenerateRockHero()
         {
             var rockHero = new RockHero();

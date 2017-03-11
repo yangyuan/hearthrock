@@ -8,7 +8,7 @@
         Title="Hearthrock" Height="360" Width="480">
     <Grid>
         <Button x:Name="PatchButton" Content="Patch" HorizontalAlignment="Left" Margin="80,27,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="PatchButton_Click"/>
-        <Button x:Name="UnpatchButton" Content="Unpatch" Margin="0,28,80.333,0" VerticalAlignment="Top" Height="30" Click="UnpatchButton_Click" HorizontalAlignment="Right" Width="100"/>
+        <Button x:Name="RecoverButton" Content="Recover" Margin="0,28,80.333,0" VerticalAlignment="Top" Height="30" Click="RecoverButton_Click" HorizontalAlignment="Right" Width="100"/>
         <Button x:Name="DebugButton" Content="Debug" HorizontalAlignment="Right" Margin="0,291,10.333,0" VerticalAlignment="Top" Width="75" Height="30" Click="DebugButton_Click"/>
         <Label x:Name="TraceLabel" Content="Trace" HorizontalAlignment="Left" Margin="8,76,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.03,0.635" Width="75" HorizontalContentAlignment="Right"/>
         <ComboBox x:Name="TraceComboBox" HorizontalAlignment="Left" Margin="88,80,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="TraceComboBox_SelectionChanged">
