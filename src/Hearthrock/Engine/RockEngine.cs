@@ -103,15 +103,12 @@ namespace Hearthrock.Engine
         {
             this.pegasus.TriggerUserActive();
 
-            //// var pegasusState = this.pegasus.GetSceneMode();
-            //// this.tracer.Verbose(pegasusState.ToString());
-
             //// try
             //// {
-            ////     //// AdventureSubScenes currentSubScene = AdventureConfig.Get().GetCurrentSubScene();
-            ////     //// this.tracer.Verbose(currentSubScene.ToString());
-            //// 
-            ////     //// this.tracer.Verbose(PracticePickerTrayDisplay.Get().IsShown().ToString());
+            ////     var pegasusState = this.pegasus.GetSceneMode();
+            ////     this.tracer.Verbose(pegasusState.ToString());
+            ////     RockPegasusGameState state = this.pegasus.GetPegasusGameState();
+            ////     this.tracer.Verbose(state.ToString());
             //// }
             //// catch
             //// {

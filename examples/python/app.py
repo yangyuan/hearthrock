@@ -8,27 +8,10 @@ app = Flask(__name__)
 def index():
     return "Hello, World!"
 
-def random_action(scene):
-    cards = all_self_cards(scene);
-    if (len(cards) == 0):
+def do_play(scene):
+    if (len(scene['PlayOptions']) == 0):
         return None
-    action = []
-    action.append(random.choice(cards))
-    return action
-	
-def all_self_cards(scene):
-    cards = []
-    for card in scene['Self']['Cards']:
-        if card['Cost'] <= scene['Self']['Resources']:
-            cards.append(card['RockId'])
-    return cards;
-
-def attack_hero(scene):
-    cards = all_self_cards(scene);
-    action = []
-    action.append(scene['Self']['Hero']['RockId'])
-    action.append(scene['Opponent']['Hero']['RockId'])
-    return action
+    return random.choice(scene['PlayOptions'])
 	
 def do_mulligan(scene):
     mulligan = []
@@ -47,10 +30,8 @@ def mulligan():
 @app.route('/play', methods=['POST'])
 def play():
     print(request.json)
-    action = random_action(request.json)
-    #action = attack_hero(request.json)
-    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    print(json.dumps(action))
+    action = do_play(request.json)
+    print(action)
     return jsonify(action)
 	
 @app.route('/trace', methods=['POST'])

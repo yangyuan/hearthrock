@@ -179,17 +179,19 @@ namespace Hearthrock.Pegasus.Internal
         {
             GameState state = GameState.Get();
 
-            if (state.IsResponsePacketBlocked())
-            {
-                return RockPegasusGameState.Blocking;
-            }
-
-            if (state.IsBlockingPowerProcessor())
-            {
-                return RockPegasusGameState.Blocking;
-            }
-
             if (state.IsBusy())
+            {
+                return RockPegasusGameState.Blocking;
+            }
+            else if (state.IsGameOver())
+            {
+                return RockPegasusGameState.GameOver;
+            }
+            else if(state.IsResponsePacketBlocked())
+            {
+                return RockPegasusGameState.Blocking;
+            }
+            else if (state.IsBlockingPowerProcessor())
             {
                 return RockPegasusGameState.Blocking;
             }
@@ -212,10 +214,6 @@ namespace Hearthrock.Pegasus.Internal
             else if (state.IsMulliganPhasePending())
             {
                 return RockPegasusGameState.Blocking;
-            }
-            else if (state.IsGameOver())
-            {
-                return RockPegasusGameState.GameOver;
             }
             else if (state.IsFriendlySidePlayerTurn() == true)
             {
