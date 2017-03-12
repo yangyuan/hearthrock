@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ee1e9a8f-58f1-4e73-92d5-769155db80d9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Hearthrock.Contracts</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IRockBot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockCard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockCardType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockConfiguration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockGameMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockHero.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockHeroClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockMinion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRockObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RockScene.cs" />
+  </ItemGroup>
+</Project>

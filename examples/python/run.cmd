@@ -1,0 +1,1 @@
+cmd /k python app.py

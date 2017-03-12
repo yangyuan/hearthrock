@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock", "Hearthrock\Hearthrock.csproj", "{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock.Client", "Hearthrock.Client\Hearthrock.Client.csproj", "{9907FF44-ADA4-4471-A261-74A6E81E5805}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hearthrock.Bot", "Hearthrock.Bot\Hearthrock.Bot.shproj", "{86D38E0E-7E47-4135-9999-571DD428E93F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Hearthrock.Contracts", "Hearthrock.Contracts\Hearthrock.Contracts.shproj", "{EE1E9A8F-58F1-4E73-92D5-769155DB80D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hearthrock.Tests", "Hearthrock.Tests\Hearthrock.Tests.csproj", "{2C21D5A1-E66F-4BD3-B40F-C7BFC998B1F4}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Hearthrock.Bot\Hearthrock.Bot.projitems*{15639b18-a2ae-4f18-b6c9-184adf24edbb}*SharedItemsImports = 4
+		Hearthrock.Contracts\Hearthrock.Contracts.projitems*{15639b18-a2ae-4f18-b6c9-184adf24edbb}*SharedItemsImports = 4
+		Hearthrock.Bot\Hearthrock.Bot.projitems*{86d38e0e-7e47-4135-9999-571dd428e93f}*SharedItemsImports = 13
+		Hearthrock.Contracts\Hearthrock.Contracts.projitems*{ee1e9a8f-58f1-4e73-92d5-769155db80d9}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15639B18-A2AE-4F18-B6C9-184ADF24EDBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9907FF44-ADA4-4471-A261-74A6E81E5805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9907FF44-ADA4-4471-A261-74A6E81E5805}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9907FF44-ADA4-4471-A261-74A6E81E5805}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9907FF44-ADA4-4471-A261-74A6E81E5805}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C21D5A1-E66F-4BD3-B40F-C7BFC998B1F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C21D5A1-E66F-4BD3-B40F-C7BFC998B1F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C21D5A1-E66F-4BD3-B40F-C7BFC998B1F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C21D5A1-E66F-4BD3-B40F-C7BFC998B1F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
