@@ -28,6 +28,16 @@ namespace Hearthrock.Contracts
         public string CardId { get; set; }
 
         /// <summary>
+        /// Gets or sets the damage of the card.
+        /// </summary>
+        public int Damage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the health of the card.
+        /// </summary>
+        public int Health { get; set; }
+
+        /// <summary>
         /// Gets or sets the CardType of the card.
         /// </summary>
         public RockCardType CardType { get; set; }

@@ -218,6 +218,8 @@ namespace Hearthrock.Pegasus.Internal
                 rockCard.CardType = RockCardType.None;
             }
 
+            rockCard.Damage = card.GetATK();
+            rockCard.Health = card.GetHealth();
             rockCard.HasTaunt = card.HasTaunt();
             rockCard.HasCharge = card.HasCharge();
             rockCard.Options = new List<RockCard>();

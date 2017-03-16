@@ -16,16 +16,16 @@ namespace Hearthrock.Contracts
         public int TraceLevel { get; set; }
 
         /// <summary>
-        /// Gets or sets the endpoint of Hearthrock bot.
-        /// Empty of null means use local bot.
-        /// </summary>
-        public string BotEndpoint { get; set; }
-
-        /// <summary>
         /// Gets or sets the endpoint of Hearthrock trace.
         /// Empty of null means use standard output to output trace.
         /// </summary>
         public string TraceEndpoint { get; set; }
+
+        /// <summary>
+        /// Gets or sets the endpoint of Hearthrock bot.
+        /// Empty of null means use local bot.
+        /// </summary>
+        public string BotEndpoint { get; set; }
 
         /// <summary>
         /// Gets or sets the preferred game mode.

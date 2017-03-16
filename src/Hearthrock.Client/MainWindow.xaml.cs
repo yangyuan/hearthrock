@@ -9,12 +9,18 @@ namespace Hearthrock.Client
     using System.Windows.Controls;
 
     using Hearthrock.Contracts;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// The root path of Hearthstone.
+        /// </summary>
+        private string rootPath = string.Empty;
+
         /// <summary>
         /// The RockConfiguration.
         /// </summary>
@@ -103,13 +109,13 @@ namespace Hearthrock.Client
         }
 
         /// <summary>
-        /// The method to response Click event for DebugButton.
+        /// The method to response Click event for SaveButton.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event.</param>
-        private async void DebugButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            DebugButton.IsEnabled = false;
+            SaveButton.IsEnabled = false;
 
             var patcher = new Hacking.PatchHelper();
             var path = string.Empty;
@@ -120,7 +126,7 @@ namespace Hearthrock.Client
             catch
             {
                 MessageBox.Show("Cannot find Hearthstone Directory.");
-                DebugButton.IsEnabled = true;
+                SaveButton.IsEnabled = true;
                 return;
             }
 
@@ -148,89 +154,14 @@ namespace Hearthrock.Client
                     this.configuration.BotEndpoint = RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath;
                     break;
                 case 2:
-                    this.configuration.BotEndpoint = this.configuration.BotEndpoint;
+                    this.configuration.BotEndpoint = BotTextBox.Text;
                     break;
             }
 
             await patcher.WriteConfigurationAsync(path, this.configuration);
             this.InitializeConfigurationAsync();
 
-            DebugButton.IsEnabled = true;
-        }
-
-        /// <summary>
-        /// Initialize Configuration and UI.
-        /// </summary>
-        private async void InitializeConfigurationAsync()
-        {
-            var patcher = new Hacking.PatchHelper();
-            var path = string.Empty;
-            try
-            {
-                path = await patcher.SearchHearthstoneDirectoryAsync();
-                this.configuration = await patcher.ReadConfigurationAsync(path);
-            }
-            catch
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(this.configuration.TraceEndpoint))
-            {
-                TraceComboBox.SelectedIndex = 0;
-            }
-
-            try
-            {
-                var defaultTraceEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultTracePath);
-                var traceEndpoint = new Uri(this.configuration.TraceEndpoint);
-                if (traceEndpoint.AbsoluteUri == defaultTraceEndpoint.AbsoluteUri)
-                {
-                    TraceComboBox.SelectedIndex = 1;
-                }
-                else
-                {
-                    TraceComboBox.SelectedIndex = 2;
-                }
-            }
-            catch
-            {
-            }
-
-            if (string.IsNullOrWhiteSpace(this.configuration.BotEndpoint))
-            {
-                BotComboBox.SelectedIndex = 0;
-            }
-
-            try
-            {
-                var defaultBotEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath);
-                var botEndpoint = new Uri(this.configuration.BotEndpoint);
-                if (botEndpoint.AbsoluteUri == defaultBotEndpoint.AbsoluteUri)
-                {
-                    BotComboBox.SelectedIndex = 1;
-                }
-                else
-                {
-                    BotComboBox.SelectedIndex = 2;
-                }
-            }
-            catch
-            {
-            }
-
-            DeckComboBox.SelectedIndex = 0;
-            DeckComboBox.IsEnabled = false;
-
-            OpponentComboBox.SelectedIndex = 0;
-            OpponentComboBox.IsEnabled = false;
-
-            if (this.configuration.GameMode == RockGameMode.None)
-            {
-                this.configuration.GameMode = RockGameMode.NormalPractice;
-            }
-
-            GameModeComboBox.SelectedIndex = (int)this.configuration.GameMode - 1;
+            SaveButton.IsEnabled = true;
         }
 
         /// <summary>
@@ -311,6 +242,132 @@ namespace Hearthrock.Client
         private void OpponentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.configuration.OpponentIndex = OpponentComboBox.SelectedIndex;
+        }
+
+        /// <summary>
+        /// The method to response SelectionChanged event for LoggingComboBox.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private void LoggingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.configuration.TraceLevel = LoggingComboBox.SelectedIndex;
+        }
+
+
+        /// <summary>
+        /// The method to response Click event for PathButton.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event.</param>
+        private async void PathButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                var result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    await InitializeConfigurationAsync(dialog.SelectedPath);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initialize Configuration and UI.
+        /// </summary>
+        private async void InitializeConfigurationAsync()
+        {
+            var patcher = new Hacking.PatchHelper();
+            var path = string.Empty;
+            try
+            {
+                path = await patcher.SearchHearthstoneDirectoryAsync();
+                this.configuration = await patcher.ReadConfigurationAsync(path);
+            }
+            catch
+            {
+                MessageBox.Show("Can not find Hearthstone Directory");
+                return;
+            }
+
+            await InitializeConfigurationAsync(path);
+        }
+
+        /// <summary>
+        /// Initialize Configuration and UI.
+        /// </summary>
+        /// <param name="path">the rootPath</param>
+        /// <returns>The task</returns>
+        private async Task InitializeConfigurationAsync(string path)
+        {
+            await Task.Delay(0);
+
+            PathTextBox.Text = path;
+
+            if (string.IsNullOrWhiteSpace(this.configuration.TraceEndpoint))
+            {
+                TraceComboBox.SelectedIndex = 0;
+            }
+
+            try
+            {
+                var defaultTraceEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultTracePath);
+                var traceEndpoint = new Uri(this.configuration.TraceEndpoint);
+                if (traceEndpoint.AbsoluteUri == defaultTraceEndpoint.AbsoluteUri)
+                {
+                    TraceComboBox.SelectedIndex = 1;
+                }
+                else
+                {
+                    TraceComboBox.SelectedIndex = 2;
+                }
+            }
+            catch
+            {
+            }
+
+            if (string.IsNullOrWhiteSpace(this.configuration.BotEndpoint))
+            {
+                BotComboBox.SelectedIndex = 0;
+            }
+
+            try
+            {
+                var defaultBotEndpoint = new Uri(RockConstants.DefaultEndpoint + RockConstants.DefaultBotPath);
+                var botEndpoint = new Uri(this.configuration.BotEndpoint);
+                if (botEndpoint.AbsoluteUri == defaultBotEndpoint.AbsoluteUri)
+                {
+                    BotComboBox.SelectedIndex = 1;
+                }
+                else
+                {
+                    BotComboBox.SelectedIndex = 2;
+                }
+            }
+            catch
+            {
+            }
+
+            DeckComboBox.SelectedIndex = 0;
+            DeckComboBox.IsEnabled = false;
+
+            OpponentComboBox.SelectedIndex = 0;
+            OpponentComboBox.IsEnabled = false;
+
+            if (this.configuration.GameMode == RockGameMode.None)
+            {
+                this.configuration.GameMode = RockGameMode.NormalPractice;
+            }
+
+            GameModeComboBox.SelectedIndex = (int)this.configuration.GameMode - 1;
+
+            if (this.configuration.TraceLevel < 0 && this.configuration.TraceLevel > 4)
+            {
+                this.configuration.TraceLevel = 0;
+            }
+
+            LoggingComboBox.SelectedIndex = this.configuration.TraceLevel;
         }
     }
 }

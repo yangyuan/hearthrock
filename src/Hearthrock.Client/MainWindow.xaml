@@ -5,27 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hearthrock.Client"
         mc:Ignorable="d"
-        Title="Hearthrock" Height="360" Width="480">
-    <Grid>
-        <Button x:Name="PatchButton" Content="Patch" HorizontalAlignment="Left" Margin="80,27,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="PatchButton_Click"/>
-        <Button x:Name="RecoverButton" Content="Recover" Margin="0,28,80.333,0" VerticalAlignment="Top" Height="30" Click="RecoverButton_Click" HorizontalAlignment="Right" Width="100"/>
-        <Button x:Name="DebugButton" Content="Debug" HorizontalAlignment="Right" Margin="0,291,10.333,0" VerticalAlignment="Top" Width="75" Height="30" Click="DebugButton_Click"/>
-        <Label x:Name="TraceLabel" Content="Trace" HorizontalAlignment="Left" Margin="8,76,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.03,0.635" Width="75" HorizontalContentAlignment="Right"/>
-        <ComboBox x:Name="TraceComboBox" HorizontalAlignment="Left" Margin="88,80,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="TraceComboBox_SelectionChanged">
+        Title="Hearthrock" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Grid Width="480" Height="360">
+        <Button x:Name="PatchButton" Content="Patch" HorizontalAlignment="Left" Margin="88,24,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="PatchButton_Click"/>
+        <Button x:Name="RecoverButton" Content="Recover" Margin="0,24,88,0" VerticalAlignment="Top" Height="30" Click="RecoverButton_Click" HorizontalAlignment="Right" Width="100"/>
+        <Button x:Name="SaveButton" Content="Sync Configuration" HorizontalAlignment="Right" Margin="0,288,22,0" VerticalAlignment="Top" Width="131" Height="30" Click="SaveButton_Click"/>
+        <Label x:Name="TraceLabel" Content="Trace" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.03,0.635" Width="64" HorizontalContentAlignment="Right"/>
+        <ComboBox x:Name="TraceComboBox" HorizontalAlignment="Left" Margin="88,106,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="TraceComboBox_SelectionChanged">
             <ComboBoxItem Content="BuiltIn"/>
             <ComboBoxItem Content="Local"/>
             <ComboBoxItem Content="Custom"/>
         </ComboBox>
-        <TextBox x:Name="TraceTextBox" Height="22" Margin="183,80,26.333,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False" VerticalContentAlignment="Center" Padding="1,0"/>
+        <TextBox x:Name="TraceTextBox" Height="22" Margin="183,106,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False" VerticalContentAlignment="Center" Padding="1,0"/>
 
-        <Label x:Name="BotLabel" Content="Bot" HorizontalAlignment="Left" Margin="9,111,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="74" HorizontalContentAlignment="Right"/>
-        <ComboBox x:Name="BotComboBox" HorizontalAlignment="Left" Margin="88,116,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="BotComboBox_SelectionChanged">
+        <Label x:Name="BotLabel" Content="Bot" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="64" HorizontalContentAlignment="Right"/>
+        <ComboBox x:Name="BotComboBox" HorizontalAlignment="Left" Margin="88,140,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="BotComboBox_SelectionChanged">
             <ComboBoxItem Content="BuiltIn"/>
             <ComboBoxItem Content="Local"/>
             <ComboBoxItem Content="Custom"/>
         </ComboBox>
-        <TextBox x:Name="BotTextBox" Height="22" Margin="183,116,26.333,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False" VerticalContentAlignment="Center" Padding="1,0"/>
-        <ComboBox x:Name="GameModeComboBox" HorizontalAlignment="Left" Margin="88,165,0,0" VerticalAlignment="Top" Width="142" SelectionChanged="GameModeComboBox_SelectionChanged">
+        <TextBox x:Name="BotTextBox" Height="22" Margin="183,140,10,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsEnabled="False" VerticalContentAlignment="Center" Padding="1,0"/>
+        <ComboBox x:Name="GameModeComboBox" HorizontalAlignment="Left" Margin="88,183,0,0" VerticalAlignment="Top" Width="142" SelectionChanged="GameModeComboBox_SelectionChanged">
             <ComboBoxItem Content="Practice (Normal)"/>
             <ComboBoxItem Content="Practice (Expert)"/>
             <ComboBoxItem Content="Casual (Standard)"/>
@@ -33,10 +33,10 @@
             <ComboBoxItem Content="Casual (Wild)"/>
             <ComboBoxItem Content="Ranked (Wild)"/>
         </ComboBox>
-        <Label x:Name="OpponentLabel" Content="Opponent" HorizontalAlignment="Left" Margin="10,232,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="73" HorizontalContentAlignment="Right"/>
-        <Label x:Name="DeckLabel" Content="Deck" HorizontalAlignment="Left" Margin="8,196,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="75" HorizontalContentAlignment="Right"/>
-        <Label x:Name="GameModeLabel" Content="Mode" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="73" HorizontalContentAlignment="Right"/>
-        <ComboBox x:Name="DeckComboBox" HorizontalAlignment="Left" Margin="88,201,0,0" VerticalAlignment="Top" Width="142" SelectionChanged="DeckComboBox_SelectionChanged">
+        <Label x:Name="OpponentLabel" Content="Opponent" HorizontalAlignment="Left" Margin="10,252,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="64" HorizontalContentAlignment="Right"/>
+        <Label x:Name="DeckLabel" Content="Deck" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="64" HorizontalContentAlignment="Right"/>
+        <Label x:Name="GameModeLabel" Content="Mode" HorizontalAlignment="Left" Margin="10,180,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="64" HorizontalContentAlignment="Right"/>
+        <ComboBox x:Name="DeckComboBox" HorizontalAlignment="Left" Margin="88,219,0,0" VerticalAlignment="Top" Width="142" SelectionChanged="DeckComboBox_SelectionChanged">
             <ComboBoxItem Content="Default"/>
             <ComboBoxItem Content="1"/>
             <ComboBoxItem Content="2"/>
@@ -48,7 +48,7 @@
             <ComboBoxItem Content="8"/>
             <ComboBoxItem Content="9"/>
         </ComboBox>
-        <ComboBox x:Name="OpponentComboBox" HorizontalAlignment="Left" Margin="88,238,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.435,-0.455" SelectionChanged="OpponentComboBox_SelectionChanged">
+        <ComboBox x:Name="OpponentComboBox" HorizontalAlignment="Left" Margin="88,255,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.435,-0.455" SelectionChanged="OpponentComboBox_SelectionChanged">
             <ComboBoxItem Content="Random"/>
             <ComboBoxItem Content="1"/>
             <ComboBoxItem Content="2"/>
@@ -60,5 +60,16 @@
             <ComboBoxItem Content="8"/>
             <ComboBoxItem Content="9"/>
         </ComboBox>
+        <Label x:Name="LoggingLabel" Content="Logging" HorizontalAlignment="Left" Margin="10,288,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.849,0.484" Width="64" HorizontalContentAlignment="Right"/>
+        <ComboBox x:Name="LoggingComboBox" HorizontalAlignment="Left" Margin="88,291,0,0" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.435,-0.455" SelectionChanged="LoggingComboBox_SelectionChanged">
+            <ComboBoxItem Content="Off"/>
+            <ComboBoxItem Content="Error"/>
+            <ComboBoxItem Content="Warning"/>
+            <ComboBoxItem Content="Info"/>
+            <ComboBoxItem Content="Verbose"/>
+        </ComboBox>
+        <Label x:Name="PathLabel" Content="Path" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" Height="28" RenderTransformOrigin="1.03,0.635" Width="64" HorizontalContentAlignment="Right"/>
+        <TextBox x:Name="PathTextBox" Height="22" Margin="88,69,37,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" VerticalContentAlignment="Center" Padding="1,0" IsEnabled="False"/>
+        <Button x:Name="PathButton" Content="..." Margin="448,69,10,0" VerticalAlignment="Top" Height="22" Click="PathButton_Click"/>
     </Grid>
 </Window>
