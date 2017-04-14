@@ -169,7 +169,7 @@ namespace Hearthrock.Client.Hacking
         /// <returns>The hearthstone directory</returns>
         private static string SearchHearthstoneDirectory()
         {
-            var candicates = new string[] { string.Empty, @"C:\Program Files\", @"C:\Program Files (x86)\", @"C:\Games\" };
+            var candicates = new string[] { string.Empty, @"C:\Program Files\", @"C:\Program Files (x86)\", @"C:\Games\", @"D:\Games\" };
 
             foreach (var candicate in candicates)
             {
