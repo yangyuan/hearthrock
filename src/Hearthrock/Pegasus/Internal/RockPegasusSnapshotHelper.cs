@@ -45,6 +45,16 @@ namespace Hearthrock.Pegasus.Internal
             rockPlayer.Cards = SnapshotCards(player);
             rockPlayer.PowerAvailable = !player.GetHeroPower().IsExhausted();
 
+            rockPlayer.HasWeapon = player.HasWeapon();
+            if (rockPlayer.HasWeapon)
+            {
+                rockPlayer.Weapon = SnapshotCard(player.GetHero().GetWeaponCard().GetEntity());
+            }
+            else
+            {
+                rockPlayer.Weapon = null;
+            }
+
             return rockPlayer;
         }
 
@@ -99,17 +109,6 @@ namespace Hearthrock.Pegasus.Internal
             rockHero.CanAttack = heroEntity.CanAttack();
             rockHero.IsExhausted = heroEntity.IsExhausted();
             rockHero.Health = heroEntity.GetRealTimeRemainingHP();
-            rockHero.HasWeapon = player.HasWeapon();
-            if (rockHero.HasWeapon)
-            {
-                rockHero.WeaponRockId = heroEntity.GetWeaponCard().GetEntity().GetEntityId();
-                rockHero.WeaponCanAttack = heroEntity.GetWeaponCard().GetEntity().CanAttack();
-            }
-            else
-            {
-                rockHero.WeaponRockId = 0;
-                rockHero.WeaponCanAttack = false;
-            }
 
             return rockHero;
         }
@@ -208,6 +207,10 @@ namespace Hearthrock.Pegasus.Internal
             else if (card.IsSpell())
             {
                 rockCard.CardType = RockCardType.Spell;
+            }
+            else if (card.IsEnchantment())
+            {
+                rockCard.CardType = RockCardType.Enchantment;
             }
             else if (card.IsWeapon())
             {
