@@ -295,22 +295,28 @@ namespace Hearthrock.Pegasus.Internal
         /// <returns>The play sub options.</returns>
         private static IEnumerable<List<int>> SnapshotSubOptions(Network.Options.Option.SubOption subOption)
         {
-            if (subOption.Targets == null || subOption.Targets.Count == 0)
+            if (!subOption.HasValidTarget())
             {
-                if (subOption.ID == 0)
+                if (subOption.PlayErrorInfo.IsValid())
                 {
-                    yield break;
-                }
-                else
-                {
-                    yield return new List<int> { subOption.ID };
+                    if (subOption.ID == 0)
+                    {
+                        yield break;
+                    }
+                    else
+                    {
+                        yield return new List<int> { subOption.ID };
+                    }
                 }
             }
             else
             {
                 foreach (var target in subOption.Targets)
                 {
-                    yield return new List<int> { subOption.ID, target };
+                    if (target.PlayErrorInfo.IsValid())
+                    {
+                        yield return new List<int> { subOption.ID, target.ID };
+                    }
                 }
             }
         }

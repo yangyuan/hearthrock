@@ -226,10 +226,17 @@ namespace Hearthrock.Client.Hacking
         private static RockConfiguration ReadConfiguration(string root)
         {
             var hearthstoneConfigurationPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationName);
-            var configurationJson = File.ReadAllText(hearthstoneConfigurationPath);
-            var configuration = JsonConvert.DeserializeObject<RockConfiguration>(configurationJson);
+            if (File.Exists(hearthstoneConfigurationPath))
+            {
+                var configurationJson = File.ReadAllText(hearthstoneConfigurationPath);
+                var configuration = JsonConvert.DeserializeObject<RockConfiguration>(configurationJson);
 
-            return configuration;
+                return configuration;
+            }
+            else
+            {
+                return new RockConfiguration();
+            }
         }
 
         /// <summary>
