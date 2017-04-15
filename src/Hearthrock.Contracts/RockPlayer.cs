@@ -22,6 +22,11 @@ namespace Hearthrock.Contracts
         public bool PowerAvailable { get; set; }
 
         /// <summary>
+        ///  Gets or sets a value indicating whether the hero has weapon.
+        /// </summary>
+        public bool HasWeapon { get; set; }
+
+        /// <summary>
         /// Gets or sets the hero of player.
         /// </summary>
         public RockHero Hero { get; set; }
@@ -30,6 +35,11 @@ namespace Hearthrock.Contracts
         /// Gets or sets the power of player.
         /// </summary>
         public RockCard Power { get; set; }
+
+        /// <summary>
+        /// Gets or sets the power of player.
+        /// </summary>
+        public RockCard Weapon { get; set; }
 
         /// <summary>
         /// Gets or sets the minions of player.

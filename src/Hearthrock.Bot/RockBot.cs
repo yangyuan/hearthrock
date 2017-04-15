@@ -8,6 +8,7 @@ namespace Hearthrock.Bot
     using System.Collections.Generic;
 
     using Hearthrock.Contracts;
+    using Hearthrock.Bot.Score;
 
     /// <summary>
     /// The build-in bot for hearthrock.
@@ -24,6 +25,55 @@ namespace Hearthrock.Bot
             // You can just return an null or empty list, which means keep all cards.
             //// return null;
 
+            //// Put your codes in here.
+
+            return this.DefaultGetMulliganAction(scene);
+        }
+
+        /// <summary>
+        /// Generate a play action for current scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        /// <returns>The cards to be played.</returns>
+        public List<int> GetPlayAction(RockScene scene)
+        {
+            // You can just return an null or empty list, which means ends turn.
+            //// return null;
+
+            //// Put your codes in here.
+
+            RockSceneContext context = new RockSceneContext(scene);
+
+            double bestScore = 0d;
+            List<int> bestAction = null;
+            Random r = new Random();
+
+            foreach (List<int> action in scene.PlayOptions)
+            {
+                double score = PlayActionScore.ComputeScore(context, action);
+                score += r.NextDouble();
+                if (score >= bestScore)
+                {
+                    bestScore = score;
+                    bestAction = action;
+                }
+            }
+
+            if (bestAction != null)
+            {
+                return bestAction;
+            }
+
+            return this.DefaultGetPlayAction(scene);
+        }
+
+        /// <summary>
+        /// The default implementation of GetMulliganAction
+        /// </summary>
+        /// <param name="scene">the scene</param>
+        /// <returns>the cards to be mulligan-ed</returns>
+        private List<int> DefaultGetMulliganAction(RockScene scene)
+        {
             List<int> cards = new List<int>();
             foreach (RockCard card in scene.Self.Cards)
             {
@@ -37,15 +87,12 @@ namespace Hearthrock.Bot
         }
 
         /// <summary>
-        /// Generate a play action for current scene.
+        /// The default implementation of GetPlayAction
         /// </summary>
-        /// <param name="scene">The scene.</param>
-        /// <returns>The cards to be played.</returns>
-        public List<int> GetPlayAction(RockScene scene)
-        {            
-            // You can just return an null or empty list, which means ends turn.
-            //// return null;
-
+        /// <param name="scene">the scene</param>
+        /// <returns>the cards to be played</returns>
+        private List<int> DefaultGetPlayAction(RockScene scene)
+        {
             if (scene.PlayOptions.Count == 0)
             {
                 return null;

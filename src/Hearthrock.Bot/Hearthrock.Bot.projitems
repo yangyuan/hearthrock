@@ -10,5 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RockBot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Score\PlayActionScore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Score\RockObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Score\RockObjectType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Score\RockSceneContext.cs" />
   </ItemGroup>
 </Project>

@@ -20,6 +20,11 @@ namespace Hearthrock.Contracts
         Spell,
 
         /// <summary>
+        /// Is Enchantment card.
+        /// </summary>
+        Enchantment,
+
+        /// <summary>
         /// Is weapon card.
         /// </summary>
         Weapon,

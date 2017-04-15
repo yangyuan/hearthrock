@@ -5,11 +5,11 @@
 namespace Hearthrock.Client
 {
     using System;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
 
     using Hearthrock.Contracts;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -254,7 +254,6 @@ namespace Hearthrock.Client
             this.configuration.TraceLevel = LoggingComboBox.SelectedIndex;
         }
 
-
         /// <summary>
         /// The method to response Click event for PathButton.
         /// </summary>
@@ -268,7 +267,7 @@ namespace Hearthrock.Client
 
                 if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    await InitializeConfigurationAsync(dialog.SelectedPath);
+                    await this.InitializeConfigurationAsync(dialog.SelectedPath);
                 }
             }
         }
@@ -291,7 +290,7 @@ namespace Hearthrock.Client
                 return;
             }
 
-            await InitializeConfigurationAsync(path);
+            await this.InitializeConfigurationAsync(path);
         }
 
         /// <summary>

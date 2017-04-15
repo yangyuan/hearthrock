@@ -48,20 +48,5 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the hero is exhausted.
         /// </summary>
         public bool IsExhausted { get; set; }
-
-        /// <summary>
-        ///  Gets or sets a value indicating whether the hero has weapon.
-        /// </summary>
-        public bool HasWeapon { get; set; }
-
-        /// <summary>
-        /// Gets or sets the WeaponRockId of the hero.
-        /// </summary>
-        public int WeaponRockId { get; set; }
-
-        /// <summary>
-        ///  Gets or sets a value indicating whether the hero's weapon can attack.
-        /// </summary>
-        public bool WeaponCanAttack { get; set; }
     }
 }
