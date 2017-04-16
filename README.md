@@ -6,6 +6,7 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
+- Hearthrock 0.4.2 Alpha for 8.0.0.18336. (Apr 14, 2017)
 - Reinitiated, Hearthrock is going to be a long term project. (Mar 12, 2017)
 - Hearthrock 0.4.1 Alpha for 7.1.1.17994. (Mar 11, 2017)
 - Hearthrock 0.4.0 Alpha for 7.1.0.17720. (Mar 9, 2017)
@@ -26,14 +27,14 @@ Hearthrock will run with Hearthstone® client, your bot will run as a separated 
 
 Hearthrock is designed for scientists and engineers only.
 
-- Make sure you are scientist or engineer.
+- Make sure you are scientist or engineer or student.
 - Download latest release version of Hearthrock from [here](../../releases).
 - Use Hearthrock.Client to patch/unpatch Hearthstone®.
 - Reference [Examples](../../tree/master/examples) and [Contracts](../../tree/master/src/Hearthrock.Contracts) to write your own bot.
 
 ## Questions or bugs?
 
-- Make sure you are scientist or engineer.
+- Make sure you are scientist or engineer or student.
 - Create an issue in [here](../../issues).
 
 ___
