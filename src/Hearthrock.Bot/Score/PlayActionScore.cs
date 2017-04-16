@@ -6,6 +6,7 @@ namespace Hearthrock.Bot.Score
 {
     using System.Collections.Generic;
     using Hearthrock.Contracts;
+    using System;
 
     /// <summary>
     /// The class to calculate the score of the action
@@ -54,8 +55,13 @@ namespace Hearthrock.Bot.Score
                     }
                     else if (sceneContext.IsFriendlyMinion(playAction[0]))
                     {
-                        // Use Minion Attack
-                        return ScoreForMinionAttack(sceneContext, playAction[0], playAction[1]);
+                        if (sceneContext.IsEnemyMinion(playAction[1]))
+                        {
+                            // Use Minion Attack
+                            return ScoreForMinionAttack(sceneContext, playAction[0], playAction[1]);
+                        }
+
+                        return ScoreForMinionAttackHero(sceneContext, playAction[0], playAction[1]);
                     }
                     else if (sceneContext.IsObjectType(playAction[0], RockObjectType.FriendlyHeroWeapon))
                     {
@@ -87,7 +93,7 @@ namespace Hearthrock.Bot.Score
         private static double ScoreForUseCard(RockSceneContext sceneContext, int cardRockId)
         {
             double score = 1; // initial score
-            RockCard card = sceneContext.GetCard(cardRockId);
+            RockCard card = sceneContext.GetRockCard(cardRockId);
 
             // adjust score by wasted cost
             int wastedCost = sceneContext.GetMininWastedCost(cardRockId);
@@ -105,7 +111,7 @@ namespace Hearthrock.Bot.Score
         private static double ScoreForUseHeroPower(RockSceneContext sceneContext, int cardRockId)
         {
             double score = 1; // initial score
-            RockCard card = sceneContext.GetCard(cardRockId);
+            RockCard card = sceneContext.GetRockCard(cardRockId);
 
             // adjust score by wasted cost
             int wastedCost = sceneContext.GetMininWastedCost(cardRockId);
@@ -124,7 +130,7 @@ namespace Hearthrock.Bot.Score
         private static double ScoreForUseHeroPowerOnTarget(RockSceneContext sceneContext, int cardRockId, int targetRockId)
         {
             double score = 1; // initial score
-            RockCard card = sceneContext.GetCard(cardRockId);
+            RockCard card = sceneContext.GetRockCard(cardRockId);
             
             // adjust score by wasted cost
             int wastedCost = sceneContext.GetMininWastedCost(cardRockId);
@@ -164,9 +170,103 @@ namespace Hearthrock.Bot.Score
         /// <param name="sourceRockId">The RockId of attacker</param>
         /// <param name="targetRockId">The RockId of target</param>
         /// <returns>The score in double</returns>
+        private static double ScoreForMinionAttackHero(RockSceneContext sceneContext, int sourceRockId, int targetRockId)
+        {
+            var targetHero = sceneContext.GetRockHero(targetRockId);
+            var sourceMinion = sceneContext.GetRockMinion(sourceRockId);
+
+            double score = 0d;
+
+            bool canKill = sourceMinion.Damage >= targetHero.Health;
+
+            if (canKill)
+            {
+                score += 8;
+            }
+            else
+            {
+                score += sourceMinion.Damage;
+            }
+
+            return score;
+        }
+
+        /// <summary>
+        /// Compute score for attacking a target.
+        /// </summary>
+        /// <param name="sceneContext">The RockSceneContext</param>
+        /// <param name="sourceRockId">The RockId of attacker</param>
+        /// <param name="targetRockId">The RockId of target</param>
+        /// <returns>The score in double</returns>
         private static double ScoreForMinionAttack(RockSceneContext sceneContext, int sourceRockId, int targetRockId)
         {
-            return 0;
+            var targetMinion = sceneContext.GetRockMinion(targetRockId);
+            var sourceMinion = sceneContext.GetRockMinion(sourceRockId);
+
+            double score = 0d;
+
+            bool canKill = false;
+            if (!targetMinion.HasDivineShield)
+            {
+                canKill = sourceMinion.Damage >= targetMinion.Health;
+            }
+
+            bool canSurvive = true;
+            if (!sourceMinion.HasDivineShield)
+            {
+                canSurvive = targetMinion.Damage <= sourceMinion.Health;
+            }
+
+            double benifit = Math.Pow(targetMinion.Damage + targetMinion.Health, 1.5d)
+                - Math.Pow(sourceMinion.Damage - sourceMinion.Health, 1.5d);
+
+            if (targetMinion.HasWindfury)
+            {
+                benifit += targetMinion.Damage;
+            }
+
+            if (sourceMinion.HasWindfury)
+            {
+                benifit -= sourceMinion.Damage;
+            }
+
+            if (targetMinion.HasAura)
+            {
+                benifit += 2;
+            }
+
+            if (sourceMinion.HasAura)
+            {
+                benifit -= 2;
+            }
+
+            if (canKill)
+            {
+                score += targetMinion.Damage;
+            }
+            else if (canSurvive)
+            {
+                score += sourceMinion.Damage;
+            }
+
+            if (canKill && canSurvive)
+            {
+                score += benifit;
+            }
+            else if (!canKill && canSurvive)
+            {
+                score += benifit * 0.625;
+            }
+            else if (canKill && !canSurvive)
+            {
+                score += benifit * 0.475;
+            }
+            else // !canKill && !canSurvive
+            {
+                score += 0;
+            }
+
+            return score;
         }
 
         /// <summary>
@@ -191,7 +291,7 @@ namespace Hearthrock.Bot.Score
         private static double ScoreForUseCardOnTarget(RockSceneContext sceneContext, int cardRockId, int targetRockId)
         {
             double score = 1; // initial score
-            RockCard card = sceneContext.GetCard(cardRockId);
+            RockCard card = sceneContext.GetRockCard(cardRockId);
 
             // adjust score by wasted cost
             int wastedCost = sceneContext.GetMininWastedCost(cardRockId);

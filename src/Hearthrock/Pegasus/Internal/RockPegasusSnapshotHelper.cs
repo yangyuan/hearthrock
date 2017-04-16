@@ -161,6 +161,7 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.HasTaunt = minion.HasTaunt();
             rockMinion.HasWindfury = minion.HasWindfury();
             rockMinion.HasDivineShield = minion.HasDivineShield();
+            rockMinion.HasAura = minion.HasAura();
             rockMinion.IsStealthed = minion.IsStealthed();
             rockMinion.IsExhausted = minion.IsExhausted();
             rockMinion.IsFrozen = minion.IsFrozen();

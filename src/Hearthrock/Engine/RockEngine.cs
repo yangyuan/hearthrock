@@ -64,7 +64,7 @@ namespace Hearthrock.Engine
         /// <summary>
         /// Gets a value indicating whether use local as trace output.
         /// </summary>
-        public bool UseLocalTrace
+        public bool UseBuiltinTrace
         {
             get
             {

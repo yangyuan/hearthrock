@@ -6,6 +6,7 @@ namespace Hearthrock.Bot.Score
 {
     using System.Collections.Generic;
 
+    using Hearthrock.Bot.Exceptions;
     using Hearthrock.Contracts;
 
     /// <summary>
@@ -45,16 +46,6 @@ namespace Hearthrock.Bot.Score
         }
 
         /// <summary>
-        /// Get a RockCard by id.
-        /// </summary>
-        /// <param name="id">The RockId</param>
-        /// <returns>The RockCard</returns>
-        public RockCard GetCard(int id)
-        {
-            return (RockCard)this.objects[id].Object;
-        }
-
-        /// <summary>
         /// Get the cost of a card/action
         /// </summary>
         /// <param name="id">The RockId</param>
@@ -73,63 +64,6 @@ namespace Hearthrock.Bot.Score
         {
             // TODO: should use dynamic programing to solve the cost
             return 0;
-        }
-
-        /// <summary>
-        /// Is RockObject FriendlyHeroPower.
-        /// </summary>
-        /// <param name="id">The RockId</param>
-        /// <returns>True if it is a FriendlyHeroPower</returns>
-        public bool IsFriendlyHeroPower(int id)
-        {
-            RockObject obj;
-            if (this.objects.TryGetValue(id, out obj))
-            {
-                if (obj.ObjectType == RockObjectType.FriendlyHeroPower)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Is RockObject IsFriendlyCard.
-        /// </summary>
-        /// <param name="id">The RockId</param>
-        /// <returns>True if it is a IsFriendlyCard</returns>
-        public bool IsFriendlyCard(int id)
-        {
-            RockObject obj;
-            if (this.objects.TryGetValue(id, out obj))
-            {
-                if (obj.ObjectType == RockObjectType.FriendlyCard)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Is RockObject IsFriendlyCard.
-        /// </summary>
-        /// <param name="id">The RockId</param>
-        /// <returns>True if it is a IsFriendlyCard</returns>
-        public bool IsFriendlyMinion(int id)
-        {
-            RockObject obj;
-            if (this.objects.TryGetValue(id, out obj))
-            {
-                if (obj.ObjectType == RockObjectType.FriendlyMinion)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -165,7 +99,24 @@ namespace Hearthrock.Bot.Score
                 return obj;
             }
 
-            return null;
+            throw new BotException("The RockObject cannot be found");
+        }
+
+        /// <summary>
+        /// Get a RockObject as T by id.
+        /// </summary>
+        /// <typeparam name="T">The RockObject subtype.</typeparam>
+        /// <param name="id">The RockId.</param>
+        /// <returns>The RockObject as T.</returns>
+        public T GetRockObjectAs<T>(int id)
+        {
+            RockObject obj = this.GetRockObject(id);
+            if (obj.Object is T)
+            {
+                return (T)obj.Object;
+            }
+
+            throw new BotException($"The RockObject is not a {nameof(T)}, it's a {obj.Object.GetType()}. The RockObjectType is {obj.ObjectType}");
         }
 
         /// <summary>
@@ -180,13 +131,13 @@ namespace Hearthrock.Bot.Score
 
                 if (!this.costs.ContainsKey(id))
                 {
-                    if (this.IsFriendlyHeroPower(id))
+                    if (this.IsObjectType(id, RockObjectType.FriendlyHeroPower))
                     {
                         this.costs.Add(id, 2);
                     }
-                    else if (this.IsFriendlyCard(id))
+                    else if (this.IsObjectType(id, RockObjectType.FriendlyCard))
                     {
-                        var card = this.GetCard(id);
+                        var card = this.GetRockCard(id);
                         this.costs.Add(id, card.Cost);
                     }
                     else

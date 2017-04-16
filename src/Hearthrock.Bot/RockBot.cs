@@ -7,8 +7,8 @@ namespace Hearthrock.Bot
     using System;
     using System.Collections.Generic;
 
-    using Hearthrock.Contracts;
     using Hearthrock.Bot.Score;
+    using Hearthrock.Contracts;
 
     /// <summary>
     /// The build-in bot for hearthrock.

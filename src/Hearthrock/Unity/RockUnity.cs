@@ -117,8 +117,8 @@ namespace Hearthrock.Unity
             // The status texts.
             string statusRockState = $"Status: " + (this.isRockEnabled ? "Running" : "Paused");
             string statusGameMode = $"Mode: " + this.rockEngine.GameMode.ToString();
-            string statusTrace = $"Trace: " + (this.rockEngine.UseLocalTrace ? "Local" : "Remote");
-            string statusBot = $"Bot: " + (this.rockEngine.UseBuiltinBot ? "Buildin" : "Remote");
+            string statusTrace = $"Trace: " + (this.rockEngine.UseBuiltinTrace ? "Builtin" : "Remote");
+            string statusBot = $"Bot: " + (this.rockEngine.UseBuiltinBot ? "Builtin" : "Remote");
 
             int currentOffsetTop = statusOffsetTop;
             GUI.Label(new Rect(contentOffsetLeft, currentOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockStatusHeight), statusRockState);

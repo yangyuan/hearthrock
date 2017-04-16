@@ -83,5 +83,10 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the minion has divine shield.
         /// </summary>
         public bool HasDivineShield { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has aura.
+        /// </summary>
+        public bool HasAura { get; set; }
     }
 }

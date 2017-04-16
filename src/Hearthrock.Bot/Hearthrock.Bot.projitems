@@ -9,10 +9,12 @@
     <Import_RootNamespace>Hearthrock.Bot</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\BotException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockBot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score\PlayActionScore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score\RockObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score\RockObjectType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Score\RockSceneContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Score\RockSceneContextExtension.cs" />
   </ItemGroup>
 </Project>
