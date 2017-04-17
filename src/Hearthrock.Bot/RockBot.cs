@@ -51,6 +51,8 @@ namespace Hearthrock.Bot
             foreach (List<int> action in scene.PlayOptions)
             {
                 double score = PlayActionScore.ComputeScore(context, action);
+                Console.WriteLine(score + " " + action.ToString());
+
                 score += r.NextDouble();
                 if (score >= bestScore)
                 {

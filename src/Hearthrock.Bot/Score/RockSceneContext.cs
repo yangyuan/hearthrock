@@ -4,8 +4,10 @@
 
 namespace Hearthrock.Bot.Score
 {
+    using System;
     using System.Collections.Generic;
 
+    using Hearthrock.Bot.Algorithm;
     using Hearthrock.Bot.Exceptions;
     using Hearthrock.Contracts;
 
@@ -16,11 +18,6 @@ namespace Hearthrock.Bot.Score
     /// </summary>
     public class RockSceneContext
     {
-        /// <summary>
-        /// The RockScene.
-        /// </summary>
-        private RockScene scene;
-
         /// <summary>
         /// The RockObjects in RockScene.
         /// </summary>
@@ -37,7 +34,7 @@ namespace Hearthrock.Bot.Score
         /// <param name="scene">The RockScene</param>
         public RockSceneContext(RockScene scene)
         {
-            this.scene = scene;
+            this.Scene = scene;
 
             this.objects = new Dictionary<int, RockObject>();
             this.costs = new Dictionary<int, int>();
@@ -46,14 +43,9 @@ namespace Hearthrock.Bot.Score
         }
 
         /// <summary>
-        /// Get the cost of a card/action
+        /// Gets the RockScene.
         /// </summary>
-        /// <param name="id">The RockId</param>
-        /// <returns>The cost</returns>
-        public int GetCost(int id)
-        {
-            return this.costs[id];
-        }
+        public RockScene Scene { get; private set; }
 
         /// <summary>
         /// Get the minion wasted cost when use this 
@@ -62,8 +54,25 @@ namespace Hearthrock.Bot.Score
         /// <returns>The cost</returns>
         public int GetMininWastedCost(int id)
         {
-            // TODO: should use dynamic programing to solve the cost
-            return 0;
+            int space = this.Scene.Self.Resources;
+            List<int> values = new List<int>();
+
+            foreach (int value in this.costs.Values)
+            {
+                values.Add(value);
+            }
+
+            int ret = Knapsack.ComputeMinWastedSpace(space, values.ToArray());
+
+            foreach (RockCard handCard in this.Scene.Self.Cards)
+            {
+                if (handCard.CardId == "GAME_005")
+                {
+                    return Math.Min(ret, Knapsack.ComputeMinWastedSpace(space + 1, values.ToArray()));
+                }
+            }
+
+            return ret;
         }
 
         /// <summary>

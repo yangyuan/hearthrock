@@ -46,6 +46,16 @@ namespace Hearthrock.Bot.Score
         }
 
         /// <summary>
+        /// Get friendly RockPlayer
+        /// </summary>
+        /// <param name="rockSceneContext">The RockSceneContext.</param>
+        /// <returns>The RockPlayer.</returns>
+        public static RockPlayer GetFriendlyRockPlayer(this RockSceneContext rockSceneContext)
+        {
+            return rockSceneContext.Scene.Self;
+        }
+
+        /// <summary>
         /// Is RockObject FriendlyHeroPower.
         /// </summary>
         /// <param name="rockSceneContext">The RockSceneContext.</param>
@@ -87,6 +97,36 @@ namespace Hearthrock.Bot.Score
         public static bool IsEnemyMinion(this RockSceneContext rockSceneContext, int id)
         {
             return rockSceneContext.IsObjectType(id, RockObjectType.EnemyMinion);
+        }
+
+        /// <summary>
+        /// Is RockObject is friendly.
+        /// </summary>
+        /// <param name="rockSceneContext">The RockSceneContext.</param>
+        /// <param name="id">The RockId</param>
+        /// <returns>True if it is a is friendly</returns>
+        public static bool IsFriendly(this RockSceneContext rockSceneContext, int id)
+        {
+            return rockSceneContext.IsObjectType(id, RockObjectType.FriendlyCard)
+                || rockSceneContext.IsObjectType(id, RockObjectType.FriendlyMinion)
+                || rockSceneContext.IsObjectType(id, RockObjectType.FriendlyHero)
+                || rockSceneContext.IsObjectType(id, RockObjectType.FriendlyHeroPower)
+                || rockSceneContext.IsObjectType(id, RockObjectType.FriendlyHeroWeapon);
+        }
+
+        /// <summary>
+        /// Is RockObject is enemy.
+        /// </summary>
+        /// <param name="rockSceneContext">The RockSceneContext.</param>
+        /// <param name="id">The RockId</param>
+        /// <returns>True if it is a is enemy.</returns>
+        public static bool IsEnemy(this RockSceneContext rockSceneContext, int id)
+        {
+            return rockSceneContext.IsObjectType(id, RockObjectType.EnemyCard)
+                || rockSceneContext.IsObjectType(id, RockObjectType.EnemyMinion)
+                || rockSceneContext.IsObjectType(id, RockObjectType.EnemyHero)
+                || rockSceneContext.IsObjectType(id, RockObjectType.EnemyHeroPower)
+                || rockSceneContext.IsObjectType(id, RockObjectType.EnemyHeroWeapon);
         }
     }
 }
