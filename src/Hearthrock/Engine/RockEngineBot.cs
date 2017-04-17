@@ -4,6 +4,7 @@
 
 namespace Hearthrock.Engine
 {
+    using System;
     using System.Collections.Generic;
 
     using Hearthrock.Communication;
@@ -45,19 +46,27 @@ namespace Hearthrock.Engine
         {
             this.tracer.Verbose(RockJsonSerializer.Serialize(scene));
 
-            if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
+            try
             {
-                var robot = new Bot.RockBot();
-                var mulligan = robot.GetMulliganAction(scene);
-                this.tracer.Verbose(RockJsonSerializer.Serialize(mulligan));
-                return mulligan;
+                if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
+                {
+                    var robot = new Bot.RockBot();
+                    var mulligan = robot.GetMulliganAction(scene);
+                    this.tracer.Verbose(RockJsonSerializer.Serialize(mulligan));
+                    return mulligan;
+                }
+                else
+                {
+                    var apiClient = new RockApiClient();
+                    var mulligan = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotMulliganRelativePath}", scene);
+                    this.tracer.Verbose(RockJsonSerializer.Serialize(mulligan));
+                    return mulligan;
+                }
             }
-            else
+            catch (Exception e)
             {
-                var apiClient = new RockApiClient();
-                var mulligan = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotMulliganRelativePath}", scene);
-                this.tracer.Verbose(RockJsonSerializer.Serialize(mulligan));
-                return mulligan;
+                this.tracer.Error($"Unexpected Exception from Bot: {e}");
+                return new List<int>();
             }
         }
 
@@ -70,19 +79,27 @@ namespace Hearthrock.Engine
         {
             this.tracer.Verbose(RockJsonSerializer.Serialize(scene));
 
-            if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
+            try
             {
-                var robot = new Bot.RockBot();
-                var action = robot.GetPlayAction(scene);
-                this.tracer.Verbose(RockJsonSerializer.Serialize(action));
-                return action;
+                if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
+                {
+                    var robot = new Bot.RockBot();
+                    var action = robot.GetPlayAction(scene);
+                    this.tracer.Verbose(RockJsonSerializer.Serialize(action));
+                    return action;
+                }
+                else
+                {
+                    var apiClient = new RockApiClient();
+                    var action = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotPlayRelativePath}", scene);
+                    this.tracer.Verbose(RockJsonSerializer.Serialize(action));
+                    return action;
+                }
             }
-            else
+            catch (Exception e)
             {
-                var apiClient = new RockApiClient();
-                var action = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotPlayRelativePath}", scene);
-                this.tracer.Verbose(RockJsonSerializer.Serialize(action));
-                return action;
+                this.tracer.Error($"Unexpected Exception from Bot: {e}");
+                return null;
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Hearthrock.Tests.CommunicationTests
         /// TestMethod for Serialize TraceInfo
         /// </summary>
         [TestMethod]
-        public void RockJsonSerializerOnTraceInfo()
+        public void TestRockJsonSerializerOnTraceInfo()
         {
             var traceMessage = new Dictionary<string, string>();
             traceMessage.Add("Level", TraceLevel.Verbose.ToString());
@@ -33,10 +33,19 @@ namespace Hearthrock.Tests.CommunicationTests
         }
 
         /// <summary>
+        /// TestMethod for Deserialize null
+        /// </summary>
+        [TestMethod]
+        public void TestRockJsonSerializerForNull()
+        {
+            List<int> jsonTraceMessage = RockJsonSerializer.Deserialize<List<int>>("null");
+        }
+
+        /// <summary>
         /// TestMethod for Serialize
         /// </summary>
         [TestMethod]
-        public void TestMethod2()
+        public void TestMethodForSerializeRockScene()
         {
             var rockScene = GenerateRockScene();
             var x = RockJsonSerializer.Serialize(rockScene);

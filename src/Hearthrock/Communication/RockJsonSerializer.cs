@@ -45,6 +45,11 @@ namespace Hearthrock.Communication
         public static T Deserialize<T>(string json)
         {
             var obj = Json.Deserialize(json);
+            if (obj == null)
+            {
+                return default(T);
+            }
+
             return (T)ConvertToType(obj, typeof(T));
         }
 
