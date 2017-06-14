@@ -109,6 +109,8 @@ namespace Hearthrock.Pegasus.Internal
             rockHero.CanAttack = heroEntity.CanAttack();
             rockHero.IsExhausted = heroEntity.IsExhausted();
             rockHero.Health = heroEntity.GetRealTimeRemainingHP();
+            rockHero.IsQuest = heroEntity.IsQuest();
+            rockHero.IsSecret = heroEntity.IsSecret();
 
             return rockHero;
         }
@@ -166,6 +168,12 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.IsExhausted = minion.IsExhausted();
             rockMinion.IsFrozen = minion.IsFrozen();
             rockMinion.IsAsleep = minion.IsAsleep();
+            rockMinion.HasDeathrattle = minion.HasDeathrattle();
+            rockMinion.HasInspire = minion.HasInspire();
+            rockMinion.HasTriggerVisual = minion.HasTriggerVisual();
+            rockMinion.IsEnraged = minion.IsEnraged();
+            rockMinion.HasBattlecry = minion.HasBattlecry();
+            rockMinion.Race = (Race)(int)minion.GetRace();
 
             return rockMinion;
         }
@@ -223,7 +231,7 @@ namespace Hearthrock.Pegasus.Internal
             }
 
             rockCard.Damage = card.GetATK();
-            rockCard.Health = card.GetHealth();
+            rockCard.Health = card.IsWeapon() ? card.GetCurrentDurability() : card.GetHealth();
             rockCard.HasTaunt = card.HasTaunt();
             rockCard.HasCharge = card.HasCharge();
             rockCard.Options = new List<RockCard>();
