@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hearthrock.Contracts
+﻿namespace Hearthrock.Contracts
 {
     public enum Race
     {
