@@ -9,6 +9,7 @@
     <Import_RootNamespace>Hearthrock.Contracts</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Race.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRockBot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RockCardType.cs" />

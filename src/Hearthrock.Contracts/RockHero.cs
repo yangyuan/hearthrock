@@ -48,5 +48,15 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the hero is exhausted.
         /// </summary>
         public bool IsExhausted { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the hero have a quest.
+        /// </summary>
+        public bool IsQuest { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the hero have a secret.
+        /// </summary>
+        public bool IsSecret { get; set; }
     }
 }

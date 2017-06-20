@@ -40,6 +40,11 @@ namespace Hearthrock.Contracts
         public int BaseHealth { get; set; }
 
         /// <summary>
+        ///  Gets or sets a minion race.
+        /// </summary>
+        public Race Race { get; set; }
+
+        /// <summary>
         ///  Gets or sets a value indicating whether the minion is frozen.
         /// </summary>
         public bool IsFrozen { get; set; }
@@ -88,5 +93,31 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the minion has aura.
         /// </summary>
         public bool HasAura { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has enraged.
+        /// </summary>
+        public bool IsEnraged { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has trigger visual.
+        /// </summary>
+        public bool HasTriggerVisual { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has inspire.
+        /// </summary>
+        public bool HasInspire { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has deathrattle.
+        /// </summary>
+        public bool HasDeathrattle { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has battlecry.
+        /// </summary>
+        public bool HasBattlecry { get; set; }
+
     }
 }
