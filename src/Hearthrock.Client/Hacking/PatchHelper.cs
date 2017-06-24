@@ -46,19 +46,21 @@ namespace Hearthrock.Client.Hacking
         /// Inject Hearthrock into The Hearthstone
         /// </summary>
         /// <param name="root">The root path of Hearthstone.</param>
+        /// <param name="clientRoot">Hearthrock client folder.</param>
         /// <returns>The async task.</returns>
-        public async Task InjectAsync(string root)
+        public async Task InjectAsync(string root, string clientRoot)
         {
-            await Task.Run(() => this.Inject(root));
+            await Task.Run(() => this.Inject(root, clientRoot));
         }
 
         /// <summary>
         /// Inject Hearthrock into The Hearthstone
         /// </summary>
         /// <param name="root">The root path of Hearthstone.</param>
-        public void Inject(string root)
+        /// <param name="clientRoot">Hearthrock client folder.</param>
+        public void Inject(string root, string clientRoot)
         {
-            SetupHearthrock(root);
+            SetupHearthrock(root, clientRoot);
 
             var hearthstoneAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneAssemblyName);
             var hearthrockAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockAssemblyName);
@@ -149,16 +151,41 @@ namespace Hearthrock.Client.Hacking
         /// <summary>
         /// Setup Hearthrock environments
         /// </summary>
-        /// <param name="root">The Hearthstone root path.</param>
+        /// <param name="root">Hearthstone client folder.</param>
+        /// <param name="clientRoot">Hearthrock client folder.</param>
         /// <returns>True if Hearthrock environments setup successful.</returns>
-        private static bool SetupHearthrock(string root)
+        private static bool SetupHearthrock(string root, string clientRoot)
         {
+            var sampleHearthstoneAssembly = Path.Combine(clientRoot, HearthstoneAssemblyName);
             var hearthstoneAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneAssemblyName);
             var hearthstoneBackupAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthstoneBackupAssemblyName);
             var hearthrockAssemblyPath = Path.Combine(root, RelativePathToHearthstoneAssemblyDirectory, HearthrockAssemblyName);
 
+            if (!EnsureVersion(sampleHearthstoneAssembly, hearthstoneAssemblyPath))
+            {
+                throw new Exception("Hearthstone file broken or outdated.");
+            }
+
             File.Copy(hearthstoneAssemblyPath, hearthstoneBackupAssemblyPath, true);
             File.Copy(HearthrockAssemblyName, hearthrockAssemblyPath, true);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure The Client and the Bot use the same version of hearthstone.
+        /// </summary>
+        /// <param name="localFile">Client Hearthstone Assembly</param>
+        /// <param name="hearthstoneFile">Real Hearthstone Assembly</param>
+        /// <returns></returns>
+        private static bool EnsureVersion(string localFile, string hearthstoneFile)
+        {
+            FileInfo localFileInfo = new FileInfo(localFile);
+
+            if (!CompareFiles(localFile, hearthstoneFile))
+            {
+                return false;
+            }
 
             return true;
         }

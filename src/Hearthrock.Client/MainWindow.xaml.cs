@@ -68,7 +68,7 @@ namespace Hearthrock.Client
                 return;
             }
 
-            await patcher.InjectAsync(path);
+            await patcher.InjectAsync(path, Environment.CurrentDirectory);
             PatchButton.IsEnabled = true;
         }
 
