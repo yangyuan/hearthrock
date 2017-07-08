@@ -9,6 +9,8 @@ namespace Hearthrock.Client
     using System.Windows;
     using System.Windows.Controls;
 
+    using Hearthrock.Bot.Exceptions;
+    using Hearthrock.Client.Hacking;
     using Hearthrock.Contracts;
 
     /// <summary>
@@ -17,14 +19,14 @@ namespace Hearthrock.Client
     public partial class MainWindow : Window
     {
         /// <summary>
-        /// The root path of Hearthstone.
-        /// </summary>
-        private string rootPath = string.Empty;
-
-        /// <summary>
         /// The RockConfiguration.
         /// </summary>
         private RockConfiguration configuration = new RockConfiguration();
+
+        /// <summary>
+        /// The Patcher instance.
+        /// </summary>
+        private Patcher patcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow" /> class.
@@ -32,6 +34,7 @@ namespace Hearthrock.Client
         public MainWindow()
         {
             this.InitializeComponent();
+            this.patcher = new Patcher(Environment.CurrentDirectory);
             this.InitializeConfigurationAsync();
         }
 
@@ -44,31 +47,18 @@ namespace Hearthrock.Client
         {
             PatchButton.IsEnabled = false;
 
-            var patcher = new Hacking.PatchHelper();
-            var path = string.Empty;
             try
             {
-                path = await patcher.SearchHearthstoneDirectoryAsync();
+                await this.patcher.RecoverHearthstoneAsync();
             }
-            catch
+            catch (PegasusException pegasusException)
             {
-                MessageBox.Show("Cannot find Hearthstone Directory.");
+                MessageBox.Show(pegasusException.Message);
                 PatchButton.IsEnabled = true;
                 return;
             }
 
-            try
-            {
-                await patcher.RecoverHearthstoneAsync(path, Environment.CurrentDirectory);
-            }
-            catch
-            {
-                MessageBox.Show("Hearthstone broken, or Hearthrock out of date.");
-                PatchButton.IsEnabled = true;
-                return;
-            }
-
-            await patcher.InjectAsync(path, Environment.CurrentDirectory);
+            await this.patcher.InjectAsync();
             PatchButton.IsEnabled = true;
         }
 
@@ -81,26 +71,13 @@ namespace Hearthrock.Client
         {
             RecoverButton.IsEnabled = false;
 
-            var patcher = new Hacking.PatchHelper();
-            var path = string.Empty;
             try
             {
-                path = await patcher.SearchHearthstoneDirectoryAsync();
+                await this.patcher.RecoverHearthstoneAsync();
             }
-            catch
+            catch (PegasusException pegasusException)
             {
-                MessageBox.Show("Cannot find Hearthstone Directory.");
-                PatchButton.IsEnabled = true;
-                return;
-            }
-
-            try
-            {
-                await patcher.RecoverHearthstoneAsync(path, Environment.CurrentDirectory);
-            }
-            catch
-            {
-                MessageBox.Show("Hearthstone broken, or Hearthrock out of date.");
+                MessageBox.Show(pegasusException.Message);
                 RecoverButton.IsEnabled = true;
                 return;
             }
@@ -116,19 +93,6 @@ namespace Hearthrock.Client
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveButton.IsEnabled = false;
-
-            var patcher = new Hacking.PatchHelper();
-            var path = string.Empty;
-            try
-            {
-                path = await patcher.SearchHearthstoneDirectoryAsync();
-            }
-            catch
-            {
-                MessageBox.Show("Cannot find Hearthstone Directory.");
-                SaveButton.IsEnabled = true;
-                return;
-            }
 
             switch (TraceComboBox.SelectedIndex)
             {
@@ -158,8 +122,18 @@ namespace Hearthrock.Client
                     break;
             }
 
-            await patcher.WriteConfigurationAsync(path, this.configuration);
-            this.InitializeConfigurationAsync();
+            try
+            {
+                await this.patcher.WriteRockConfigurationAsync(this.configuration);
+            }
+            catch (PegasusException pegasusException)
+            {
+                MessageBox.Show(pegasusException.Message);
+                SaveButton.IsEnabled = true;
+                return;
+            }
+
+            await this.InitializeConfigurationAsync(this.patcher.RootPath);
 
             SaveButton.IsEnabled = true;
         }
@@ -267,7 +241,16 @@ namespace Hearthrock.Client
 
                 if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    await this.InitializeConfigurationAsync(dialog.SelectedPath);
+                    try
+                    {
+                        this.patcher.RootPath = dialog.SelectedPath;
+                        await this.InitializeConfigurationAsync(this.patcher.RootPath);
+                    }
+                    catch (PegasusException pegasusException)
+                    {
+                        MessageBox.Show(pegasusException.Message);
+                        return;
+                    }
                 }
             }
         }
@@ -277,17 +260,14 @@ namespace Hearthrock.Client
         /// </summary>
         private async void InitializeConfigurationAsync()
         {
-            var patcher = new Hacking.PatchHelper();
-            var path = string.Empty;
+            string path = string.Empty;
             try
             {
-                path = await patcher.SearchHearthstoneDirectoryAsync();
-                this.configuration = await patcher.ReadConfigurationAsync(path);
+                path = await this.patcher.SearchHearthstoneDirectoryAsync();
+                this.patcher.RootPath = path;
             }
             catch
             {
-                MessageBox.Show("Can not find Hearthstone Directory");
-                return;
             }
 
             await this.InitializeConfigurationAsync(path);
