@@ -42,7 +42,7 @@ namespace Hearthrock.Contracts
         /// <summary>
         ///  Gets or sets a minion race.
         /// </summary>
-        public Race Race { get; set; }
+        public RockRace Race { get; set; }
 
         /// <summary>
         ///  Gets or sets a value indicating whether the minion is frozen.
@@ -118,6 +118,5 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the minion has battlecry.
         /// </summary>
         public bool HasBattlecry { get; set; }
-
     }
 }

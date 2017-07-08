@@ -173,7 +173,7 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.HasTriggerVisual = minion.HasTriggerVisual();
             rockMinion.IsEnraged = minion.IsEnraged();
             rockMinion.HasBattlecry = minion.HasBattlecry();
-            rockMinion.Race = (Race)(int)minion.GetRace();
+            rockMinion.Race = (RockRace)(int)minion.GetRace();
 
             return rockMinion;
         }
