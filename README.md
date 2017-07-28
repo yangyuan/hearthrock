@@ -6,6 +6,7 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
+- Hearthrock 0.4.4 Alpha for 8.4.0.20022. (July 28, 2017)
 - Hearthrock 0.4.3 Alpha for 8.2.2.19632. (July 8, 2017)
 - Hearthrock resumed, thanks for helping from [@AiSatan](https://github.com/aisatan), [@SimiPro](https://github.com/simipro), [@jakibaki](https://github.com/jakibaki).
 - Hearthrock suspended due to [an technical issue](../../issues/13).
