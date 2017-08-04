@@ -121,21 +121,15 @@ namespace Hearthrock.Client.Hacking
             var hearthrockAssembly = AssemblyDefinition.ReadAssembly(hearthrockAssemblyPath, new ReaderParameters { AssemblyResolver = resolver });
             var hearthstoneAssembly = AssemblyDefinition.ReadAssembly(hearthstoneAssemblyPath, new ReaderParameters { AssemblyResolver = resolver });
 
-            MethodDefinition method_hearthrock = hearthrockAssembly.GetMethod("RockUnity", "Hook");
-            if (method_hearthrock == null)
-            {
-                throw new PegasusException("Hearthrock Hook method not found!");
-            }
+            MethodDefinition methodRockUnityHook = hearthrockAssembly.GetMethod("RockUnity", "Hook");
+            MethodDefinition methodSceneMgrStart = hearthstoneAssembly.GetMethod("SceneMgr", "Start");
+            AssemblyDefinition tmpAssembly = hearthstoneAssembly.InjectMethod(methodSceneMgrStart, methodRockUnityHook);
 
-            MethodDefinition method_hearthstone = hearthstoneAssembly.GetMethod("SceneMgr", "Start");
-            if (method_hearthstone == null)
-            {
-                throw new PegasusException("Hearthstone SceneMgr.Start method not found!");
-            }
+            MethodDefinition methodRockPlayZoneSlotMousedOver = hearthrockAssembly.GetMethod("RockGameHooks", "PlayZoneSlotMousedOver");
+            MethodDefinition methodStonePlayZoneSlotMousedOver = hearthstoneAssembly.GetMethod("InputManager", "PlayZoneSlotMousedOver");
+            tmpAssembly = tmpAssembly.HijackMethod(methodStonePlayZoneSlotMousedOver, methodRockPlayZoneSlotMousedOver);
 
-            AssemblyDefinition assembly_csharp = hearthstoneAssembly.InjectMethod(method_hearthstone, method_hearthrock);
-
-            assembly_csharp.Write(hearthstoneAssemblyPath);
+            tmpAssembly.Write(hearthstoneAssemblyPath);
         }
 
         /// <summary>

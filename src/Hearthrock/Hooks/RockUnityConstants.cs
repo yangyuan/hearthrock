@@ -2,7 +2,7 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-namespace Hearthrock.Unity
+namespace Hearthrock.Hooks
 {
     /// <summary>
     /// Constants of RockUnity.
