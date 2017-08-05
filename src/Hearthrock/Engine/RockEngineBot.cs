@@ -42,7 +42,7 @@ namespace Hearthrock.Engine
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be mulligan-ed.</returns>
-        public List<int> GetMulliganAction(RockScene scene)
+        public RockAction GetMulliganAction(RockScene scene)
         {
             this.tracer.Verbose(RockJsonSerializer.Serialize(scene));
 
@@ -58,7 +58,7 @@ namespace Hearthrock.Engine
                 else
                 {
                     var apiClient = new RockApiClient();
-                    var mulligan = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotMulliganRelativePath}", scene);
+                    var mulligan = apiClient.Post<RockAction>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotMulliganRelativePath}", scene);
                     this.tracer.Verbose(RockJsonSerializer.Serialize(mulligan));
                     return mulligan;
                 }
@@ -66,7 +66,7 @@ namespace Hearthrock.Engine
             catch (Exception e)
             {
                 this.tracer.Error($"Unexpected Exception from Bot: {e}");
-                return new List<int>();
+                return RockAction.Create();
             }
         }
 
@@ -75,7 +75,7 @@ namespace Hearthrock.Engine
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be played.</returns>
-        public List<int> GetPlayAction(RockScene scene)
+        public RockAction GetPlayAction(RockScene scene)
         {
             this.tracer.Verbose(RockJsonSerializer.Serialize(scene));
 
@@ -91,7 +91,7 @@ namespace Hearthrock.Engine
                 else
                 {
                     var apiClient = new RockApiClient();
-                    var action = apiClient.Post<List<int>>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotPlayRelativePath}", scene);
+                    var action = apiClient.Post<RockAction>($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotPlayRelativePath}", scene);
                     this.tracer.Verbose(RockJsonSerializer.Serialize(action));
                     return action;
                 }
@@ -99,7 +99,7 @@ namespace Hearthrock.Engine
             catch (Exception e)
             {
                 this.tracer.Error($"Unexpected Exception from Bot: {e}");
-                return null;
+                return RockAction.Create();
             }
         }
     }

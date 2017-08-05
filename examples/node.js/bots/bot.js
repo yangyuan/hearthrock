@@ -12,7 +12,8 @@ class RockBot extends base.RockBotBase {
                 mulligan.push(card['RockId']);
             }
         }
-        return mulligan;
+		
+        return this.create_action(mulligan);
     }
 
     get_play_action(scene) {
@@ -20,8 +21,16 @@ class RockBot extends base.RockBotBase {
             return null;
         }
 
-        return scene['PlayOptions'][Math.floor(Math.random() * scene['PlayOptions'].length)];
+        return this.create_action(scene['PlayOptions'][Math.floor(Math.random() * scene['PlayOptions'].length)]);
     }
+	
+	create_action(objects) {
+		let action = {};
+		action.Version = 1;
+		action.Objects = objects;
+		action.Slot = -1;
+        return action;
+	}
 }
 
 var exports = module.exports = {

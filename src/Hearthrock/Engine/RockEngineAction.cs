@@ -30,11 +30,17 @@ namespace Hearthrock.Engine
         private int step;
 
         /// <summary>
+        /// The current step index.
+        /// </summary>
+        private int slot;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RockEngineAction" /> class.
         /// </summary>
         /// <param name="pegasus">The IRockPegasus.</param>
         /// <param name="action">The RockIds of the action.</param>
-        public RockEngineAction(IRockPegasus pegasus, List<int> action)
+        /// <param name="slot">The target slot when apply the action.</param>
+        public RockEngineAction(IRockPegasus pegasus, List<int> action, int slot)
         {
             if (action == null)
             {
@@ -44,6 +50,8 @@ namespace Hearthrock.Engine
             {
                 this.actions = action;
             }
+
+            this.slot = slot;
 
             this.pegasus = pegasus;
             this.step = 0;

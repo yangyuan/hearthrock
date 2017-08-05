@@ -16,13 +16,13 @@ namespace Hearthrock.Contracts
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be mulligan-ed.</returns>
-        List<int> GetMulliganAction(RockScene scene);
+        RockAction GetMulliganAction(RockScene scene);
 
         /// <summary>
         /// Generate a play action for current scene.
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be played.</returns>
-        List<int> GetPlayAction(RockScene scene);
+        RockAction GetPlayAction(RockScene scene);
     }
 }

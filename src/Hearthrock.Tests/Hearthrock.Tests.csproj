@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AlgorithmTests\KnapsackTests.cs" />
     <Compile Include="CommunicationTests\RockJsonSerializerTests.cs" />
+    <Compile Include="Contracts\RockActionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
