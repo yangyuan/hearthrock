@@ -267,10 +267,10 @@ namespace Hearthrock.Engine
             if (this.currentAction == null || this.currentAction.IsDone() || !this.currentAction.IsValid())
             {
                 var scene = this.pegasus.SnapshotScene();
-                var rockAction = this.bot.GetPlayAction(scene);
-                if (rockAction != null)
+                var playAction = this.bot.GetPlayAction(scene);
+                if (playAction.Objects.Count != 0)
                 {
-                    var rockActionContext = new RockEngineAction(this.pegasus, rockAction);
+                    var rockActionContext = new RockEngineAction(this.pegasus, playAction.Objects, playAction.Slot);
                     if (rockActionContext.IsValid())
                     {
                         this.currentAction = rockActionContext;
@@ -307,9 +307,9 @@ namespace Hearthrock.Engine
             {
                 this.ShowRockInfo("Mulligan");
                 var scene = this.pegasus.SnapshotScene();
-                var mulliganedCards = this.bot.GetMulliganAction(scene);
+                var mulliganedAction = this.bot.GetMulliganAction(scene);
 
-                this.currentAction = new RockEngineAction(this.pegasus, mulliganedCards);
+                this.currentAction = new RockEngineAction(this.pegasus, mulliganedAction.Objects, mulliganedAction.Slot);
             }
 
             if (this.currentAction.IsDone())

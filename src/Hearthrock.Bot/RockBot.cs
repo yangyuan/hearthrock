@@ -20,7 +20,7 @@ namespace Hearthrock.Bot
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be mulligan-ed.</returns>
-        public List<int> GetMulliganAction(RockScene scene)
+        public RockAction GetMulliganAction(RockScene scene)
         {
             // You can just return an null or empty list, which means keep all cards.
             //// return null;
@@ -35,7 +35,7 @@ namespace Hearthrock.Bot
         /// </summary>
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be played.</returns>
-        public List<int> GetPlayAction(RockScene scene)
+        public RockAction GetPlayAction(RockScene scene)
         {
             // You can just return an null or empty list, which means ends turn.
             //// return null;
@@ -62,7 +62,7 @@ namespace Hearthrock.Bot
 
             if (bestAction != null)
             {
-                return bestAction;
+                return RockAction.Create(bestAction);
             }
 
             return this.DefaultGetPlayAction(scene);
@@ -73,7 +73,7 @@ namespace Hearthrock.Bot
         /// </summary>
         /// <param name="scene">the scene</param>
         /// <returns>the cards to be mulligan-ed</returns>
-        private List<int> DefaultGetMulliganAction(RockScene scene)
+        private RockAction DefaultGetMulliganAction(RockScene scene)
         {
             List<int> cards = new List<int>();
             foreach (RockCard card in scene.Self.Cards)
@@ -84,7 +84,7 @@ namespace Hearthrock.Bot
                 }
             }
 
-            return cards;
+            return RockAction.Create(cards);
         }
 
         /// <summary>
@@ -92,16 +92,16 @@ namespace Hearthrock.Bot
         /// </summary>
         /// <param name="scene">the scene</param>
         /// <returns>the cards to be played</returns>
-        private List<int> DefaultGetPlayAction(RockScene scene)
+        private RockAction DefaultGetPlayAction(RockScene scene)
         {
             if (scene.PlayOptions.Count == 0)
             {
-                return null;
+                return RockAction.Create();
             }
             else
             {
                 // this smart bot will randomly choose an play action.
-                return scene.PlayOptions[new Random().Next(0, scene.PlayOptions.Count)];
+                return RockAction.Create(scene.PlayOptions[new Random().Next(0, scene.PlayOptions.Count)]);
             }
         }
     }
