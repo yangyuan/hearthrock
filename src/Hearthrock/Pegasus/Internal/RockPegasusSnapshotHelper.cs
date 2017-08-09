@@ -27,6 +27,7 @@ namespace Hearthrock.Pegasus.Internal
             rockScene.Self = SnapshotPlayer(self);
             rockScene.Opponent = SnapshotPlayer(opponent);
             rockScene.PlayOptions = SnapshotOptions();
+            rockScene.Turn = GameState.Get().GetTurn();
             return rockScene;
         }
 
@@ -39,6 +40,8 @@ namespace Hearthrock.Pegasus.Internal
         {
             var rockPlayer = new RockPlayer();
             rockPlayer.Resources = player.GetNumAvailableResources();
+            rockPlayer.PermanentResources = player.GetNumPermanentResources();
+            rockPlayer.TemporaryResources = player.GetNumTemporaryResources();
             rockPlayer.Hero = SnapshotHero(player);
             rockPlayer.Power = SnapshotPower(player);
             rockPlayer.Minions = SnapshotMinions(player);

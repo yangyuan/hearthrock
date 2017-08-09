@@ -10,7 +10,6 @@ namespace Hearthrock.Pegasus.Internal
 
     using Hearthrock.Contracts;
     using Hearthrock.Diagnostics;
-    using PegasusShared;
 
     /// <summary>
     /// The implementation of IRockPegasus
@@ -44,8 +43,7 @@ namespace Hearthrock.Pegasus.Internal
                 return;
             }
 
-            FieldInfo fieldinfo = ipk.GetType().GetField("m_activityDetected", BindingFlags.NonPublic | BindingFlags.Instance);
-            fieldinfo.SetValue(ipk, true);
+            ipk.SetActivityDetected(true);
         }
 
         /// <summary>

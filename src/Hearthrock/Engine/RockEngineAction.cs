@@ -7,6 +7,7 @@ namespace Hearthrock.Engine
     using System.Collections.Generic;
 
     using Hearthrock.Contracts;
+    using Hearthrock.Hooks;
     using Hearthrock.Pegasus;
 
     /// <summary>
@@ -68,35 +69,33 @@ namespace Hearthrock.Engine
         /// </summary>
         public void Apply()
         {
+            RockGameHooks.PlayZoneSlotMousedOverValue = this.slot;
+            RockGameHooks.EnablePlayZoneSlotMousedOver = true;
+
             // Pick source card
             if (this.step == 0)
             {
                 this.pegasus.ClickObject(this.actions[0]);
-
-                this.step = 1;
-                return;
             }
-
-            if (this.step == 1 && this.actions.Count == 1)
+            else if (this.step == 1 && this.actions.Count == 1)
             {
                 this.pegasus.DropObject();
-
-                this.step = 2;
-                return;
             }
-
-            // other scenarios
-            if (this.actions.Count > this.step)
+            else if (this.actions.Count > this.step)
             {
                 this.pegasus.ClickObject(this.actions[this.step]);
-                this.step++;
-                return;
             }
             else
             {
                 this.pegasus.DropObject();
-                this.step++;
             }
+
+            this.step++;
+
+            RockGameHooks.EnablePlayZoneSlotMousedOver = false;
+            RockGameHooks.PlayZoneSlotMousedOverValue = -1;
+
+            return;
         }
 
         /// <summary>

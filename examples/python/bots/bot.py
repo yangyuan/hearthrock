@@ -3,10 +3,7 @@ import random
 
 
 def create_action(objects):
-    action = {};
-    action['Version'] = 1;
-    action['Objects'] = objects;
-    action['Slot'] = -1;
+    action = {'Version': 1, 'Objects': objects, 'Slot': -1}
     return action;
 
 def do_mulligan(scene):

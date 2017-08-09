@@ -25,10 +25,7 @@ class RockBot extends base.RockBotBase {
     }
 	
 	create_action(objects) {
-		let action = {};
-		action.Version = 1;
-		action.Objects = objects;
-		action.Slot = -1;
+		let action = {Version: 1, Objects: objects, Slot: -1}
         return action;
 	}
 }

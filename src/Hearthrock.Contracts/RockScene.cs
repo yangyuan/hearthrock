@@ -22,6 +22,11 @@ namespace Hearthrock.Contracts
         public RockPlayer Opponent { get; set; }
 
         /// <summary>
+        /// Gets or sets the turn number of the game.
+        /// </summary>
+        public int Turn { get; set; }
+
+        /// <summary>
         /// Gets or sets the play options.
         /// </summary>
         public List<List<int>> PlayOptions { get; set; }
