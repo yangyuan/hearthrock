@@ -12,9 +12,19 @@ namespace Hearthrock.Contracts
     public class RockPlayer
     {
         /// <summary>
-        /// Gets or sets the resources of player.
+        /// Gets or sets the available resources of player.
         /// </summary>
         public int Resources { get; set; }
+
+        /// <summary>
+        /// Gets or sets the permanent resources of player.
+        /// </summary>
+        public int PermanentResources { get; set; }
+
+        /// <summary>
+        /// Gets or sets the temporary resources of player.
+        /// </summary>
+        public int TemporaryResources { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the power of player is available.
