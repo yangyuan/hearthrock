@@ -6,11 +6,10 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
-- Hearthrock 0.4.4 Alpha for 8.4.0.20022. (July 28, 2017)
-- Hearthrock 0.4.3 Alpha for 8.2.2.19632. (July 8, 2017)
+- Hearthrock 0.5.0 Alpha for 9.0.0.20457. (Aug 9, 2017)
+- Hearthrock 0.4.4 Alpha for 8.4.0.20022. (Jul 28, 2017)
+- Hearthrock 0.4.3 Alpha for 8.2.2.19632. (Jul 8, 2017)
 - Hearthrock resumed, thanks for helping from [@AiSatan](https://github.com/aisatan), [@SimiPro](https://github.com/simipro), [@jakibaki](https://github.com/jakibaki).
-- Hearthrock suspended due to [an technical issue](../../issues/13).
-- Hearthrock 0.4.2 Alpha for 8.0.0.18336. (Apr 14, 2017)
 
 ## Purposes and Features
 
@@ -34,6 +33,10 @@ Hearthrock is designed for scientists and engineers only.
 
 - Make sure you are scientist or engineer or student.
 - Create an issue in [here](../../issues).
+
+## Pull requests?
+- Pull requests are welcome, no matter how small the changes are.
+- It's a must to pass StyleCop.
 
 ___
 *“Hearthrock isn't endorsed by Blizzard Entertainment and doesn't reflect the views or opinions of Blizzard Entertainment or anyone officially involved in producing or managing Hearthstone. Hearthstone is a trademark or registered trademark of Blizzard Entertainment, Inc., in the U.S. and/or other countries.”*
