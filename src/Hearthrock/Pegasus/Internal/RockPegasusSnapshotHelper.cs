@@ -175,6 +175,7 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.HasInspire = minion.HasInspire();
             rockMinion.HasTriggerVisual = minion.HasTriggerVisual();
             rockMinion.HasLifesteal = minion.HasLifesteal();
+            rockMinion.IsPoisonous = minion.IsPoisonous();
             rockMinion.IsEnraged = minion.IsEnraged();
             rockMinion.HasBattlecry = minion.HasBattlecry();
             rockMinion.Race = (RockRace)(int)minion.GetRace();
