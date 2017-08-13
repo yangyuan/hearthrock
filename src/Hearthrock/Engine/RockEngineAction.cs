@@ -150,40 +150,40 @@ namespace Hearthrock.Engine
             this.step = this.actions.Count + 1;
         }
 
-        /// <summary>
-        /// Get the interpretation of this action.
-        /// </summary>
-        /// <returns>The interpretation of this action.</returns>
-        private string GetInterpretation()
+    /// <summary>
+    /// Get the interpretation of this action.
+    /// </summary>
+    /// <returns>The interpretation of this action.</returns>
+    private string GetInterpretation()
+    {
+        if (this.actions.Count == 0)
         {
-            if (this.actions.Count == 0)
+            return string.Empty;
+        }
+
+        var sourceObject = this.pegasus.GetObject(this.actions[0]);
+        if (this.actions.Count == 1)
+        {
+            return "Play: " + sourceObject.Name;
+        }
+        else
+        {
+            var targetEnities = new List<IRockObject>();
+
+            for (int i = 1; i < this.actions.Count; i++)
             {
-                return string.Empty;
+                var rockId = this.actions[i];
+                targetEnities.Add(this.pegasus.GetObject(rockId));
             }
 
-            var sourceObject = this.pegasus.GetObject(this.actions[0]);
-            if (this.actions.Count == 1)
+            string ret = "Attack: " + sourceObject.Name + " ";
+            foreach (var targetEnity in targetEnities)
             {
-                return "Play: " + sourceObject.Name;
+                ret += " > " + targetEnity.Name;
             }
-            else
-            {
-                var targetEnities = new List<IRockObject>();
 
-                for (int i = 1; i < this.actions.Count; i++)
-                {
-                    var rockId = this.actions[i];
-                    targetEnities.Add(this.pegasus.GetObject(rockId));
-                }
-
-                string ret = "Attack: " + sourceObject.Name + " ";
-                foreach (var targetEnity in targetEnities)
-                {
-                    ret += " > " + targetEnity.Name;
-                }
-
-                return ret;
-            }
+            return ret;
         }
     }
+}
 }

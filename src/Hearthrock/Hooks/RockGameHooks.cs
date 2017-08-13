@@ -2,6 +2,8 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
+using UnityEngine;
+
 namespace Hearthrock.Hooks
 {
     using System;
