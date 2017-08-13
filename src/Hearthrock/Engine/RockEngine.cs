@@ -268,7 +268,7 @@ namespace Hearthrock.Engine
             {
                 var scene = this.pegasus.SnapshotScene();
                 var playAction = this.bot.GetPlayAction(scene);
-                if (playAction.Objects.Count != 0)
+                if (playAction.Objects != null && playAction.Objects.Count != 0)
                 {
                     var rockActionContext = new RockEngineAction(this.pegasus, playAction.Objects, playAction.Slot);
                     if (rockActionContext.IsValid())
