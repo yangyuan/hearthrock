@@ -118,5 +118,15 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the minion has battlecry.
         /// </summary>
         public bool HasBattlecry { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion has lifesteal.
+        /// </summary>
+        public bool HasLifesteal { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the minion is poisonous.
+        /// </summary>
+        public bool IsPoisonous { get; set; }
     }
 }
