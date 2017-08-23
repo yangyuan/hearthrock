@@ -122,6 +122,11 @@ namespace Hearthrock.Client
                     break;
             }
 
+            if (this.configuration.BotEndpoint != string.Empty && !this.configuration.BotEndpoint.EndsWith("/"))
+            {
+                MessageBox.Show("Bot endpoints usually end with \"/\".");
+            }
+
             try
             {
                 await this.patcher.WriteRockConfigurationAsync(this.configuration);
