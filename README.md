@@ -6,6 +6,7 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
+- Hearthrock 0.5.2 Alpha for 9.2.0.22017. (Oct 26, 2017)
 - Hearthrock 0.5.1 Alpha for 9.1.0.20970. (Sept 20, 2017)
 - Hearthrock 0.5.0 Alpha for 9.0.0.20457. (Aug 9, 2017)
 - Hearthrock 0.4.4 Alpha for 8.4.0.20022. (Jul 28, 2017)
