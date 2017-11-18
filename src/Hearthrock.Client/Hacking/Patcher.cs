@@ -8,6 +8,8 @@ namespace Hearthrock.Client.Hacking
     using System.Collections.Generic;
     using System.IO;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using Hearthrock.Bot.Exceptions;
@@ -245,7 +247,12 @@ namespace Hearthrock.Client.Hacking
             var pegasusInformation = this.ReadPegasusInformation();
             var pegasusVersion = this.ReadPegasusVersion();
 
-            if (!pegasusInformation.Version.Equals(pegasusVersion))
+            if (string.IsNullOrEmpty(pegasusVersion))
+            {
+                throw new PegasusException($"Cannot detect Hearthstone client version.");
+            }
+
+            if (!pegasusVersion.Contains(pegasusInformation.Version))
             {
                 throw new PegasusException($"Hearthrock is out of data: supported version {pegasusInformation.Version}, current version {pegasusVersion}");
             }
@@ -282,7 +289,12 @@ namespace Hearthrock.Client.Hacking
                 throw new PegasusException($"Cannot find {hearthstoneAssemblyPath} in Hearthrock client.");
             }
 
-            if (!pegasusInformation.Version.Equals(pegasusVersion))
+            if (string.IsNullOrEmpty(pegasusVersion))
+            {
+                throw new PegasusException($"Cannot detect Hearthstone client version.");
+            }
+
+            if (!pegasusVersion.Contains(pegasusInformation.Version))
             {
                 if (File.Exists(hearthstoneBackupAssemblyPath))
                 {
@@ -354,55 +366,14 @@ namespace Hearthrock.Client.Hacking
                 throw new PegasusException("Pegasus product file not found or corrupted.");
             }
 
-            BinaryReader br = new BinaryReader(File.OpenRead(hearthstoneProductPath));
+            string productInfo = File.ReadAllText(hearthstoneProductPath, Encoding.ASCII);
             string version = string.Empty;
 
-            try
+            Regex regex = new Regex("([0-9]+\\.[0-9]+\\.[0-0]+\\.[0-9]+)");
+            var versions = regex.Matches(productInfo);
+            if (versions.Count == 1)
             {
-                bool end = false;
-                List<string> data = new List<string>();
-
-                while (!end)
-                {
-                    byte type = br.ReadByte();
-                    switch (type)
-                    {
-                        case 0x0A:
-                        case 0x12:
-                        case 0x32:
-                        case 0x3A:
-                            data.Add(br.ReadString());
-                            break;
-                        case 0x1A:
-                        case 0x42:
-                        case 0x4A:
-                            br.ReadByte();
-                            break;
-                        case 0x18:
-                            br.ReadBytes(5);
-                            break;
-                        case 0x10:
-                            br.ReadBytes(20);
-                            break;
-                        case 0x52:
-                            br.ReadBytes(45);
-                            break;
-                        case 0x00:
-                            end = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                version = data[7];
-            }
-            catch
-            {
-            }
-            finally
-            {
-                br.Close();
+                version = versions[0].Value;
             }
 
             return version;
