@@ -44,8 +44,3 @@ Hearthrock is designed for scientists and engineers only.
 
 ___
 *“Hearthrock isn't endorsed by Blizzard Entertainment and doesn't reflect the views or opinions of Blizzard Entertainment or anyone officially involved in producing or managing Hearthstone. Hearthstone is a trademark or registered trademark of Blizzard Entertainment, Inc., in the U.S. and/or other countries.”*
-
-___
-### 中文说明
-
-http://andrewyang.cn/post.php?id=1029
