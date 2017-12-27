@@ -6,6 +6,7 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
+- Hearthrock 0.5.4 Alpha for 10.0.0.22611. (Dec 12, 2017)
 - Hearthrock 0.5.3 Alpha for 9.4.0.22115. (Nov 18, 2017)
 - Hearthrock (AI) received $5,000 credits from NUTech AWS Grant.
 - Hearthrock 0.5.2 Alpha for 9.2.0.22017. (Oct 26, 2017)
@@ -44,8 +45,3 @@ Hearthrock is designed for scientists and engineers only.
 
 ___
 *“Hearthrock isn't endorsed by Blizzard Entertainment and doesn't reflect the views or opinions of Blizzard Entertainment or anyone officially involved in producing or managing Hearthstone. Hearthstone is a trademark or registered trademark of Blizzard Entertainment, Inc., in the U.S. and/or other countries.”*
-
-___
-### 中文说明
-
-http://andrewyang.cn/post.php?id=1029
