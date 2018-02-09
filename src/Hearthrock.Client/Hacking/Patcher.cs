@@ -2,6 +2,8 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
+using System.Linq;
+
 namespace Hearthrock.Client.Hacking
 {
     using System;
@@ -131,6 +133,11 @@ namespace Hearthrock.Client.Hacking
             MethodDefinition methodStonePlayZoneSlotMousedOver = hearthstoneAssembly.GetMethod("InputManager", "PlayZoneSlotMousedOver");
             tmpAssembly = tmpAssembly.HijackMethod(methodStonePlayZoneSlotMousedOver, methodRockPlayZoneSlotMousedOver);
 
+            MethodDefinition methodRockGetMousePosition = hearthrockAssembly.GetMethod("RockGameHooks", "GetMousePosition");
+            MethodDefinition methodStoneGetMousePosition = hearthstoneAssembly.GetMethod("UniversalInputManager", "GetMousePosition");
+
+            tmpAssembly = tmpAssembly.HijackMethod(methodStoneGetMousePosition, methodRockGetMousePosition);
+
             tmpAssembly.Write(hearthstoneAssemblyPath);
         }
 
@@ -215,7 +222,8 @@ namespace Hearthrock.Client.Hacking
             {
                 string.Empty,
                 @"C:\Program Files\Hearthstone\",
-                @"C:\Program Files (x86)\Hearthstone\"
+                @"C:\Program Files (x86)\Hearthstone\",
+                @"E:\Program Files (x86)\HS\Hearthstone\"
             };
 
             for (int i = 2; i < 26; i++)
