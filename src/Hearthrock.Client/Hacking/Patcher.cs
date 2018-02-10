@@ -2,8 +2,6 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-using System.Linq;
-
 namespace Hearthrock.Client.Hacking
 {
     using System;
