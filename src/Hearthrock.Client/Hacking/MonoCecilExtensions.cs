@@ -98,7 +98,7 @@ namespace Hearthrock.Client.Hacking
 
                 // the index of temporary variable
                 int index = ilp.Body.Variables.Count;
-                ilp.Body.Variables.Add(new VariableDefinition(baseMethodDefinition.ReturnType));
+                ilp.Body.Variables.Add(new VariableDefinition(assemblyDefinition.MainModule.Import(baseMethodDefinition.ReturnType)));
 
                 var instructions = ilp.Body.Instructions.ToArray();
 

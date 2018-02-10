@@ -17,7 +17,7 @@ namespace Hearthrock.Hooks
         /// <summary>
         /// Is RockUnity enabled.
         /// </summary>
-        private bool isRockEnabled = false;
+        public static bool IsRockEnabled = false;
 
         /// <summary>
         /// The RockEngine instance.
@@ -74,7 +74,7 @@ namespace Hearthrock.Hooks
 
                 this.rockEngine.Tick();
 
-                if (this.isRockEnabled)
+                if (IsRockEnabled)
                 {
                     delay = this.rockEngine.Update();
                 }
@@ -98,16 +98,16 @@ namespace Hearthrock.Hooks
                 new Rect(contentOffsetLeft, buttonOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockButtonHeight),
                 RockUnityConstants.RockButtonTitle))
             {
-                if (this.isRockEnabled)
+                if (IsRockEnabled)
                 {
-                    this.isRockEnabled = false;
+                    IsRockEnabled = false;
 
                     this.rockEngine.Reload();
                     this.rockEngine.ShowRockInfo("Hearthrock Paused");
                 }
                 else
                 {
-                    this.isRockEnabled = true;
+                    IsRockEnabled = true;
 
                     this.rockEngine.Reload();
                     this.rockEngine.ShowRockInfo("Hearthrock Started");
@@ -115,7 +115,7 @@ namespace Hearthrock.Hooks
             }
 
             // The status texts.
-            string statusRockState = $"Status: " + (this.isRockEnabled ? "Running" : "Paused");
+            string statusRockState = $"Status: " + (IsRockEnabled ? "Running" : "Paused");
             string statusGameMode = $"Mode: " + this.rockEngine.GameMode.ToString();
             string statusTrace = $"Trace: " + (this.rockEngine.UseBuiltinTrace ? "Builtin" : "Remote");
             string statusBot = $"Bot: " + (this.rockEngine.UseBuiltinBot ? "Builtin" : "Remote");

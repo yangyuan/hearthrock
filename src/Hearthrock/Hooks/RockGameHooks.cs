@@ -2,6 +2,8 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
+using UnityEngine;
+
 namespace Hearthrock.Hooks
 {
     using System;
@@ -46,6 +48,22 @@ namespace Hearthrock.Hooks
             {
                 return position;
             }
+        }
+
+        /// <summary>
+        /// The method return face position as mouse position.
+        /// </summary>
+        /// <returns>Opponent's face position</returns>
+        public static Vector3 GetMousePosition(Vector3 position)
+        {
+            if (!RockUnity.IsRockEnabled) 
+                return position;
+
+            var pos = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.8f, 0.0f));
+            position.x = pos.x;
+            position.y = pos.y;
+
+            return position;
         }
     }
 }
