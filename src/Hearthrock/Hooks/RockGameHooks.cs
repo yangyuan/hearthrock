@@ -2,11 +2,11 @@
 //     Copyright (c) The Hearthrock Project. All rights reserved.
 // </copyright>
 
-using UnityEngine;
-
 namespace Hearthrock.Hooks
 {
     using System;
+
+    using UnityEngine;
 
     /// <summary>
     /// Hooks for Hearthrock
@@ -17,6 +17,11 @@ namespace Hearthrock.Hooks
         ///  Gets or sets a value indicating whether PlayZoneSlotMousedOver is enabled.
         /// </summary>
         public static bool EnablePlayZoneSlotMousedOver { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether EnableLockMousePosition is enabled.
+        /// </summary>
+        public static bool EnableLockMousePosition { get; set; }
 
         /// <summary>
         /// Gets or sets the value of PlayZoneSlotMousedOver.
@@ -51,15 +56,19 @@ namespace Hearthrock.Hooks
         }
 
         /// <summary>
-        /// The method return face position as mouse position.
+        /// Return the center of the stage when EnableLockMousePosition is true.
         /// </summary>
-        /// <returns>Opponent's face position</returns>
+        /// <param name="position">The original position</param>
+        /// <returns>The center of the stage when EnableLockMousePosition is true</returns>
         public static Vector3 GetMousePosition(Vector3 position)
         {
-            if (!RockUnity.IsRockEnabled) 
+            if (!EnableLockMousePosition)
+            {
                 return position;
+            }
 
-            var pos = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.8f, 0.0f));
+            // The center of the stage is the 8/15 of the screen. 
+            var pos = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5334f, 0.0f));
             position.x = pos.x;
             position.y = pos.y;
 

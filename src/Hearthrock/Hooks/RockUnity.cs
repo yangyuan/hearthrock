@@ -17,7 +17,7 @@ namespace Hearthrock.Hooks
         /// <summary>
         /// Is RockUnity enabled.
         /// </summary>
-        public static bool IsRockEnabled = false;
+        private bool isRockEnabled = false;
 
         /// <summary>
         /// The RockEngine instance.
@@ -74,7 +74,7 @@ namespace Hearthrock.Hooks
 
                 this.rockEngine.Tick();
 
-                if (IsRockEnabled)
+                if (this.isRockEnabled)
                 {
                     delay = this.rockEngine.Update();
                 }
@@ -98,16 +98,18 @@ namespace Hearthrock.Hooks
                 new Rect(contentOffsetLeft, buttonOffsetTop, RockUnityConstants.WindowContentWidth, RockUnityConstants.RockButtonHeight),
                 RockUnityConstants.RockButtonTitle))
             {
-                if (IsRockEnabled)
+                if (this.isRockEnabled)
                 {
-                    IsRockEnabled = false;
+                    this.isRockEnabled = false;
+                    RockGameHooks.EnableLockMousePosition = false;
 
                     this.rockEngine.Reload();
                     this.rockEngine.ShowRockInfo("Hearthrock Paused");
                 }
                 else
                 {
-                    IsRockEnabled = true;
+                    this.isRockEnabled = true;
+                    RockGameHooks.EnableLockMousePosition = true;
 
                     this.rockEngine.Reload();
                     this.rockEngine.ShowRockInfo("Hearthrock Started");
@@ -115,7 +117,7 @@ namespace Hearthrock.Hooks
             }
 
             // The status texts.
-            string statusRockState = $"Status: " + (IsRockEnabled ? "Running" : "Paused");
+            string statusRockState = $"Status: " + (this.isRockEnabled ? "Running" : "Paused");
             string statusGameMode = $"Mode: " + this.rockEngine.GameMode.ToString();
             string statusTrace = $"Trace: " + (this.rockEngine.UseBuiltinTrace ? "Builtin" : "Remote");
             string statusBot = $"Bot: " + (this.rockEngine.UseBuiltinBot ? "Builtin" : "Remote");
