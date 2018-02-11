@@ -4,7 +4,8 @@ import random
 
 def create_action(objects):
     action = {'Version': 1, 'Objects': objects, 'Slot': -1}
-    return action;
+    return action
+
 
 def do_mulligan(scene):
     mulligan = []
@@ -16,7 +17,7 @@ def do_mulligan(scene):
 
 def do_play(scene):
     if len(scene['PlayOptions']) == 0:
-        return None
+        return []
     return create_action(random.choice(scene['PlayOptions']))
 
 

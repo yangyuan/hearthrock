@@ -60,5 +60,10 @@ namespace Hearthrock.Contracts
         /// Gets or sets the cards of player.
         /// </summary>
         public List<RockCard> Cards { get; set; }
+
+        /// <summary>
+        /// Gets or sets the (card) choices of player.
+        /// </summary>
+        public List<RockCard> Choices { get; set; }
     }
 }
