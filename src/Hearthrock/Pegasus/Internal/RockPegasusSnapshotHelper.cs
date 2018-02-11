@@ -46,6 +46,7 @@ namespace Hearthrock.Pegasus.Internal
             rockPlayer.Power = SnapshotPower(player);
             rockPlayer.Minions = SnapshotMinions(player);
             rockPlayer.Cards = SnapshotCards(player);
+            rockPlayer.Choices = SnapshotChoices(player);
             rockPlayer.PowerAvailable = !player.GetHeroPower().IsExhausted();
 
             rockPlayer.HasWeapon = player.HasWeapon();
@@ -202,6 +203,28 @@ namespace Hearthrock.Pegasus.Internal
         }
 
         /// <summary>
+        /// Snapshot card choices.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The list of RockCard.</returns>
+        private static List<RockCard> SnapshotChoices(Player player)
+        {
+            var rockCards = new List<RockCard>();
+
+            var choices = GameState.Get()?.GetEntityChoices(player.GetPlayerId());
+
+            if (choices != null)
+            {
+                foreach (var entityId in choices.Entities)
+                {
+                    rockCards.Add(SnapshotCard(GameState.Get()?.GetEntity(entityId)));
+                }
+            }
+
+            return rockCards;
+        }
+
+        /// <summary>
         /// Snapshot a card.
         /// </summary>
         /// <param name="card">The Entity.</param>
@@ -263,6 +286,15 @@ namespace Hearthrock.Pegasus.Internal
             var options = GameState.Get()?.GetOptionsPacket();
             if (options == null || options.List == null)
             {
+                var choices = GameState.Get()?.GetFriendlyEntityChoices();
+                if (choices != null)
+                {
+                    foreach (var entityId in choices.Entities)
+                    {
+                        ret.Add(new List<int> { entityId });
+                    }
+                }
+
                 return ret;
             }
 
