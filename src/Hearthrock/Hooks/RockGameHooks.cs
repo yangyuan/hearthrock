@@ -68,11 +68,7 @@ namespace Hearthrock.Hooks
             }
 
             // The center of the stage is the 8/15 of the screen. 
-            var pos = Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5334f, 0.0f));
-            position.x = pos.x;
-            position.y = pos.y;
-
-            return position;
+            return Camera.main.ViewportToScreenPoint(new Vector3(0.5f, 0.5334f, 0.0f));
         }
     }
 }
