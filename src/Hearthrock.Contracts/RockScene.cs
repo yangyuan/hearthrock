@@ -30,5 +30,17 @@ namespace Hearthrock.Contracts
         /// Gets or sets the play options.
         /// </summary>
         public List<List<int>> PlayOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action sequence of the game.
+        /// The sequence increases during a session, and remain the same when reporting action results.
+        /// </summary>
+        public int ActionId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the unique client session GUID.
+        /// SessionId changes when start a new game or re-start the bot.
+        /// </summary>
+        public string SessionId { get; set; }
     }
 }

@@ -43,6 +43,18 @@ namespace Hearthrock.Engine
         private RockEngineAction currentAction;
 
         /// <summary>
+        /// The action sequence of the game.
+        /// The sequence increases during a session, and remain the same when reporting action results.
+        /// </summary>
+        private int actionId;
+
+        /// <summary>
+        /// The unique client session GUID.
+        /// SessionId changes when start a new game or re-start the bot.
+        /// </summary>
+        private string sessionId;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RockEngine" /> class.
         /// </summary>
         public RockEngine()
@@ -94,6 +106,8 @@ namespace Hearthrock.Engine
             this.tracer = new RockTracer(this.configuration);
             this.bot = new RockEngineBot(this.configuration, this.tracer);
             this.pegasus = RockPegasusFactory.CreatePegasus(this.tracer);
+            this.actionId = 0;
+            this.sessionId = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -256,17 +270,21 @@ namespace Hearthrock.Engine
         /// <returns>Seconds to be delayed before next call.</returns>
         private double OnRockAction()
         {
-            if (EndTurnButton.Get().HasNoMorePlays())
+            if (this.currentAction?.IsValid() == false)
             {
-                this.ShowRockInfo("Job's Done");
-                this.pegasus.DoEndTurn();
                 this.currentAction = null;
-                return 3;
             }
 
-            if (this.currentAction == null || this.currentAction.IsDone() || !this.currentAction.IsValid())
+            if (this.currentAction?.IsDone() == true)
             {
-                var scene = this.pegasus.SnapshotScene();
+                var scene = this.pegasus.SnapshotScene(this.sessionId, this.actionId);
+                this.bot.ReportActionResult(scene);
+            }
+
+            if (this.currentAction == null || this.currentAction.IsDone())
+            {
+                this.actionId += 1;
+                var scene = this.pegasus.SnapshotScene(this.sessionId, this.actionId);
                 var playAction = this.bot.GetPlayAction(scene);
                 if (playAction.Objects != null && playAction.Objects.Count != 0)
                 {
@@ -279,12 +297,15 @@ namespace Hearthrock.Engine
                     else
                     {
                         this.tracer.Warning("Invalid rockAction");
+                        this.currentAction = null;
+                        return 3;
                     }
                 }
                 else
                 {
                     this.ShowRockInfo("Job's Done");
                     this.pegasus.DoEndTurn();
+                    this.currentAction = null;
                     return 3;
                 }
             }
@@ -306,7 +327,10 @@ namespace Hearthrock.Engine
             if (this.currentAction == null)
             {
                 this.ShowRockInfo("Mulligan");
-                var scene = this.pegasus.SnapshotScene();
+                this.actionId += 1;
+                // Force update sessionId when starting a new game.
+                this.sessionId = Guid.NewGuid().ToString();
+                var scene = this.pegasus.SnapshotScene(this.sessionId, this.actionId);
                 var mulliganedAction = this.bot.GetMulliganAction(scene);
 
                 this.currentAction = new RockEngineAction(this.pegasus, mulliganedAction.Objects, mulliganedAction.Slot);
@@ -315,6 +339,8 @@ namespace Hearthrock.Engine
             if (this.currentAction.IsDone())
             {
                 MulliganManager.Get().GetMulliganButton().TriggerRelease();
+                var scene = this.pegasus.SnapshotScene(this.sessionId, this.actionId);
+                this.bot.ReportActionResult(scene);
                 return 5;
             }
 

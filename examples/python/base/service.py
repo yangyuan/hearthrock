@@ -30,6 +30,8 @@ class RockApiService:
                     ret = _bot.get_mulligan_action(json_data)
                 elif self.path == "/play":
                     ret = _bot.get_play_action(json_data)
+                elif self.path == "/report":
+                    ret = _bot.report(json_data)
                 self.send_response(200)
                 self.end_headers()
                 self.wfile.write(bytes(json.dumps(ret), 'utf-8'))

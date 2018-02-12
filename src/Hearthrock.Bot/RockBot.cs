@@ -69,6 +69,16 @@ namespace Hearthrock.Bot
         }
 
         /// <summary>
+        /// Report the result of an action by providing the current scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        public void ReportActionResult(RockScene scene)
+        {
+            // do nothing in built-in bot.
+            return;
+        }
+
+        /// <summary>
         /// The default implementation of GetMulliganAction
         /// </summary>
         /// <param name="scene">the scene</param>
