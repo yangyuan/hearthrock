@@ -39,6 +39,16 @@ namespace Hearthrock.Communication
         }
 
         /// <summary>
+        /// Post a object to remote and without getting the result.
+        /// </summary>
+        /// <param name="endpoint">The api endpoint.</param>
+        /// <param name="obj">The object to be posted.</param>
+        public void Post(string endpoint, object obj)
+        {
+            this.Post(endpoint, RockJsonSerializer.Serialize(obj));
+        }
+
+        /// <summary>
         /// Post a json to remote and get the result string.
         /// </summary>
         /// <param name="endpoint">The api endpoint.</param>

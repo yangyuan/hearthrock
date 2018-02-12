@@ -33,5 +33,10 @@ namespace Hearthrock.Contracts
         /// Default url relative path of bot mulligan action.
         /// </summary>
         public const string DefaultBotMulliganRelativePath = "mulligan";
+
+        /// <summary>
+        /// Default url relative path of bot report action.
+        /// </summary>
+        public const string DefaultBotReportRelativePath = "report";
     }
 }

@@ -40,11 +40,13 @@ class RockApiService {
         request.on('end', function () {
             let json = JSON.parse(body);
             if (request.url == "/trace") {
-                ret = trace.RockTrace.trace(json)
+                ret = trace.RockTrace.trace(json);
             } else if (request.url == "/mulligan") {
-                ret = bot.get_mulligan_action(json)
+                ret = bot.get_mulligan_action(json);
             } else if (request.url == "/play") {
-                ret = bot.get_play_action(json)
+                ret = bot.get_play_action(json);
+            } else if (request.url == "/report") {
+                ret = bot.report(json);
             }
 
             response.end(JSON.stringify(ret))

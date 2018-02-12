@@ -9,6 +9,10 @@ class RockBotBase {
     get_play_action(scene) {
         throw new Error("Not Implemented.")
     }
+
+    report(scene) {
+        throw new Error("Not Implemented.")
+    }
 }
 
 var exports = module.exports = {

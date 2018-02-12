@@ -128,7 +128,9 @@ namespace Hearthrock.Pegasus
         /// <summary>
         /// Snapshot current scene.
         /// </summary>
+        /// <param name="sessionId">The Session Id.</param>
+        /// <param name="actionId">The Action Id.</param>
         /// <returns>The RockScene.</returns>
-        RockScene SnapshotScene();
+        RockScene SnapshotScene(string sessionId, int actionId);
     }
 }
