@@ -102,5 +102,35 @@ namespace Hearthrock.Engine
                 return RockAction.Create();
             }
         }
+
+        /// <summary>
+        /// Report the result of an action by providing the current scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        public void ReportActionResult(RockScene scene)
+        {
+            this.tracer.Verbose(RockJsonSerializer.Serialize(scene));
+
+            try
+            {
+                if (string.IsNullOrEmpty(this.configuration.BotEndpoint))
+                {
+                    var robot = new Bot.RockBot();
+                    var action = robot.GetPlayAction(scene);
+                    return;
+                }
+                else
+                {
+                    var apiClient = new RockApiClient();
+                    apiClient.Post($"{this.configuration.BotEndpoint}{RockConstants.DefaultBotReportRelativePath}", scene);
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                this.tracer.Error($"Unexpected Exception from Bot: {e}");
+                return;
+            }
+        }
     }
 }

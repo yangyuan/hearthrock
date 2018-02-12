@@ -24,5 +24,11 @@ namespace Hearthrock.Contracts
         /// <param name="scene">The scene.</param>
         /// <returns>The cards to be played.</returns>
         RockAction GetPlayAction(RockScene scene);
+
+        /// <summary>
+        /// Report the result of an action by providing the current scene.
+        /// </summary>
+        /// <param name="scene">The scene.</param>
+        void ReportActionResult(RockScene scene);
     }
 }

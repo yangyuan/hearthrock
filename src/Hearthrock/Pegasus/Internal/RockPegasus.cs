@@ -393,10 +393,12 @@ namespace Hearthrock.Pegasus.Internal
         /// <summary>
         /// Snapshot current scene.
         /// </summary>
+        /// <param name="sessionId">The Session Id.</param>
+        /// <param name="actionId">The Action Id.</param>
         /// <returns>The RockScene.</returns>
-        public RockScene SnapshotScene()
+        public RockScene SnapshotScene(string sessionId, int actionId)
         {
-            return RockPegasusSnapshotHelper.SnapshotScene();
+            return RockPegasusSnapshotHelper.SnapshotScene(sessionId, actionId);
         }
 
         /// <summary>

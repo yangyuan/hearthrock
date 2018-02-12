@@ -23,6 +23,10 @@ class RockBot extends base.RockBotBase {
 
         return this.create_action(scene['PlayOptions'][Math.floor(Math.random() * scene['PlayOptions'].length)]);
     }
+
+    report(scene) {
+        return null;
+    }
 	
 	create_action(objects) {
 		let action = {Version: 1, Objects: objects, Slot: -1}

@@ -16,8 +16,10 @@ namespace Hearthrock.Pegasus.Internal
         /// <summary>
         /// Snapshot Scene
         /// </summary>
+        /// <param name="sessionId">The Session Id.</param>
+        /// <param name="actionId">The Action Id.</param>
         /// <returns>The RockScene.</returns>
-        public static RockScene SnapshotScene()
+        public static RockScene SnapshotScene(string sessionId, int actionId)
         {
             var rockScene = new RockScene();
 
@@ -28,6 +30,8 @@ namespace Hearthrock.Pegasus.Internal
             rockScene.Opponent = SnapshotPlayer(opponent);
             rockScene.PlayOptions = SnapshotOptions();
             rockScene.Turn = GameState.Get().GetTurn();
+            rockScene.SessionId = sessionId;
+            rockScene.ActionId = actionId;
             return rockScene;
         }
 
