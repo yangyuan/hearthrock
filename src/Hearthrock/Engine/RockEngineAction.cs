@@ -136,13 +136,16 @@ namespace Hearthrock.Engine
         {
             foreach (int cardId in this.actions)
             {
-                var card = this.pegasus.GetObject(cardId);
-                if (card.CardId == "GAME_005")
+                var card = this.pegasus?.GetObject(cardId);
+                if (card != null)
                 {
-                    continue;
-                }
+                    if (card.CardId == "GAME_005")
+                    {
+                        continue;
+                    }
 
-                this.pegasus.ClickObject(card.RockId);
+                    this.pegasus?.ClickObject(card.RockId);
+                }
             }
 
             this.step = this.actions.Count + 1;
