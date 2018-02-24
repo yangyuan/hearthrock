@@ -128,5 +128,16 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the minion is poisonous.
         /// </summary>
         public bool IsPoisonous { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the minion is silenced.
+        /// </summary>
+        public bool IsSilenced { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the minion number attacks this turn.
+        /// </summary>
+        public bool NumAttacksThisTurn { get; set; }
+
     }
 }
