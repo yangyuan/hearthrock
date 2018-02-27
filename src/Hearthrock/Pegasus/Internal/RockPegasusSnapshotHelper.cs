@@ -185,7 +185,6 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.HasBattlecry = minion.HasBattlecry();
             rockMinion.Race = (RockRace)(int)minion.GetRace();
             rockMinion.IsSilenced = minion.IsSilenced();
-            rockMinion.NumAttacksThisTurn = minion.GetNumAttacksThisTurn() == 0;
 
             return rockMinion;
         }
