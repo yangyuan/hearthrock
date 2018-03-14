@@ -83,6 +83,8 @@ namespace Hearthrock.Engine
             }
             else if (this.actions.Count > this.step)
             {
+                // TODO: https://github.com/yangyuan/hearthrock/issues/46
+                this.pegasus.DropObject();
                 this.pegasus.ClickObject(this.actions[this.step]);
             }
             else
