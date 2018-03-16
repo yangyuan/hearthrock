@@ -186,6 +186,7 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.IsPoisonous = minion.IsPoisonous();
             rockMinion.IsEnraged = minion.IsEnraged();
             rockMinion.HasBattlecry = minion.HasBattlecry();
+            rockMinion.IsSilenced = minion.IsSilenced();
             rockMinion.Race = (RockRace)(int)minion.GetRace();
 
             return rockMinion;
