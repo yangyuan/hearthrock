@@ -50,14 +50,14 @@ namespace Hearthrock.Contracts
         /// The factory method of RockAction
         /// </summary>
         /// <param name="objects">The RockObject IDs of the action.</param>
-        /// <param name="solt">The solt when apply the action.</param>
+        /// <param name="slot">The slot when apply the action.</param>
         /// <returns>The RockAction.</returns>
-        public static RockAction Create(List<int> objects, int solt)
+        public static RockAction Create(List<int> objects, int slot)
         {
             var result = new RockAction();
             result.Version = 1;
             result.Objects = objects;
-            result.Slot = solt;
+            result.Slot = slot;
 
             return result;
         }
