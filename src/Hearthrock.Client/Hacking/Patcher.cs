@@ -375,7 +375,7 @@ namespace Hearthrock.Client.Hacking
             string productInfo = File.ReadAllText(hearthstoneProductPath, Encoding.ASCII);
             string version = string.Empty;
 
-            Regex regex = new Regex("([0-9]+\\.[0-9]+\\.[0-0]+\\.[0-9]+)");
+            Regex regex = new Regex("([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)");
             var versions = regex.Matches(productInfo);
             if (versions.Count == 1)
             {
