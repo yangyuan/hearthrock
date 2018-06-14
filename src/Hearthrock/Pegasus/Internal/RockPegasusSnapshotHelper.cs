@@ -122,6 +122,7 @@ namespace Hearthrock.Pegasus.Internal
             rockHero.Health = heroEntity.GetRealTimeRemainingHP();
             rockHero.IsQuest = heroEntity.IsQuest();
             rockHero.IsSecret = heroEntity.IsSecret();
+            rockHero.IsFrozen = heroEntity.IsFrozen();
 
             return rockHero;
         }
