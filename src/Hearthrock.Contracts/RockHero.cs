@@ -58,5 +58,10 @@ namespace Hearthrock.Contracts
         ///  Gets or sets a value indicating whether the hero have a secret.
         /// </summary>
         public bool IsSecret { get; set; }
+
+        /// <summary>
+        ///  Gets or sets a value indicating whether the hero have is frozen.
+        /// </summary>
+        public bool IsFrozen { get; set; }
     }
 }
