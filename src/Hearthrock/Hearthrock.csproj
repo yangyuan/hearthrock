@@ -32,18 +32,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.11.1.1.19\lib\net20\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.11.2.0.20\lib\net20\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.11.1.1.19\lib\net20\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.11.2.0.20\lib\net20\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-UnityScript, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.11.1.1.19\lib\net20\Assembly-UnityScript.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.11.2.0.20\lib\net20\Assembly-UnityScript.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hearthrock.Stone.11.1.1.19\lib\net20\UnityEngine.dll</HintPath>
+      <HintPath>..\packages\Hearthrock.Stone.11.2.0.20\lib\net20\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
