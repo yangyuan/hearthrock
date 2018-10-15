@@ -60,6 +60,11 @@ namespace Hearthrock.Client
 
             await this.patcher.InjectAsync();
             PatchButton.IsEnabled = true;
+
+            if (!await this.patcher.TestRockConfigurationAsync())
+            {
+                await this.patcher.WriteRockConfigurationAsync(this.configuration);
+            }
         }
 
         /// <summary>
