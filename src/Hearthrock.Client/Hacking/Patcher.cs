@@ -177,6 +177,16 @@ namespace Hearthrock.Client.Hacking
         }
 
         /// <summary>
+        /// Test if configuration exists.
+        /// </summary>
+        /// <returns>True if configuration exists.</returns>
+        public async Task<bool> TestRockConfigurationAsync()
+        {
+            return await Task.Run(() => this.TestRockConfiguration());
+        }
+        
+
+        /// <summary>
         /// Is the path a Hearthstone directory.
         /// </summary>
         /// <param name="path">The path as string.</param>
@@ -415,6 +425,24 @@ namespace Hearthrock.Client.Hacking
             var hearthstoneConfigurationPath = Path.Combine(this.pegasusRoot, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationFileName);
             var configurationJson = JsonConvert.SerializeObject(rockConfiguration, Formatting.Indented);
             File.WriteAllText(hearthstoneConfigurationPath, configurationJson);
+        }
+
+        /// <summary>
+        /// Test if configuration exists.
+        /// </summary>
+        /// <returns>True if configuration exists.</returns>
+        private bool TestRockConfiguration()
+        {
+            this.AssertRootPath();
+            var hearthstoneConfigurationPath = Path.Combine(this.pegasusRoot, RelativePathToHearthstoneAssemblyDirectory, HearthrockConfigurationFileName);
+            if (File.Exists(hearthstoneConfigurationPath))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
