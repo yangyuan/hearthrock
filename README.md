@@ -6,6 +6,7 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 
 ## News
 
+- Hearthrock 0.6.9 Alpha for 12.4.0.27641. (Nov 25, 2018)
 - Hearthrock 0.6.8 Alpha for 12.2.0.27059. (Oct 15, 2018)
 - Hearthrock 0.6.7 Alpha for 12.0.0.25770. (Sep 3, 2018)
 - Hearthrock 0.6.6 Alpha for 11.2.0.25252. (Jul 17, 2018)
@@ -15,9 +16,6 @@ Hearthstone® Bot Engine https://yangyuan.github.io/hearthrock
 - Hearthrock 0.6.2 Alpha for 11.0.0.23966. (Apr 23, 2018)
 - Hearthrock 0.6.1 Alpha for 10.4.0.23576. (Mar 13, 2018)
 - Hearthrock 0.6.0 Alpha for 10.2.0.23180. (Feb 11, 2018)
-- Hearthrock 0.5.5 Alpha for 10.2.0.23180. (Feb 6, 2018)
-- Hearthrock 0.5.4 Alpha for 10.0.0.22611. (Dec 12, 2017)
-- Hearthrock 0.5.3 Alpha for 9.4.0.22115. (Nov 18, 2017)
 - Hearthrock (AI) received $5,000 credits from NUTech AWS Grant.
 
 ## Purposes and Features
