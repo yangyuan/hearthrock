@@ -65,5 +65,15 @@ namespace Hearthrock.Contracts
         /// Gets or sets the (card) choices of player.
         /// </summary>
         public List<RockCard> Choices { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Graveyard of player.
+        /// </summary>
+        public List<RockCard> Graveyard { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Deck of player.
+        /// </summary>
+        public List<RockCard> Deck { get; set; }
     }
 }

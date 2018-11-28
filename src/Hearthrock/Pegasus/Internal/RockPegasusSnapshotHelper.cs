@@ -50,6 +50,9 @@ namespace Hearthrock.Pegasus.Internal
             rockPlayer.Power = SnapshotPower(player);
             rockPlayer.Minions = SnapshotMinions(player);
             rockPlayer.Cards = SnapshotCards(player);
+            rockPlayer.Deck = SnapshotDeck(player);
+            rockPlayer.Graveyard = SnapshotGraveyard(player);
+
             rockPlayer.Choices = SnapshotChoices(player);
             rockPlayer.PowerAvailable = !player.GetHeroPower().IsExhausted();
 
@@ -119,6 +122,7 @@ namespace Hearthrock.Pegasus.Internal
             rockHero.Health = heroEntity.GetRealTimeRemainingHP();
             rockHero.IsQuest = heroEntity.IsQuest();
             rockHero.IsSecret = heroEntity.IsSecret();
+            rockHero.IsFrozen = heroEntity.IsFrozen();
 
             return rockHero;
         }
@@ -183,9 +187,8 @@ namespace Hearthrock.Pegasus.Internal
             rockMinion.IsPoisonous = minion.IsPoisonous();
             rockMinion.IsEnraged = minion.IsEnraged();
             rockMinion.HasBattlecry = minion.HasBattlecry();
-            rockMinion.Race = (RockRace)(int)minion.GetRace();
             rockMinion.IsSilenced = minion.IsSilenced();
-            rockMinion.NumAttacksThisTurn = minion.GetNumAttacksThisTurn() == 0;
+            rockMinion.Race = (RockRace)(int)minion.GetRace();
 
             return rockMinion;
         }
@@ -207,6 +210,43 @@ namespace Hearthrock.Pegasus.Internal
 
             return rockCards;
         }
+
+        /// <summary>
+        /// Snapshot of deck.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The list of RockCard.</returns>
+        private static List<RockCard> SnapshotDeck(Player player)
+        {
+            var rockCards = new List<RockCard>();
+
+            List<Card> cards = player.GetDeckZone().GetCards();
+            foreach (var card in cards)
+            {
+                rockCards.Add(SnapshotCard(card.GetEntity()));
+            }
+
+            return rockCards;
+        }
+
+        /// <summary>
+        /// Snapshot of graveyard.
+        /// </summary>
+        /// <param name="player">The Player.</param>
+        /// <returns>The list of RockCard.</returns>
+        private static List<RockCard> SnapshotGraveyard(Player player)
+        {
+            var rockCards = new List<RockCard>();
+
+            List<Card> cards = player.GetGraveyardZone().GetCards();
+            foreach (var card in cards)
+            {
+                rockCards.Add(SnapshotCard(card.GetEntity()));
+            }
+
+            return rockCards;
+        }
+
 
         /// <summary>
         /// Snapshot card choices.

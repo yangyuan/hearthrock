@@ -134,10 +134,5 @@ namespace Hearthrock.Contracts
         /// </summary>
         public bool IsSilenced { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the minion number attacks this turn.
-        /// </summary>
-        public bool NumAttacksThisTurn { get; set; }
-
     }
 }
