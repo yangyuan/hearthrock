@@ -226,19 +226,17 @@ namespace Hearthrock.Client.Hacking
         /// <returns>The hearthstone directory</returns>
         private static string SearchHearthstoneDirectory()
         {
-            List<string> candicates = new List<string>
-            {
-                string.Empty,
-                @"C:\Program Files\Hearthstone\",
-                @"C:\Program Files (x86)\Hearthstone\",
-                @"E:\Program Files (x86)\HS\Hearthstone\"
-            };
+            List<string> candicates = new List<string>();
 
             for (int i = 2; i < 26; i++)
             {
                 char drive = (char)(Convert.ToUInt16('A') + i);
-                candicates.Add($@"{drive}:\Game\Hearthstone\");
-                candicates.Add($@"{drive}:\Games\Hearthstone\");
+                candicates.AddRange(
+                    SearchFolder(
+                        new DirectoryInfo($"{drive}:\\"),
+                        "Hearthstone",
+                        i < 6 ? 3 : 2) // for C/D/E/F search 3 levels, for the rest search 2 levels
+                    );
             }
 
             foreach (var candicate in candicates)
@@ -250,6 +248,45 @@ namespace Hearthrock.Client.Hacking
             }
 
             throw new PegasusException("Cannot find Hearthstone, please set the path manually.");
+        }
+
+        /// <summary>
+        /// Search a folder with name and depth
+        /// </summary>
+        /// <param name="directory">the root directory</param>
+        /// <param name="name">name of the folder</param>
+        /// <param name="depth">The depth of search</param>
+        /// <returns>IEnumerable of search results.</returns>
+        private static IEnumerable<string> SearchFolder(DirectoryInfo directory, string name, int depth)
+        {
+            if (depth > 0)
+            {
+                var subDirectories = new DirectoryInfo[0];
+                try
+                {
+                    subDirectories = directory.GetDirectories();
+                }
+                catch
+                {
+                    // ignore all Exceptions
+                    // very likely DirectoryNotFoundException, UnauthorizedAccessException, SecurityException and IOException
+                }
+
+                foreach (var subDirectory in subDirectories)
+                {
+                    if (subDirectory.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        yield return subDirectory.FullName;
+                    }
+                    else if ((subDirectory.Attributes & FileAttributes.Hidden) == 0)
+                    {
+                        foreach (var candicate in SearchFolder(subDirectory, name, depth - 1))
+                        {
+                            yield return candicate;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

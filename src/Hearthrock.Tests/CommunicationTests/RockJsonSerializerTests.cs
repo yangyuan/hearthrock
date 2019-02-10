@@ -52,6 +52,31 @@ namespace Hearthrock.Tests.CommunicationTests
         }
 
         /// <summary>
+        /// TestMethod for Serialize
+        /// </summary>
+        [TestMethod]
+        public void TestRockJsonSerializerOnRockConfiguration()
+        {
+            var config = new RockConfiguration();
+            config.GameMode = RockGameMode.NormalPractice;
+            var configJson = RockJsonSerializer.Serialize(config);
+            var configObject = RockJsonSerializer.Deserialize<RockConfiguration>(configJson);
+            Assert.AreEqual(configObject.GameMode, config.GameMode);
+        }
+
+        /// <summary>
+        /// TestMethod for Serialize
+        /// </summary>
+        [TestMethod]
+        public void TestRockJsonSerializerOnRockScene()
+        {
+            var rockScene = GenerateRockScene();
+            var rockSceneJson = RockJsonSerializer.Serialize(rockScene);
+            var rockSceneObject = RockJsonSerializer.Deserialize<RockScene>(rockSceneJson);
+            Assert.AreEqual(rockScene.ActionId, rockSceneObject.ActionId);
+        }
+
+        /// <summary>
         /// Generate a sample RockScene.
         /// </summary>
         /// <returns>A RockScene.</returns>
