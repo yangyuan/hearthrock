@@ -7,14 +7,60 @@ namespace Hearthrock.Communication
     using System;
     using System.Collections;
     using System.Collections.Generic;
-
-    using Facebook.MiniJSON;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// A JsonSerializer based on Facebook.MiniJSON.
     /// </summary>
     public class RockJsonSerializer
     {
+        /// <summary>
+        /// Method of SerializeObject
+        /// </summary>
+        private static MethodInfo SerializeObjectMethod;
+
+        /// <summary>
+        /// Method of DeserializeObject
+        /// </summary>
+        private static MethodInfo DeserializeObjectMethod;
+
+        /// <summary>
+        /// Static constructor of RockJsonSerializer.
+        /// </summary>
+        static RockJsonSerializer()
+        {
+            var assembly = Assembly.GetAssembly(typeof(UnityEngine.Component));
+            var simpleJson = assembly.GetType("SimpleJson.SimpleJson");
+            SerializeObjectMethod = simpleJson.GetMethod("SerializeObject", new[] { typeof(object) });
+            DeserializeObjectMethod = simpleJson.GetMethods().Where(
+                t => t.Name == "DeserializeObject" 
+                && !t.IsGenericMethod
+                && t.GetParameters().Length == 1
+                && t.GetParameters()[0].ParameterType == typeof(string)
+                ).First();
+        }
+
+        /// <summary>
+        /// Deserialize a json string to an object.
+        /// </summary>
+        /// <param name="json">The json string.</param>
+        /// <returns>The object deserialized.</returns>
+        private static object DeserializeObject(object json)
+        {
+            return DeserializeObjectMethod.Invoke(null, new object[] { json });
+        }
+
+        /// <summary>
+        /// Serialize an object to a json string.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>The serialized json string.</returns>
+        private static string SerializeObject(object obj)
+        {
+            return (string)SerializeObjectMethod.Invoke(null, new object[] { obj });
+        }
+
         /// <summary>
         /// List of built-in types.
         /// </summary>
@@ -44,7 +90,7 @@ namespace Hearthrock.Communication
         /// <returns>The object deserialized.</returns>
         public static T Deserialize<T>(string json)
         {
-            var obj = Json.Deserialize(json);
+            var obj = DeserializeObject(json);
             if (obj == null)
             {
                 return default(T);
@@ -60,7 +106,7 @@ namespace Hearthrock.Communication
         /// <returns>The serialized json string.</returns>
         public static string Serialize(object obj)
         {
-            return Json.Serialize(ConvertToGenetal(obj, obj.GetType()));
+            return SerializeObject(ConvertToGenetal(obj, obj.GetType()));
         }
 
         /// <summary>
@@ -97,7 +143,7 @@ namespace Hearthrock.Communication
                 return list;
             }
 
-            var map = obj as Dictionary<string, object>;
+            var map = obj as IDictionary<string, object>;
 
             if (instance is IDictionary && type.IsGenericType)
             {
